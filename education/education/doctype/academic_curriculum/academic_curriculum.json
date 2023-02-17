@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "CURC-.####",
+ "creation": "2023-02-10 12:43:59.800125",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "program",
+  "column_break_onad",
+  "educational_year",
+  "column_break_0za5",
+  "educational_semester",
+  "courses_section",
+  "courses"
+ ],
+ "fields": [
+  {
+   "fieldname": "program",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Program",
+   "options": "Program",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_0za5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "courses_section",
+   "fieldtype": "Section Break",
+   "label": "Courses"
+  },
+  {
+   "fieldname": "courses",
+   "fieldtype": "Table",
+   "label": "Courses",
+   "options": "Academic Curriculum Course",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_onad",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "educational_year",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Educational Year",
+   "options": "Educational Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "educational_semester",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Educational Semester",
+   "options": "Educational Semester",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-02-16 17:28:11.112217",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Academic Curriculum",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "program"
+}

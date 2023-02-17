@@ -9,6 +9,8 @@
  "field_order": [
   "course_name",
   "department",
+  "course_language",
+  "total_course_hours",
   "hero_image",
   "column_break_tflc",
   "description",
@@ -18,6 +20,8 @@
   "assessment",
   "default_grading_scale",
   "assessment_criteria",
+  "prerequisites_tab",
+  "prerequisite_courses",
   "connections_tab"
  ],
  "fields": [
@@ -88,14 +92,39 @@
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+  },
+  {
+   "fieldname": "course_language",
+   "fieldtype": "Select",
+   "label": "Course Language",
+   "options": "Arabic\nEnglish",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_course_hours",
+   "fieldtype": "Int",
+   "label": "Total Course Hours",
+   "reqd": 1
+  },
+  {
+   "fieldname": "prerequisites_tab",
+   "fieldtype": "Tab Break",
+   "label": "Prerequisites"
+  },
+  {
+   "fieldname": "prerequisite_courses",
+   "fieldtype": "Table",
+   "label": "Prerequisite Courses",
+   "options": "Academic Course Prerequisite"
   }
  ],
  "image_field": "hero_image",
  "links": [],
- "modified": "2023-01-13 17:12:58.871929",
+ "modified": "2023-02-16 13:01:47.585788",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

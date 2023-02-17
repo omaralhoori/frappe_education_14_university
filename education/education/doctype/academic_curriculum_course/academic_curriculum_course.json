@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-02-10 16:48:21.028761",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "course",
+  "compulsory",
+  "pool_of_elective_courses"
+ ],
+ "fields": [
+  {
+   "fieldname": "course",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Course",
+   "options": "Course",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pool_of_elective_courses",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pool of Elective Courses",
+   "mandatory_depends_on": "eval:!doc.compulsory",
+   "options": "Pool of Elective Courses"
+  },
+  {
+   "default": "1",
+   "fieldname": "compulsory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Compulsory"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-02-16 13:27:15.706635",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Academic Curriculum Course",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

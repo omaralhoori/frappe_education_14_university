@@ -12,7 +12,8 @@
   "term_name",
   "term_start_date",
   "term_end_date",
-  "title"
+  "title",
+  "semester"
  ],
  "fields": [
   {
@@ -51,10 +52,17 @@
    "hidden": 1,
    "label": "Title",
    "unique": 1
+  },
+  {
+   "fieldname": "semester",
+   "fieldtype": "Link",
+   "label": "Semester",
+   "options": "Educational Semester",
+   "reqd": 1
   }
  ],
  "links": [],
- "modified": "2022-12-13 18:20:17.263912",
+ "modified": "2023-02-16 10:48:07.111935",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Academic Term",
@@ -75,7 +83,6 @@
   }
  ],
  "quick_entry": 1,
- "restrict_to_domain": "",
  "sort_field": "name",
  "sort_order": "DESC",
  "states": [],
