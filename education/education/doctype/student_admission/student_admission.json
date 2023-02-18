@@ -14,6 +14,7 @@
   "enable_admission_application",
   "column_break_3",
   "academic_year",
+  "academic_term",
   "admission_start_date",
   "admission_end_date",
   "section_break_5",
@@ -89,12 +90,19 @@
    "fieldname": "enable_admission_application",
    "fieldtype": "Check",
    "label": "Enable Admission Application"
+  },
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "label": "Academic Term",
+   "options": "Academic Term",
+   "reqd": 1
   }
  ],
  "has_web_view": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2023-01-12 15:22:20.267807",
+ "modified": "2023-02-18 18:17:31.158998",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Admission",
