@@ -1,0 +1,94 @@
+<script src="https://secure-jordan.paytabs.com/payment/js/paylib.js"></script>
+
+<form action="" id="payform" method="post">
+    <span id="paymentErrors"></span>
+    <div class="row form-group">
+        <label class="col-sm-5 col-form-label">{{_('Outstanding Amount')}}</label>
+        <div class="col-sm-7 outstanding-container">
+            
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-sm-5 col-form-label">{{_('Card Number')}}</label>
+        <div class="col-sm-7">
+            <input type="text" class="form-control" data-paylib="number" size="20">
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-sm-5 col-form-label">{{_('Expiry Date')}} (MM/YYYY)</label>
+
+        <div class="col-sm-3">
+            <input type="text" class="form-control" data-paylib="expmonth" size="2">
+        </div>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" data-paylib="expyear" size="4">
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-sm-5 col-form-label">{{_('Security Code')}}</label>
+        <div class="col-sm-3">
+            <input type="text" class="form-control" data-paylib="cvv" size="4">
+        </div>
+    </div>
+    <input type="hidden" value="" class="doc-name-input" name="doc-name" />
+    <div class="row form-group">
+        <input type="submit" class="btn btn-primary ml-auto" value="{{_('Pay')}}">
+    </div>
+</form>
+
+<script type="text/javascript">
+    var myform = document.getElementById('payform');
+    // paylib.inlineForm({
+    //     'key': '{{client_key}}',
+    //     'form': myform,
+    //     'autoSubmit': true,
+    //     'callback': function (response) {
+    //         document.getElementById('paymentErrors').innerHTML = '';
+    //         if (response.error) {
+    //             paylib.handleError(document.getElementById('paymentErrors'), response);
+    //         }
+    //     }
+    // });
+
+    myform.onsubmit = function(){
+    var vals = $(this).serialize();
+
+    $.ajax({
+        url: "{{pay_form_url}}",  
+        method: "POST",
+        data: vals,
+        success: function(data) {
+            console.log(data);
+            var awaitTime = 5;
+            if (data.message.msg){
+                frappe.show_alert({
+                message: data.message.msg,
+                indicator:'green'
+            }, awaitTime);
+            }else if(data.message.error){
+                frappe.show_alert({
+                message: data.message.error,
+                indicator:'red'
+            }, awaitTime);
+            }else{
+                frappe.show_alert({
+                message: __('Something went wrong'),
+                indicator:'red'
+            }, awaitTime);
+
+            }
+            setTimeout(()=> {
+                location.reload()
+            }, awaitTime * 1000)
+        }
+    });
+
+    return false; // prevent from submit
+};
+
+    const payBtnOnClick = function(e) {
+        document.querySelector('.outstanding-container').innerHTML = e.getAttribute('doc-price')
+        document.querySelector('.doc-name-input').value = e.getAttribute('doc-name')
+
+    }
+</script>

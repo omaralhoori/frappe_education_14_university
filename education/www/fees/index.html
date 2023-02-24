@@ -1,0 +1,73 @@
+{% extends "templates/web.html" %}
+
+{% block breadcrumbs %}
+{% include "templates/includes/breadcrumbs.html" %}
+{% endblock %}
+
+{% block header %}
+
+<h3>{{ title }}</h3>
+{% endblock %}
+
+{% block page_content %}
+
+{% set today = frappe.utils.getdate(frappe.utils.nowdate()) %}
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">{{_('Code')}}</th>
+			<th scope="col">{{_('Status')}}</th>
+			<th scope="col">{{_('Grand Total')}}</th>
+			<th scope="col">{{_('Paid Amount')}}</th>
+			<th scope="col">{{_('Due Date')}}</th>
+			<th scope="col">{{_('Actions')}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for doc in fees_list %}
+		<tr>
+			<th scope="row">{{loop.index}}</th>
+			<td>{{ doc.name }}</td>
+			<td>
+				{% if doc.outstanding_amount == 0 %}
+				<strong>{{_('Paid')}}</strong>
+				{% elif doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) < today %} <strong>
+					{{_('Overdue')}}</strong>
+					{% else %}
+					<storng>{{_('Unpaid')}}</storng>
+					{% endif %}
+			</td>
+			<td>{{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}</td>
+			<td>{{ frappe.utils.fmt_money(doc.paid_amount, currency=doc.currency) }}</td>
+			<td>
+				{{ doc.due_date.strftime('%Y-%m-%d') }}
+			</td>
+			<td>
+				<a href="/fees/{{doc.name}}/" class="btn btn-info btn-sm"> {{ _('Details')}}</a>
+				{% if doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) >= today %}
+				<button class="btn btn-success btn-sm pay-btn" onclick="payBtnOnClick(this)" doc-name="{{doc.name}}"
+					doc-price="{{frappe.utils.fmt_money(doc.outstanding_amount, currency=doc.currency)}}"
+					data-toggle="modal" data-target="#exampleModal"> {{
+					_('Pay')}}</button>
+				{% endif %}
+			</td>
+		</tr>
+		{% endfor %}
+
+	</tbody>
+</table>
+
+<!-- Pay Form Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-body m-2">
+				{% include "templates/includes/fees/pay_form.html" %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@ from erpnext.controllers.accounts_controller import AccountsController
 from frappe import _
 from frappe.utils import money_in_words
 from frappe.utils.csvutils import getlink
-
+from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
 class Fees(AccountsController):
 	def set_indicator(self):
@@ -92,6 +92,11 @@ class Fees(AccountsController):
 				_("Payment request {0} created").format(getlink("Payment Request", pr.name))
 			)
 
+	def pay_fee(self):
+		payment_entry = get_payment_entry("Fees", self.name, party_amount=self.outstanding_amount, party_type='Student', payment_type='Receive', ignore_account_permission=True)
+		payment_entry.save(ignore_permissions=True)
+		payment_entry.submit()
+		return True
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry")
 		make_reverse_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
@@ -142,15 +147,18 @@ def get_fee_list(
 	student = frappe.db.sql(
 		"select name from `tabStudent` where student_email_id= %s", user
 	)
+	limit_stmt = ""
 	if student:
+		if limit_start != 0 and limit_page_length != 0:
+			limit_stmt = f"limit {limit_start} , {limit_page_length} "
 		return frappe.db.sql(
 			"""
 			select name, program, due_date, grand_total - outstanding_amount as paid_amount,
 			outstanding_amount, grand_total, currency
 			from `tabFees`
 			where student= %s and docstatus=1
-			order by due_date asc limit {0} , {1}""".format(
-				limit_start, limit_page_length
+			order by due_date asc {0}""".format(
+				limit_stmt
 			),
 			student,
 			as_dict=True,
@@ -166,3 +174,15 @@ def get_list_context(context=None):
 		"get_list": get_fee_list,
 		"row_template": "templates/includes/fee/fee_row.html",
 	}
+
+
+@frappe.whitelist()
+def pay_fee():
+	try:
+		fee_doc = frappe.get_doc("Fees", frappe.local.form_dict.get('doc-name'))
+		fee_doc.pay_fee()
+	except:
+		return {
+			"error": _('You are not allowed to pay this fee')
+		}
+	return {"msg": _("The fee is paid successfully")}

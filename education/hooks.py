@@ -35,12 +35,13 @@ website_generators = ["Student Admission"]
 
 website_route_rules = [
 	{"from_route": "/admissions", "to_route": "Student Admission"},
-]
+]#{"from_route": "/fees", "to_route": "Fees"},
 
 treeviews = ["Assessment Group"]
 
 calendars = [
 	"Course Schedule",
+	"Academic Calender",
 ]
 
 standard_portal_menu_items = [
