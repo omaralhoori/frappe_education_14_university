@@ -54,7 +54,7 @@ frappe.ui.form.on('Program Enrollment', {
 	},
 
 	program: function(frm) {
-		frm.events.get_courses(frm);
+		//frm.events.get_courses(frm);
 		if (frm.doc.program) {
 			frappe.call({
 				method: 'education.education.api.get_fee_schedule',

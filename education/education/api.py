@@ -32,27 +32,33 @@ def enroll_student(source_name):
 	frappe.publish_realtime(
 		"enroll_student_progress", {"progress": [1, 4]}, user=frappe.session.user
 	)
-	student = get_mapped_doc(
-		"Student Applicant",
-		source_name,
-		{
-			"Student Applicant": {
-				"doctype": "Student",
-				"field_map": {"name": "student_applicant"},
-			}
-		},
-		ignore_permissions=True,
-	)
-	student.save()
+	student= None
+	if not frappe.db.exists("Student", {"student_applicant": source_name}):
+		student = get_mapped_doc(
+			"Student Applicant",
+			source_name,
+			{
+				"Student Applicant": {
+					"doctype": "Student",
+					"field_map": {"name": "student_applicant"},
+				}
+			},
+			ignore_permissions=True,
+		)
+		student.save()
+	else:
+		student = frappe.get_doc("Student", {"student_applicant": source_name} )
 
 	student_applicant = frappe.db.get_value(
-		"Student Applicant", source_name, ["student_category", "program"], as_dict=True
+		"Student Applicant", source_name, ["student_category", "program", "academic_year",  "academic_term"], as_dict=True
 	)
 	program_enrollment = frappe.new_doc("Program Enrollment")
 	program_enrollment.student = student.name
 	program_enrollment.student_category = student_applicant.student_category
 	program_enrollment.student_name = student.student_name
 	program_enrollment.program = student_applicant.program
+	program_enrollment.academic_year = student_applicant.academic_year
+	program_enrollment.academic_term = student_applicant.academic_term
 	frappe.publish_realtime(
 		"enroll_student_progress", {"progress": [2, 4]}, user=frappe.session.user
 	)

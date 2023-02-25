@@ -17,7 +17,7 @@ frappe.ui.form.on("Student Applicant", {
 
 		if (!frm.is_new() && frm.doc.application_status==="Applied") {
 			frm.add_custom_button(__("Approve"), function() {
-				frm.set_value("application_status", "Approved");
+				frm.set_value("application_status", "Admitted");
 				frm.save_or_update();
 
 			}, 'Actions');
@@ -28,7 +28,7 @@ frappe.ui.form.on("Student Applicant", {
 			}, 'Actions');
 		}
 
-		if (!frm.is_new() && frm.doc.application_status === "Approved") {
+		if (!frm.is_new() && frm.doc.application_status === "Admitted") {
 			frm.add_custom_button(__("Enroll"), function() {
 				frm.events.enroll(frm)
 			}).addClass("btn-primary");

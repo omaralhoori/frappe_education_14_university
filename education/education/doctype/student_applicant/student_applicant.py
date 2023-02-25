@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.model.mapper import get_mapped_doc
 from frappe.utils import add_years, date_diff, getdate, nowdate
 
 
@@ -38,6 +39,9 @@ class StudentApplicant(Document):
 
 		if self.student_admission and self.program and self.date_of_birth:
 			self.validation_from_student_admission()
+	def after_insert(self):
+		student = self.create_student()
+		self.create_application_fees(student.name)
 
 	def validate_dates(self):
 		if self.date_of_birth and getdate(self.date_of_birth) >= getdate():
@@ -72,6 +76,44 @@ class StudentApplicant(Document):
 				)
 			)
 
+	def create_student(self):
+		student = get_mapped_doc(
+		"Student Applicant",
+		self.name,
+		{
+			"Student Applicant": {
+				"doctype": "Student",
+				"field_map": {"name": "student_applicant"},
+			}
+		},
+		ignore_permissions=True,
+	)
+		student.user = frappe.session.user
+		student.save(ignore_permissions=True)
+		user = frappe.get_doc("User", student.user)
+		user.append_roles(['Student'])
+		user.save(ignore_permissions=True)
+		return student
+	
+	def create_application_fees(self, student):
+		if not self.student_admission: return frappe.throw(_("Please select Student Admission which is mandatory for the paid student applicant"))
+		student_admission = get_student_admission_data(self.student_admission, self.program)
+		if not student_admission: frappe.throw(_("Cannot find selected Student Admission for the selected program"))
+		if not student_admission.application_fee or student_admission.application_fee == 0: return
+		fees_doc = frappe.get_doc({
+			"doctype": "Fees",
+			"student": student,
+			"against_doctype": "Student Applicant",
+			"against_doctype_name": self.name,
+			"program": self.program,
+			"due_date": student_admission.application_fee_due_date or student_admission.admission_end_date
+		})
+		component = fees_doc.append("components")
+		component.fees_category = student_admission['fee_category']
+		component.amount = student_admission.application_fee
+		fees_doc.save(ignore_permissions=True)
+		fees_doc.submit()
+	
 	def validation_from_student_admission(self):
 
 		student_admission = get_student_admission_data(self.student_admission, self.program)
@@ -107,8 +149,8 @@ class StudentApplicant(Document):
 def get_student_admission_data(student_admission, program):
 
 	student_admission = frappe.db.sql(
-		"""select sa.admission_start_date, sa.admission_end_date,
-		sap.program, sap.min_age, sap.max_age, sap.applicant_naming_series
+		"""select sa.admission_start_date, sa.admission_end_date, sa.application_fee_due_date,
+		sap.program, sap.min_age, sap.max_age, sap.applicant_naming_series, sap.application_fee, sap.fee_category
 		from `tabStudent Admission` sa, `tabStudent Admission Program` sap
 		where sa.name = sap.parent and sa.name = %s and sap.program = %s""",
 		(student_admission, program),

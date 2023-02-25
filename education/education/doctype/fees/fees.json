@@ -38,6 +38,10 @@
   "grand_total",
   "grand_total_in_words",
   "outstanding_amount",
+  "against_section",
+  "against_doctype",
+  "column_break_tad9",
+  "against_doctype_name",
   "edit_printing_settings",
   "letter_head",
   "column_break_32",
@@ -336,14 +340,37 @@
   {
    "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "against_section",
+   "fieldtype": "Section Break",
+   "label": "Fees Against"
+  },
+  {
+   "fieldname": "against_doctype",
+   "fieldtype": "Link",
+   "label": "Against DocType",
+   "options": "DocType"
+  },
+  {
+   "fieldname": "column_break_tad9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "against_doctype_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Against Doctype Name",
+   "options": "against_doctype"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-08-05 14:05:47.728400",
+ "modified": "2023-02-24 20:09:50.941158",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fees",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -386,10 +413,10 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "",
  "search_fields": "student, student_name",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "student_name"
 }

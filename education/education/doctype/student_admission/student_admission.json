@@ -17,6 +17,7 @@
   "academic_term",
   "admission_start_date",
   "admission_end_date",
+  "application_fee_due_date",
   "section_break_5",
   "program_details",
   "introduction"
@@ -97,12 +98,17 @@
    "label": "Academic Term",
    "options": "Academic Term",
    "reqd": 1
+  },
+  {
+   "fieldname": "application_fee_due_date",
+   "fieldtype": "Date",
+   "label": "Application Fee Due Date"
   }
  ],
  "has_web_view": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2023-02-18 18:17:31.158998",
+ "modified": "2023-02-24 17:55:03.180177",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Admission",

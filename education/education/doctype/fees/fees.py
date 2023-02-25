@@ -96,6 +96,11 @@ class Fees(AccountsController):
 		payment_entry = get_payment_entry("Fees", self.name, party_amount=self.outstanding_amount, party_type='Student', payment_type='Receive', ignore_account_permission=True)
 		payment_entry.save(ignore_permissions=True)
 		payment_entry.submit()
+		if self.against_doctype and self.against_doctype_name:
+			try:
+				frappe.db.set_value(self.against_doctype, self.against_doctype_name, {"paid": 1})
+			except:
+				pass
 		return True
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry")

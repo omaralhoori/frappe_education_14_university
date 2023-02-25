@@ -5,6 +5,7 @@ def after_install():
 	setup_fixtures()
 	create_student_role()
 	create_parent_assessment_group()
+	create_fee_category()
 
 
 def setup_fixtures():
@@ -27,6 +28,15 @@ def create_parent_assessment_group():
 				"is_group": 1,
 			}
 		).insert(ignore_mandatory=True)
+
+def create_fee_category():
+	if not frappe.db.exists("Fee Category", "Application Fee"):
+		frappe.get_doc(
+			{
+				"doctype": "Fee Category",
+				"category_name": "Application Fee",
+			}
+		).insert()
 
 
 def create_student_role():
