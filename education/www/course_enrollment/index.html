@@ -1,0 +1,233 @@
+{% extends "templates/web.html" %}
+
+{% block breadcrumbs %}
+{% include "templates/includes/breadcrumbs.html" %}
+{% endblock %}
+
+{% block header %}
+
+<h3 class="mb-6">{{ title }}</h3>
+{% endblock %}
+
+{% block page_content %}
+
+{% set today = frappe.utils.getdate(frappe.utils.nowdate()) %}
+<!-- Tabs navs -->
+<ul class="nav nav-tabs nav-fill mb-3" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a
+        class="nav-link active"
+        id="courses-tab"
+        data-toggle="tab"
+        data-mdb-toggle="tab"
+        href="#courses-tabs"
+        role="tab"
+        aria-controls="courses-tabs"
+        aria-selected="true"
+        >{{_('Available Courses')}}</a
+      >
+    </li>
+    <li class="nav-item" role="presentation">
+      <a
+        class="nav-link"
+        id="selected-courses-tab"
+        data-toggle="tab"
+        data-mdb-toggle="tab"
+        href="#selected-courses-tabs"
+        role="tab"
+        aria-controls="selected-courses-tabs"
+        aria-selected="false"
+        >{{_('Selected Courses')}}</a
+      >
+    </li>
+  </ul>
+  <!-- Tabs navs -->
+  
+  <!-- Tabs content -->
+<div class="tab-content">
+    <div
+      class="tab-pane fade show active"
+      id="courses-tabs"
+      role="tabpanel"
+      aria-labelledby="courses-tab"
+    >
+      
+
+    <div>
+{% for pool_name in available_courses%}
+    <div class="row">
+        <div class="col-8 h4">{{_(pool_name)}}</div>
+        <div class="col-4">{{_('Required Courses')}} : {{available_courses[pool_name][0]['required_course_count'] or _('All')}}</div>
+      </div>
+    <table class="table table-striped courses-table-{{loop.index}}">
+        <thead>
+            <tr>
+                <th scope="col">{{_('Code')}}</th>
+                <th scope="col">{{_('Name')}}</th>
+                <th scope="col">{{_('Language')}}</th>
+                <th scope="col">{{_('Hours')}}</th>
+                <th scope="col">{{_('Type')}}</th>
+                <th scope="col">{{_('Actions')}}</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for course in available_courses[pool_name] %}
+            <tr>
+                <td>
+                    {{course['course_code']}}
+                    <input class="course-id" type="hidden" value="{{course['course_id']}}" />
+                </td>
+                <td>
+                    {{_(course['course_name'])}}
+                </td>
+                <td>
+                    {{_(course['course_language'])}}
+                </td>
+                <td class="course-hours">
+                    {{course['total_course_hours']}}
+                </td>
+                <td>
+                    {% if course['compulsory'] == 1 %}
+                        {{_('Compulsory')}}
+                    {% else %}
+                        {{_('Elective')}}
+                    {% endif %}
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-primary add-course-btn" onclick="addBtnClicked(this)">{{_('Add')}}</button>
+                    <button class="btn btn-sm btn-danger d-none remove-course-btn" onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                </td>
+            </tr>
+    {% endfor %}
+</tbody>
+</table>
+
+{% endfor %}
+    </div>
+    <div class="d-flex justify-content-between">
+        <div>
+            {{_("Total Hours")}} : <span class="total-hours">0</span>
+        </div>
+        <button class="btn btn-primary next-tab-btn">{{_('Next')}}</button>
+    </div>
+</div>
+<div
+class="tab-pane fade"
+id="selected-courses-tabs"
+role="tabpanel"
+aria-labelledby="selected-courses-tab"
+>
+    <div>
+        <div class="row">
+            <div class="col-4 h4">{{_('Selected Courses')}}</div>
+            <div class="col-4">{{_('Maximum number of hours')}} : 23</div>
+            <div class="col-4">{{_('Minimum number of hours')}} : 23</div>
+          </div>
+        <table class="table table-striped selected-courses-table">
+            <thead>
+                <tr>
+                    <th scope="col">{{_('Corse Code')}}</th>
+                    <th scope="col">{{_('Course Name')}}</th>
+                    <th scope="col">{{_('Course Language')}}</th>
+                    <th scope="col">{{_('Number of Hours')}}</th>
+                    <th scope="col">{{_('Course Type')}}</th>
+                    <th scope="col">{{_('Actions')}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+                </table>
+    </div>
+    <div class="d-flex justify-content-between">
+        <div>
+            {{_("Total Hours")}} : <span class="total-hours">0</span>
+        </div>
+        <button class="btn btn-primary next-tab-btn" onclick="onCoursesSubmited(this)">{{_('Submit')}}</button>
+    </div>
+</div>
+</div>
+<script>
+    function addBtnClicked(btn){
+    // Delete the selected course from the table
+    var row = btn.parentNode.parentNode;
+    var previousTable = row.parentNode.parentNode.classList.value.replaceAll(" ", ".")
+    row.parentNode.removeChild(row);
+
+    // Add row to the selected courses table
+    row.querySelector('.remove-course-btn').classList.remove("d-none");
+    row.querySelector('.add-course-btn').classList.add("d-none");
+    row.setAttribute("previous-table", previousTable);
+    document.querySelector('.selected-courses-table tbody').appendChild(row)
+    calculateSelectedTotalHours();
+    frappe.show_alert({
+        message:'{{_("Course added successfully")}}',
+        indicator:'green'
+    }, 5);
+    
+}
+function removeBtnClicked(btn){
+    // Delete the selected course from the table
+    var row = btn.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+
+    // Add row to the previous courses table
+    row.querySelector('.add-course-btn').classList.remove("d-none");
+    row.querySelector('.remove-course-btn').classList.add("d-none");
+
+    var previousTable = row.getAttribute("previous-table")
+    document.querySelector(`${previousTable} tbody`).appendChild(row)
+    calculateSelectedTotalHours();
+    frappe.show_alert({
+        message:'{{_("Course removed successfully")}}',
+        indicator:'green'
+    }, 5);
+    
+}
+
+function calculateSelectedTotalHours(){
+    var totalHours = 0;
+    for(var courseRow of document.querySelectorAll('.selected-courses-table .course-hours'))
+    {
+        totalHours += Number(courseRow.innerText)
+    }
+    document.querySelectorAll('.total-hours').forEach(e=> e.innerText = totalHours.toString())
+}
+
+document.querySelector(".next-tab-btn")
+    .addEventListener("click", (event) => {
+        event.preventDefault()
+        document.querySelector('#selected-courses-tab').click();
+});
+
+function onCoursesSubmited(btn){
+    var d = new frappe.ui.Dialog({
+		title: '{{_("Confirmation")}}',
+		primary_action_label: '{{_("Yes")}}',
+		primary_action: () => {
+            courseSubmissionConfirmed();
+			d.hide();
+		},
+		secondary_action_label: '{{_("No")}}',
+		secondary_action: () => d.hide(),
+	});
+
+	d.$body.append(`<p class="frappe-confirm-message">{{_('Are you sure you want to submit these courses?')}}</p>`);
+	d.show();
+}
+
+function courseSubmissionConfirmed(){
+    var selectedCourses = [];
+    document.querySelectorAll('.selected-courses-table .course-id').forEach(e => selectedCourses.push(e.value))
+    
+    frappe.call({
+        "method": "education.education.doctype.academic_curriculum.academic_curriculum.register_student_courses",
+        "args": {
+            "courses": selectedCourses
+        },
+        callback: (res) => {
+            console.log(res);
+        }
+    })
+}
+</script>
+{% endblock %}

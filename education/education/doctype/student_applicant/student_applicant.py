@@ -89,6 +89,10 @@ class StudentApplicant(Document):
 		ignore_permissions=True,
 	)
 		student.user = frappe.session.user
+		educational_year = frappe.db.sql("""
+				SELECT name FROM `tabEducational Year` ORDER BY year_order LIMIT 1;
+			""",as_dict=True)
+		if educational_year: student.educational_year = educational_year[0]['name']
 		student.save(ignore_permissions=True)
 		user = frappe.get_doc("User", student.user)
 		user.append_roles(['Student'])

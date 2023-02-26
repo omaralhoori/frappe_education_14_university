@@ -15,7 +15,7 @@
  "links": [
   {
    "hidden": 0,
-   "icon_image": "/private/files/1711682.png",
+   "icon_image": "/assets/frappe/icons/icons/1.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Student and Instructor",
@@ -85,7 +85,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/7214198.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Content Masters",
    "link_count": 0,
@@ -130,7 +131,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/1584349.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Admission",
    "link_count": 0,
@@ -187,7 +189,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/1390704.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Fees",
    "link_count": 0,
@@ -268,7 +271,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/1387226.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Attendance",
    "link_count": 0,
@@ -373,7 +377,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/5596712.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Assessment",
    "link_count": 0,
@@ -430,7 +435,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/3153391.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Assessment Reports",
    "link_count": 0,
@@ -487,7 +493,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/1043726.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Tools",
    "link_count": 0,
@@ -556,7 +563,8 @@
   },
   {
    "hidden": 0,
-   "icon_type": "Icon",
+   "icon_image": "/private/files/1221369.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Other Reports",
    "link_count": 0,
@@ -577,6 +585,8 @@
   },
   {
    "hidden": 0,
+   "icon_image": "/private/files/4580188.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Settings",
    "link_count": 8,
@@ -671,6 +681,8 @@
   },
   {
    "hidden": 0,
+   "icon_image": "/private/files/8303133.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Schedule",
    "link_count": 3,
@@ -711,6 +723,8 @@
   },
   {
    "hidden": 0,
+   "icon_image": "/private/files/3829937.png",
+   "icon_type": "Image",
    "is_query_report": 0,
    "label": "Masters",
    "link_count": 5,
@@ -772,7 +786,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-02-16 17:26:32.015185",
+ "modified": "2023-02-25 06:34:36.744733",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education",

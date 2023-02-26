@@ -14,6 +14,7 @@
   "first_name",
   "middle_name",
   "last_name",
+  "educational_year",
   "column_break_4",
   "naming_series",
   "joining_date",
@@ -278,11 +279,18 @@
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+  },
+  {
+   "fieldname": "educational_year",
+   "fieldtype": "Link",
+   "label": "Educational Year",
+   "options": "Educational Year",
+   "read_only": 1
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-02-06 12:25:25.197460",
+ "modified": "2023-02-25 16:04:20.099607",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

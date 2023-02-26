@@ -104,12 +104,12 @@ class Student(Document):
 				)
 			)
 
-	# def update_applicant_status(self):
-	# 	"""Updates Student Applicant status to Admitted"""
-	# 	if self.student_applicant:
-	# 		frappe.db.set_value(
-	# 			"Student Applicant", self.student_applicant, "application_status", "Admitted"
-	# 		)
+	def update_applicant_status(self):
+		"""Updates Student Applicant status to Admitted"""
+		if self.student_applicant:
+			frappe.db.set_value(
+				"Student Applicant", self.student_applicant, "application_status", "Admitted"
+			)
 
 	def get_all_course_enrollments(self):
 		"""Returns a list of course enrollments linked with the current student"""

@@ -2,11 +2,13 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:course_name",
+ "autoname": "field:course_code",
  "creation": "2015-09-07 12:39:55.181893",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "course_code",
+  "section_break_2uzs",
   "course_name",
   "department",
   "course_language",
@@ -116,11 +118,22 @@
    "fieldtype": "Table",
    "label": "Prerequisite Courses",
    "options": "Academic Course Prerequisite"
+  },
+  {
+   "fieldname": "course_code",
+   "fieldtype": "Data",
+   "label": "Course Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "section_break_2uzs",
+   "fieldtype": "Section Break"
   }
  ],
  "image_field": "hero_image",
  "links": [],
- "modified": "2023-02-16 13:01:47.585788",
+ "modified": "2023-02-25 16:35:55.942979",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course",
