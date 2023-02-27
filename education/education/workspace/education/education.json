@@ -7,7 +7,7 @@
  "for_user": "",
  "hide_custom": 0,
  "icon": "education",
- "icon_image": "/private/files/3778120.png",
+ "icon_image": "/assets/frappe/icons/icons/169.png",
  "icon_type": "Image",
  "idx": 0,
  "is_hidden": 0,
@@ -15,7 +15,7 @@
  "links": [
   {
    "hidden": 0,
-   "icon_image": "/assets/frappe/icons/icons/1.png",
+   "icon_image": "/assets/frappe/icons/icons/129.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Student and Instructor",
@@ -85,7 +85,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/7214198.png",
+   "icon_image": "/assets/frappe/icons/icons/104.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Content Masters",
@@ -131,7 +131,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/1584349.png",
+   "icon_image": "/assets/frappe/icons/icons/80.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Admission",
@@ -189,7 +189,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/1390704.png",
+   "icon_image": "/assets/frappe/icons/icons/26.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Fees",
@@ -271,7 +271,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/1387226.png",
+   "icon_image": "/assets/frappe/icons/icons/25.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Attendance",
@@ -377,7 +377,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/5596712.png",
+   "icon_image": "/assets/frappe/icons/icons/93.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Assessment",
@@ -435,7 +435,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/3153391.png",
+   "icon_image": "/assets/frappe/icons/icons/56.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Assessment Reports",
@@ -493,7 +493,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/1043726.png",
+   "icon_image": "/assets/frappe/icons/icons/13.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Tools",
@@ -563,7 +563,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/1221369.png",
+   "icon_image": "/assets/frappe/icons/icons/22.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Other Reports",
@@ -585,7 +585,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/4580188.png",
+   "icon_image": "/assets/frappe/icons/icons/17.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Settings",
@@ -681,7 +681,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/8303133.png",
+   "icon_image": "/assets/frappe/icons/icons/141.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Schedule",
@@ -723,7 +723,7 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/private/files/3829937.png",
+   "icon_image": "/assets/frappe/icons/icons/71.png",
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Masters",
@@ -786,7 +786,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-02-25 06:34:36.744733",
+ "modified": "2023-02-26 20:44:23.808928",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education",
