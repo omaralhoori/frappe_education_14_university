@@ -37,6 +37,13 @@ def create_fee_category():
 				"category_name": "Application Fee",
 			}
 		).insert()
+	if not frappe.db.exists("Fee Category", "Hour Rate"):
+		frappe.get_doc(
+			{
+				"doctype": "Fee Category",
+				"category_name": "Hour Rate",
+			}
+		).insert()
 
 
 def create_student_role():

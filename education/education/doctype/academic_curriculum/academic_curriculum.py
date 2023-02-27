@@ -43,6 +43,10 @@ def get_academic_curriculum_for_student(student):
 			LEFT JOIN `tabPool of Elective Courses` tpoec ON tpoec.name=tacc.pool_of_elective_courses
 			INNER JOIN `tabEducational Year` tey ON tac.educational_year=tey.name
 			WHERE tac.program=%(program)s AND tac.educational_semester=%(semester)s AND tey.year_order <= {year_order} AND tcrs.name NOT IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s )
+			AND tcrs.name NOT IN (
+				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
+				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s
+				  )
 	""".format(year_order=educational_year_order), {
 		"program": enrolled_program,
 		"semester": semester,
@@ -57,17 +61,17 @@ def register_student_courses(courses):
 	if not enrolled_program: frappe.throw(_('You are not registered in any program'), frappe.DoesNotExistError)
 	#print(enrolled_program, courses, student)
 	courses = json.loads(courses)
-	for course in courses:
-		filters = {
+	filters = {
+			"doctype": "Course Enrollment Applicant",
+			"application_date": frappe.utils.nowdate(),
 			"student": student,
-			"course": course,
-			"program_enrollment": enrolled_program
+			"program": enrolled_program
 		}
-		print(filters)
-		if not frappe.db.exists("Course Enrollment", filters):
-			filters.update({
-				"doctype": "Course Enrollment",
-				"enrollment_date": frappe.utils.nowdate()
-			})
-			frappe.get_doc(filters).save(ignore_permissions=True)
+	enrollment= frappe.get_doc(filters)
+	
+	for course in courses:
+		course_row = enrollment.append("courses")
+		course_row.course = course
+	enrollment.save(ignore_permissions=True)
 	return {"msg": _("Courses registered successfully")}
+
