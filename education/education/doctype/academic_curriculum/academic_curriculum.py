@@ -27,6 +27,35 @@ class AcademicCurriculum(Document):
 def get_academic_curriculum_for_student(student):
 	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"], cache=True)
 	if not enrolled_program: frappe.throw(_('You are not registered in any program'), frappe.DoesNotExistError)
+	if frappe.db.get_single_value("Education Settings", "fetch_courses_from_program", cache=True):
+		return fetech_program_based_courses(student, enrolled_program)
+	else:
+		return fetech_academic_curriculum_based_courses(student, enrolled_program)
+
+def fetech_program_based_courses(student, enrolled_program):
+	return frappe.db.sql("""
+			SELECT 	tcrs.name as course_id,tcrs.course_code, tcrs.course_name, tcrs.course_language, tcrs.total_course_hours,
+		tpoec.pool_name, tpoec.required_course_count, tacc.required as compulsory 
+			FROM `tabProgram` as tac
+			INNER JOIN `tabProgram Course` as tacc ON tac.name=tacc.parent
+			INNER JOIN `tabCourse` as tcrs ON tcrs.name=tacc.course
+			LEFT JOIN `tabPool of Elective Courses` tpoec ON tpoec.name=tacc.pool_of_elective_courses
+			WHERE tac.name=%(program)s AND tcrs.name NOT IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s )
+			AND tcrs.name NOT IN (
+				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
+				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s
+				  )
+			AND (0 not in (
+			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
+			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s
+			WHERE tacp.parent=tcrs.name
+			))
+	""", {
+		"program": enrolled_program,
+		"student": student
+	}, as_dict=True)
+
+def fetech_academic_curriculum_based_courses(student, enrolled_program):
 	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term", cache=True)
 	if not current_academic_term: return []
 	semester = frappe.db.get_value("Academic Term", current_academic_term, "semester", cache=True)
@@ -47,6 +76,11 @@ def get_academic_curriculum_for_student(student):
 				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
 				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s
 				  )
+			AND (0 not in (
+			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
+			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s
+			WHERE tacp.parent=tcrs.name
+			))
 	""".format(year_order=educational_year_order), {
 		"program": enrolled_program,
 		"semester": semester,
