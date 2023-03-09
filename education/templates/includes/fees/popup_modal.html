@@ -1,0 +1,59 @@
+<!-- Pay Form Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-body m-2">
+                <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <a
+                        class="nav-link active"
+                        id="card-tab"
+                        data-toggle="tab"
+                        data-mdb-toggle="tab"
+                        href="#card-tabs"
+                        role="tab"
+                        aria-controls="card-tabs"
+                        aria-selected="true"
+                        >{{_('Credit Card')}}</a
+                      >
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <a
+                        class="nav-link"
+                        id="receipt-tab"
+                        data-toggle="tab"
+                        data-mdb-toggle="tab"
+                        href="#receipt-tabs"
+                        role="tab"
+                        aria-controls="receipt-tabs"
+                        aria-selected="false"
+                        >{{_('Upload Receipt')}}</a
+                      >
+                    </li>
+                  </ul>
+
+                    <!-- Tabs content -->
+                <div class="tab-content">
+                    <div
+                    class="tab-pane fade show active"
+                    id="card-tabs"
+                    role="tabpanel"
+                    aria-labelledby="card-tab"
+                    >
+                        {% include "templates/includes/fees/pay_form.html" %}
+                    </div>
+                    <div
+                    class="tab-pane fade"
+                    id="receipt-tabs"
+                    role="tabpanel"
+                    aria-labelledby="receipt-tab"
+                    >
+                    {% include "templates/includes/fees/upload_form.html" %}
+                    </div>
+                </div>
+				
+			</div>
+		</div>
+	</div>
+</div>

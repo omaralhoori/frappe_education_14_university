@@ -63,6 +63,14 @@ frappe.ui.form.on("Fees", {
 			frm.set_df_property('posting_time', 'read_only', 1);
 		}
 		if(frm.doc.docstatus > 0) {
+			if(frm.doc.receipt_uploaded===1 && frm.doc.outstanding_amount>0) {
+				frm.add_custom_button(__("Approve"), function() {
+					frm.events.approve_receipt(frm);
+				}, __('Receipt'));
+				frm.add_custom_button(__("Reject"), function() {
+					frm.events.reject_receipt(frm);
+				}, __('Receipt'));
+			}
 			frm.add_custom_button(__('Accounting Ledger'), function() {
 				frappe.route_options = {
 					voucher_no: frm.doc.name,
@@ -148,6 +156,25 @@ frappe.ui.form.on("Fees", {
 				frappe.set_route("Form", doc[0].doctype, doc[0].name);
 			}
 		});
+	},
+
+	approve_receipt: function(frm) {
+		frm.call({
+			"method": "pay_fee",
+			doc:frm.doc,
+			callback: (message) => {
+				frm.reload_doc();
+			}
+		})
+	},
+	reject_receipt: function(frm) {
+		frm.call({
+			"method": "reject_receipt",
+			doc:frm.doc,
+			callback: (message) => {
+				frm.reload_doc();
+			}
+		})
 	},
 
 	set_posting_time: function(frm) {

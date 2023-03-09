@@ -33,11 +33,13 @@
 			<td>
 				{% if doc.outstanding_amount == 0 %}
 				<strong>{{_('Paid')}}</strong>
-				{% elif doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) < today %} <strong>
-					{{_('Overdue')}}</strong>
-					{% else %}
-					<storng>{{_('Unpaid')}}</storng>
-					{% endif %}
+				{% elif doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) < today %} 
+				<strong> {{_('Overdue')}}</strong>
+				{% elif doc.receipt_uploaded == 1 %}
+					<strong> {{_('Pending')}}</strong>	
+				{% else %}
+					<strong>{{_('Unpaid')}}</strong>
+				{% endif %}
 			</td>
 			<td>{{ frappe.utils.fmt_money(doc.grand_total, currency=doc.currency) }}</td>
 			<td>{{ frappe.utils.fmt_money(doc.paid_amount, currency=doc.currency) }}</td>
@@ -46,7 +48,7 @@
 			</td>
 			<td>
 				<a href="/fees/{{doc.name}}/" class="btn btn-info btn-sm"> {{ _('Details')}}</a>
-				{% if doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) >= today %}
+				{% if doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) >= today and doc.receipt_uploaded==0 %}
 				<button class="btn btn-success btn-sm pay-btn" onclick="payBtnOnClick(this)" doc-name="{{doc.name}}"
 					doc-price="{{frappe.utils.fmt_money(doc.outstanding_amount, currency=doc.currency)}}"
 					data-toggle="modal" data-target="#exampleModal"> {{
@@ -59,15 +61,6 @@
 	</tbody>
 </table>
 
-<!-- Pay Form Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-body m-2">
-				{% include "templates/includes/fees/pay_form.html" %}
-			</div>
-		</div>
-	</div>
-</div>
+{% include "templates/includes/fees/popup_modal.html" %}
+
 {% endblock %}

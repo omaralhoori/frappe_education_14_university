@@ -1,0 +1,47 @@
+<form action="" id="upload_form" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="formFile" class="form-label">{{_('Receipt')}}</label>
+        <input class="form-control" name="receipt-file" type="file" id="formFile">
+    </div>
+     <input type="hidden" value="" class="upload-doc-name" name="doc-name" />
+    <div class="row form-group">
+        <input type="submit" onclick="uploadOnSubmit(this)" class="btn btn-primary ml-auto" value="{{_('Submit')}}">
+    </div>
+</form>
+
+<script>
+
+     var myform = document.getElementById('upload_form');
+
+    myform.onsubmit = function(e){
+    e.preventDefault();   
+    var formData = new FormData(this);
+    console.log(formData)
+    $.ajax({
+        url: "{{upload_form_url}}",  
+        method: "POST",
+        data: formData,
+        success: function(data) {
+            if (data.message.error){
+                frappe.msgprint({
+                    indicator: 'red', 
+                    message: data.message.error})
+            }else if (data.message.msg){
+                frappe.msgprint({
+                    indicator: 'green', 
+                    message: data.message.msg})
+                 location.reload()
+            }
+        },
+        cache: false,
+        contentType: false,
+        processData: false
+    });
+
+    //return false; // prevent from submit
+};
+
+    function uploadOnSubmit(e) {
+        document.querySelector('.upload-doc-name').value = document.querySelector('.doc-name-input').value
+    }
+</script>

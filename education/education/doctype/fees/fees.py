@@ -9,11 +9,13 @@ from erpnext.accounts.doctype.payment_request.payment_request import \
 from erpnext.accounts.general_ledger import make_reverse_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 from frappe import _
+from frappe.model.document_attach import DocumentAttach
 from frappe.utils import money_in_words
 from frappe.utils.csvutils import getlink
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
-class Fees(AccountsController):
+
+class Fees(AccountsController ,DocumentAttach):
 	def set_indicator(self):
 		"""Set indicator for portal"""
 		if self.outstanding_amount > 0:
@@ -65,7 +67,10 @@ class Fees(AccountsController):
 			return ", ".join(list(set(student_emails)))
 		else:
 			return None
-
+	def upload_receipt(self, file_content, filename):
+		self.attach(file_content, filename)
+		self.db_set("receipt_uploaded", 1)
+		
 	def calculate_total(self):
 		"""Calculates total amount."""
 		self.grand_total = 0
@@ -91,7 +96,7 @@ class Fees(AccountsController):
 			frappe.msgprint(
 				_("Payment request {0} created").format(getlink("Payment Request", pr.name))
 			)
-
+	@frappe.whitelist()
 	def pay_fee(self):
 		payment_entry = get_payment_entry("Fees", self.name, party_amount=self.outstanding_amount, party_type='Student', payment_type='Receive', ignore_account_permission=True)
 		payment_entry.save(ignore_permissions=True)
@@ -102,6 +107,10 @@ class Fees(AccountsController):
 			except:
 				pass
 		return True
+	@frappe.whitelist()
+	def reject_receipt(self):
+		self.db_set("receipt_uploaded", 0)
+		
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry")
 		make_reverse_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
@@ -159,7 +168,7 @@ def get_fee_list(
 		return frappe.db.sql(
 			"""
 			select name, program, due_date, grand_total - outstanding_amount as paid_amount,
-			outstanding_amount, grand_total, currency
+			outstanding_amount, grand_total, currency, receipt_uploaded
 			from `tabFees`
 			where student= %s and docstatus=1
 			order by due_date asc {0}""".format(
@@ -191,3 +200,25 @@ def pay_fee():
 			"error": _('You are not allowed to pay this fee')
 		}
 	return {"msg": _("The fee is paid successfully")}
+
+
+@frappe.whitelist()
+def upload_receipt():
+	fee_name = frappe.local.form_dict.get('doc-name')
+	file = frappe.request.files['receipt-file']
+	if not file or not fee_name: 
+		return {
+			"error": _("you didn't upload file")
+		}
+	file_content = frappe.request.files['receipt-file'].read()
+	try:
+		fee_doc = frappe.get_doc("Fees", fee_name)
+		fee_doc.upload_receipt(file_content, file.filename)
+	except:
+		return {
+			"error": _('You are not allowed to pay this fee')
+		}
+	return {
+		"msg": _("File uploaded successfully")
+	}
+	

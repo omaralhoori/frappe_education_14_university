@@ -52,7 +52,8 @@
   "income_account",
   "accounting_dimensions_section",
   "cost_center",
-  "dimension_col_break"
+  "dimension_col_break",
+  "receipt_uploaded"
  ],
  "fields": [
   {
@@ -362,11 +363,18 @@
    "fieldtype": "Dynamic Link",
    "label": "Against Doctype Name",
    "options": "against_doctype"
+  },
+  {
+   "default": "0",
+   "fieldname": "receipt_uploaded",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Receipt Uploaded"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-24 20:09:50.941158",
+ "modified": "2023-03-09 13:48:00.176957",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fees",
