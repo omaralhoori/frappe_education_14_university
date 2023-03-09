@@ -9,6 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "pool_name",
+  "requirement_base",
   "required_course_count"
  ],
  "fields": [
@@ -26,12 +27,18 @@
    "default": "1",
    "fieldname": "required_course_count",
    "fieldtype": "Int",
-   "label": "Required Course Count"
+   "label": "Minimum Required"
+  },
+  {
+   "fieldname": "requirement_base",
+   "fieldtype": "Select",
+   "label": "Requirement Base",
+   "options": "Hour\nCourse"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-16 13:28:15.629079",
+ "modified": "2023-03-06 03:44:02.574824",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Pool of Elective Courses",
