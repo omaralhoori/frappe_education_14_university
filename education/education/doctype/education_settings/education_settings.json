@@ -8,6 +8,8 @@
   "current_academic_year",
   "current_academic_term",
   "attendance_freeze_date",
+  "maximum_number_of_hours",
+  "minimum_number_of_hours",
   "column_break_4",
   "validate_batch",
   "validate_course",
@@ -84,11 +86,23 @@
    "fieldname": "fetch_courses_from_program",
    "fieldtype": "Check",
    "label": "Fetch Courses From Program"
+  },
+  {
+   "description": "The maximum number of hours that a student can select when applying for courses. If 0 is specified, there is no limit.",
+   "fieldname": "maximum_number_of_hours",
+   "fieldtype": "Int",
+   "label": "Maximum number of hours"
+  },
+  {
+   "description": "The minimum number of hours that a student can select when applying for courses. If 0 is specified, there is no limit.",
+   "fieldname": "minimum_number_of_hours",
+   "fieldtype": "Int",
+   "label": "Minimum number of hours"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-03-04 14:54:05.001106",
+ "modified": "2023-03-06 09:44:49.476562",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

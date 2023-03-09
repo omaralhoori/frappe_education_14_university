@@ -11,6 +11,7 @@ class AcademicCurriculum(Document):
 		self.validate_compulsory_courses()
 	
 	def validate_compulsory_courses(self):
+		return
 		required_course = {}
 		for course in self.courses:
 			if course.pool_of_elective_courses:
@@ -35,21 +36,22 @@ def get_academic_curriculum_for_student(student):
 def fetech_program_based_courses(student, enrolled_program):
 	return frappe.db.sql("""
 			SELECT 	tcrs.name as course_id,tcrs.course_code, tcrs.course_name, tcrs.course_language, tcrs.total_course_hours,
-		tpoec.pool_name, tpoec.required_course_count, tacc.required as compulsory 
+		tpoec.pool_name, tpoec.required_course_count,tpoec.requirement_base, tacc.required as compulsory,
+		IF (tcrs.name IN (
+				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
+				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s AND cea.program=%(program)s
+				  ), 1, 0) as applicant_status,
+		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s ), 1, 0) as enrollment_status,
+		IF ((0 not in (
+			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
+			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s and tce.graduation_date is not null
+			WHERE tacp.parent=tcrs.name
+			)), 1, 0) as enrollable
 			FROM `tabProgram` as tac
 			INNER JOIN `tabProgram Course` as tacc ON tac.name=tacc.parent
 			INNER JOIN `tabCourse` as tcrs ON tcrs.name=tacc.course
 			LEFT JOIN `tabPool of Elective Courses` tpoec ON tpoec.name=tacc.pool_of_elective_courses
-			WHERE tac.name=%(program)s AND tcrs.name NOT IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s )
-			AND tcrs.name NOT IN (
-				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
-				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s
-				  )
-			AND (0 not in (
-			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
-			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s
-			WHERE tacp.parent=tcrs.name
-			))
+			WHERE tac.name=%(program)s
 	""", {
 		"program": enrolled_program,
 		"student": student
@@ -65,22 +67,23 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 	if not educational_year or not semester: return []
 	return frappe.db.sql("""
 			SELECT 	tcrs.name as course_id,tcrs.course_code, tcrs.course_name, tcrs.course_language, tcrs.total_course_hours,
-		tpoec.pool_name, tpoec.required_course_count, tey.year_name, tacc.compulsory 
+		tpoec.pool_name, tpoec.required_course_count, tey.year_name, tacc.compulsory ,
+		IF (tcrs.name IN (
+				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
+				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s AND cea.program=%(program)s
+				  ), 1, 0) as applicant_status,
+		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s ), 1, 0) as enrollment_status,
+		IF ((0 not in (
+			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
+			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s and tce.graduation_date is not null
+			WHERE tacp.parent=tcrs.name
+			)), 1, 0) as enrollable
 			FROM `tabAcademic Curriculum` as tac
 			INNER JOIN `tabAcademic Curriculum Course` as tacc ON tac.name=tacc.parent
 			INNER JOIN `tabCourse` as tcrs ON tcrs.name=tacc.course
 			LEFT JOIN `tabPool of Elective Courses` tpoec ON tpoec.name=tacc.pool_of_elective_courses
 			INNER JOIN `tabEducational Year` tey ON tac.educational_year=tey.name
-			WHERE tac.program=%(program)s AND tac.educational_semester=%(semester)s AND tey.year_order <= {year_order} AND tcrs.name NOT IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s )
-			AND tcrs.name NOT IN (
-				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
-				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s
-				  )
-			AND (0 not in (
-			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
-			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s
-			WHERE tacp.parent=tcrs.name
-			))
+			WHERE tac.program=%(program)s AND tac.educational_semester=%(semester)s AND tey.year_order <= {year_order}
 	""".format(year_order=educational_year_order), {
 		"program": enrolled_program,
 		"semester": semester,

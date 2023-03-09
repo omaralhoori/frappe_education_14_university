@@ -57,9 +57,9 @@
 {% for pool_name in available_courses%}
     <div class="row">
         <div class="col-8 h4">{{_(pool_name)}}</div>
-        <div class="col-4">{{_('Required Courses')}} : {{available_courses[pool_name][0]['required_course_count'] or _('All')}}</div>
+        <div class="col-4"> {% if available_courses[pool_name][0]['requirement_type'] == 'Hour' %}{{_('Required Hours')}}{% else %}{{_('Required Courses')}} {%endif%} : {{available_courses[pool_name][0]['required_course_count'] or _('All')}}</div>
       </div>
-    <table class="table table-striped courses-table-{{loop.index}}">
+    <table class="table table-striped available_courses_table courses-table-{{loop.index}}">
         <thead>
             <tr>
                 <th scope="col">{{_('Code')}}</th>
@@ -72,6 +72,7 @@
         </thead>
         <tbody>
     {% for course in available_courses[pool_name] %}
+        {% if course['applicant_status'] == 0 or course['enrollment_status'] == 1 %}
             <tr>
                 <td>
                     {{course['course_code']}}
@@ -94,10 +95,17 @@
                     {% endif %}
                 </td>
                 <td>
+                    {% if course['enrollment_status'] == 1 %}
+                    <span class="badge badge-success">{{_('Enrolled')}}</span>
+                    {% elif course['enrollable'] == 0 %}
+                    <span class="badge badge-warning">{{_('Prerequisites Not Met')}}</span>
+                    {% else %}
                     <button class="btn btn-sm btn-primary add-course-btn" onclick="addBtnClicked(this)">{{_('Add')}}</button>
                     <button class="btn btn-sm btn-danger d-none remove-course-btn" onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                    {% endif %}
                 </td>
             </tr>
+            {% endif %}
     {% endfor %}
 </tbody>
 </table>
@@ -120,8 +128,12 @@ aria-labelledby="selected-courses-tab"
     <div>
         <div class="row">
             <div class="col-4 h4">{{_('Selected Courses')}}</div>
-            <div class="col-4">{{_('Maximum number of hours')}} : 23</div>
-            <div class="col-4">{{_('Minimum number of hours')}} : 23</div>
+            {% if maximum_hours > 0 %}
+            <div class="col-4">{{_('Maximum number of hours')}} : {{maximum_hours}}</div>
+            {% endif %}
+            {% if minimum_hours > 0 %}
+            <div class="col-4">{{_('Minimum number of hours')}} : {{minimum_hours}}</div>
+            {% endif %}
           </div>
         <table class="table table-striped selected-courses-table">
             <thead>
@@ -135,6 +147,37 @@ aria-labelledby="selected-courses-tab"
                 </tr>
             </thead>
             <tbody>
+            {% for pool_name in available_courses %}
+            {% for course in available_courses[pool_name] %}
+        {% if course['applicant_status'] == 1 and course['enrollment_status'] == 0 %}
+            <tr>
+                <td>
+                    {{course['course_code']}}
+                    <input class="course-id" type="hidden" value="{{course['course_id']}}" />
+                </td>
+                <td>
+                    {{_(course['course_name'])}}
+                </td>
+                <td>
+                    {{_(course['course_language'])}}
+                </td>
+                <td class="course-hours">
+                    {{course['total_course_hours']}}
+                </td>
+                <td>
+                    {% if course['compulsory'] == 1 %}
+                        {{_('Compulsory')}}
+                    {% else %}
+                        {{_('Elective')}}
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="badge badge-info">{{_('Applied')}}</span>
+                </td>
+            </tr>
+            {% endif %}
+    {% endfor %}
+    {% endfor %}
                 </tbody>
                 </table>
     </div>
@@ -147,7 +190,14 @@ aria-labelledby="selected-courses-tab"
 </div>
 </div>
 <script>
-    function addBtnClicked(btn){
+
+document.querySelector(".next-tab-btn")
+    .addEventListener("click", (event) => {
+        event.preventDefault()
+        document.querySelector('#selected-courses-tab').click();
+});
+
+function addBtnClicked(btn){
     // Delete the selected course from the table
     var row = btn.parentNode.parentNode;
     var previousTable = row.parentNode.parentNode.classList.value.replaceAll(" ", ".")
@@ -158,12 +208,11 @@ aria-labelledby="selected-courses-tab"
     row.querySelector('.add-course-btn').classList.add("d-none");
     row.setAttribute("previous-table", previousTable);
     document.querySelector('.selected-courses-table tbody').appendChild(row)
-    calculateSelectedTotalHours();
+    setTotalHours();
     frappe.show_alert({
         message:'{{_("Course added successfully")}}',
         indicator:'green'
     }, 5);
-    
 }
 function removeBtnClicked(btn){
     // Delete the selected course from the table
@@ -176,7 +225,7 @@ function removeBtnClicked(btn){
 
     var previousTable = row.getAttribute("previous-table")
     document.querySelector(`${previousTable} tbody`).appendChild(row)
-    calculateSelectedTotalHours();
+    setTotalHours();
     frappe.show_alert({
         message:'{{_("Course removed successfully")}}',
         indicator:'green'
@@ -190,16 +239,20 @@ function calculateSelectedTotalHours(){
     {
         totalHours += Number(courseRow.innerText)
     }
+    return totalHours;
+}
+
+function setTotalHours(){
+    var totalHours = calculateSelectedTotalHours()
     document.querySelectorAll('.total-hours').forEach(e=> e.innerText = totalHours.toString())
 }
 
-document.querySelector(".next-tab-btn")
-    .addEventListener("click", (event) => {
-        event.preventDefault()
-        document.querySelector('#selected-courses-tab').click();
-});
+
 
 function onCoursesSubmited(btn){
+    if (!checkSelectedHoursLimits()){
+        return;
+    }
     var d = new frappe.ui.Dialog({
 		title: '{{_("Confirmation")}}',
 		primary_action_label: '{{_("Yes")}}',
@@ -229,5 +282,38 @@ function courseSubmissionConfirmed(){
         }
     })
 }
+
+function calculateCurrentCoursesTotalHours(){
+    var totalHours = calculateSelectedTotalHours();
+    for(var courseRow of document.querySelectorAll('.available_courses_table .course-hours'))
+    {
+        totalHours += Number(courseRow.innerText)
+    }
+    return totalHours;
+}
+
+function checkSelectedHoursLimits(){
+    var totalHours = calculateSelectedTotalHours();
+    var maximumHours=Number('{{maximum_hours}}');
+    var minimumHours=Number('{{minimum_hours}}');
+    var currentCoursesTotalHours = calculateCurrentCoursesTotalHours();
+    console.log(currentCoursesTotalHours);
+    if (maximumHours > 0 && maximumHours < totalHours){
+        frappe.msgprint(`{{_('You have exceeded the maximum number of hours')}}`,  `{{_("Submission Failed")}}`);
+        return false;
+    }
+    if (minimumHours > 0 && minimumHours < currentCoursesTotalHours  && minimumHours > totalHours){
+        frappe.msgprint(
+            `{{_("You haven't selected enough hours")}}`,
+            `{{_("Submission Failed")}}`
+            );
+        return false;
+    }
+
+    return true;
+}
+document.addEventListener("DOMContentLoaded", () => {
+    setTotalHours();
+});
 </script>
 {% endblock %}

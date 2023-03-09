@@ -8,6 +8,8 @@ def get_context(context):
         frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
     context.show_sidebar = True
     context.title = _("Course Enrollment")
+    context.maximum_hours= frappe.db.get_single_value("Education Settings" ,"maximum_number_of_hours")
+    context.minimum_hours= frappe.db.get_single_value("Education Settings" ,"minimum_number_of_hours")
 
     student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
     courses = get_academic_curriculum_for_student(student)
