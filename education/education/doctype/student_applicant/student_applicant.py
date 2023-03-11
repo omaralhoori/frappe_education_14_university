@@ -31,14 +31,22 @@ class StudentApplicant(Document):
 		set_name_by_naming_series(self)
 
 	def validate(self):
+		self.validate_duplication()
 		self.validate_dates()
 		self.validate_term()
 		self.title = " ".join(
-			filter(None, [self.first_name, self.middle_name, self.last_name])
+			filter(None, [self.first_name, self.middle_name , self.last_name])
 		)
 
 		if self.student_admission and self.program and self.date_of_birth:
 			self.validation_from_student_admission()
+
+	def validate_duplication(self):
+		registered = frappe.db.sql("""
+			select name from `tabStudent Applicant`
+			WHERE program=%(program)s AND student_email_id=%(student)s
+		""", {"program": self.program, "student": self.student_email_id})
+		if registered: frappe.throw("You are not allowed to apply for this program again")
 	def after_insert(self):
 		student = self.create_student()
 		self.create_application_fees(student.name)

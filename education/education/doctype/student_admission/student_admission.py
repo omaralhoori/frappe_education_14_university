@@ -21,6 +21,13 @@ class StudentAdmission(WebsiteGenerator):
 		if self.enable_admission_application and not self.program_details:
 			frappe.throw(_("Please add programs to enable admission application."))
 
+	def is_program_registered(self, program):
+		registered = frappe.db.sql("""
+			select name from `tabStudent Applicant`
+			WHERE program=%(program)s AND student_email_id=%(student)s
+		""", {"program": program, "student": frappe.session.user})
+		return True if registered else False
+
 	def get_context(self, context):
 		context.no_cache = 1
 		context.show_sidebar = True

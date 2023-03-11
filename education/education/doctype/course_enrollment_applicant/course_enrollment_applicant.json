@@ -16,7 +16,8 @@
   "application_status",
   "paid",
   "applied_courses_section",
-  "courses"
+  "courses",
+  "amended_from"
  ],
  "fields": [
   {
@@ -84,11 +85,20 @@
    "options": "Program",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Course Enrollment Applicant",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-02-27 06:11:58.301786",
+ "modified": "2023-03-11 12:06:34.263223",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",
