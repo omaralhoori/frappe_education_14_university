@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "naming_series",
+  "mode_of_payment",
   "student",
   "student_name",
   "fee_schedule",
@@ -370,11 +371,18 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Receipt Uploaded"
+  },
+  {
+   "default": "Bank Draft",
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode of Payment",
+   "options": "Mode of Payment"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-09 13:48:00.176957",
+ "modified": "2023-03-11 13:37:40.208389",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fees",
