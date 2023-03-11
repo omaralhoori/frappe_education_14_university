@@ -222,3 +222,13 @@ def upload_receipt():
 		"msg": _("File uploaded successfully")
 	}
 	
+
+
+@frappe.whitelist()
+def get_fees_details(doc):
+	details =  frappe.db.sql("""
+		SELECT fees_category, description, amount FROM `tabFee Component`
+		WHERE parent=%(doc)s
+	""", {"doc": doc}, as_dict=True)
+	for detail in details: detail['fees_category'] = _(detail['fees_category'])
+	return details

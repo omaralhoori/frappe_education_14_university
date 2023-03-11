@@ -23,3 +23,9 @@ Are you sure you want to submit these courses?,هل أنت متأكد أنك ت�
 "The maximum number of hours that a student can select when applying for courses. If 0 is specified, there is no limit.","الحد الأقصى لعدد الساعات التي يمكن للطالب تحديدها عند اختيار المقرارات. إذا تم تحديد 0 ، فلا يوجد حد."
 "The minimum number of hours that a student can select when applying for courses. If 0 is specified, there is no limit.","الحد الأدنى لعدد الساعات التي يمكن للطالب تحديدها عند اختيار المقرارات. إذا تم تحديد 0 ، فلا يوجد حد."
 "Enabling this option will let the student select from the courses defined in program otherwise courses will be fetched from academic curriculum","سيؤدي تمكين هذا الخيار إلى السماح للطالب بالاختيار من المقرارات المحددة في البرنامج وإلا سيتم جلب المقرارات من المنهاج الأكاديمي"
+amount,القيمة
+Amount,القيمة
+Card Number,رقم البطاقة
+Upload Receipt,رفع إيصال
+Security Code,رمز الحماية
+Due Date,تاريخ الاستحقاق

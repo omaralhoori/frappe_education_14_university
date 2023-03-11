@@ -1,0 +1,56 @@
+<!-- Pay Form Modal -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-body m-2">
+            
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+  function detailsBtnOnClick(e){
+    var docName = e.getAttribute('doc-name');
+    document.querySelector("#detailModal .modal-body").innerHTML = `<div>{{_("Loading..")}}</div>`
+
+    frappe.call({
+      method: "education.education.doctype.fees.fees.get_fees_details",
+      args: {
+        doc: docName
+      }, 
+      callback: (res) => {
+        if(res.message.length > 0){
+            document.querySelector("#detailModal .modal-body").innerHTML = `<div>${formatFeeDetails(res.message)}</div>`
+        }else{
+          document.querySelector("#detailModal .modal-body").innerHTML = `<div>{{_("No details found for this fee.")}}</div>`
+        }
+      }
+    })
+  }
+
+  function formatFeeDetails(details){
+    var html = ""
+    
+    for (var detail of details){
+      html += `
+        <tr>
+          <td>${detail['fees_category']}</td>
+          <td>${detail['description'] || ''}</td>
+          <td>${detail['amount']}</td>
+        </tr>
+      `
+    }
+    html = `<table class="table table-striped">
+      <tr> 
+        <th>{{_("Fees Category")}}</th>
+        <th>{{_("Description")}}</th>
+        <th>{{_("Amount")}}</th>
+      </tr>
+      ${html}
+    </table>`
+    return html;
+  }
+
+</script>
