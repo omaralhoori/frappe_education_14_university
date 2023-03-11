@@ -42,6 +42,7 @@ class StudentApplicant(Document):
 			self.validation_from_student_admission()
 
 	def validate_duplication(self):
+		return
 		registered = frappe.db.sql("""
 			select name from `tabStudent Applicant`
 			WHERE program=%(program)s AND student_email_id=%(student)s
