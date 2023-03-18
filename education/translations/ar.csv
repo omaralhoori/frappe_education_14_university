@@ -29,3 +29,6 @@ Card Number,رقم البطاقة
 Upload Receipt,رفع إيصال
 Security Code,رمز الحماية
 Due Date,تاريخ الاستحقاق
+"The total number of registered hours: {0}, hour rate: {1}","إجمالي عدد الساعات المسجلة: {0} ، معدل الساعة: {1}"
+You have already registered the courses for this semester,لقد قمت بتسجيل المقررات لهذا الفصل من قبل
+You are not registered in any program,أنت غير مسجل في أي برنامج

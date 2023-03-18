@@ -13,6 +13,8 @@
   "program",
   "column_break_asrs",
   "application_date",
+  "academic_year",
+  "academic_term",
   "application_status",
   "paid",
   "applied_courses_section",
@@ -94,11 +96,25 @@
    "options": "Course Enrollment Applicant",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "academic_year",
+   "fieldtype": "Link",
+   "label": "Academic Year",
+   "options": "Academic Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "label": "Academic Term",
+   "options": "Academic Term",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-11 12:06:34.263223",
+ "modified": "2023-03-18 17:12:47.571756",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",

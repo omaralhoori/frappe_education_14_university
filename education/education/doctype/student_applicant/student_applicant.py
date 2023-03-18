@@ -50,7 +50,8 @@ class StudentApplicant(Document):
 		if registered: frappe.throw("You are not allowed to apply for this program again")
 	def after_insert(self):
 		student = self.create_student()
-		self.create_application_fees(student.name)
+		self.enroll_student(student)
+		# self.create_application_fees(student.name)
 
 	def validate_dates(self):
 		if self.date_of_birth and getdate(self.date_of_birth) >= getdate():
@@ -86,6 +87,10 @@ class StudentApplicant(Document):
 			)
 
 	def create_student(self):
+		if frappe.db.exists("Student", {"student_email_id": self.student_email_id}):
+			return  frappe.get_doc("Student", {"student_email_id": self.student_email_id})
+		if frappe.db.exists("Student", {"student_mobile_number": self.student_mobile_number}):
+			return frappe.get_doc("Student", {"student_mobile_number":self.student_mobile_number })
 		student = get_mapped_doc(
 		"Student Applicant",
 		self.name,
@@ -126,7 +131,22 @@ class StudentApplicant(Document):
 		component.amount = student_admission.application_fee
 		fees_doc.save(ignore_permissions=True)
 		fees_doc.submit()
-	
+
+	def enroll_student(self, student):
+		if frappe.db.exists("Program Enrollment", {"program": self.program, "student": student.name}): return
+		years = frappe.db.get_all("Educational Year", fields = ["name"], order_by="year_order asc", page_length=1)
+		if not years: return
+		program_enrollment = frappe.new_doc("Program Enrollment")
+		program_enrollment.student = student.name
+		program_enrollment.student_category = self.student_category
+		program_enrollment.student_name = student.student_name
+		program_enrollment.program = self.program
+		program_enrollment.academic_year = self.academic_year
+		program_enrollment.academic_term = self.academic_term
+		program_enrollment.educational_year= years[0]['name']
+		program_enrollment.save(ignore_permissions=True)
+		program_enrollment.submit()
+
 	def validation_from_student_admission(self):
 
 		student_admission = get_student_admission_data(self.student_admission, self.program)

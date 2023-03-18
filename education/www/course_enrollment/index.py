@@ -1,3 +1,4 @@
+from education.education.doctype.course_enrollment_applicant.course_enrollment_applicant import has_student_registred_courses
 from education.education.doctype.academic_curriculum.academic_curriculum import get_academic_curriculum_for_student
 import frappe
 from frappe import _
@@ -14,6 +15,7 @@ def get_context(context):
 
     student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
     courses = get_academic_curriculum_for_student(student)
+    context.courses_registered= has_student_registred_courses(student)
     available_courses = {}
     for course in courses:
         if not course.get('pool_name') and course.get('compulsory'):

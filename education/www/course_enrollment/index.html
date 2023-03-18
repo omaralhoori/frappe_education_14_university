@@ -100,8 +100,10 @@
                     {% elif course['enrollable'] == 0 %}
                     <span class="badge badge-warning">{{_('Prerequisites Not Met')}}</span>
                     {% else %}
+                     {% if not courses_registered %}
                     <button class="btn btn-sm btn-primary add-course-btn" onclick="addBtnClicked(this)">{{_('Add')}}</button>
                     <button class="btn btn-sm btn-danger d-none remove-course-btn" onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                    {% endif %}
                     {% endif %}
                 </td>
             </tr>
@@ -184,7 +186,9 @@ aria-labelledby="selected-courses-tab"
         <div>
             {{_("Total Hours")}} : <span class="total-hours">0</span>
         </div>
-        <button class="btn btn-primary next-tab-btn" onclick="onCoursesSubmited(this)">{{_('Submit')}}</button>
+        {% if not courses_registered %}
+         <button class="btn btn-primary next-tab-btn" onclick="onCoursesSubmited(this)">{{_('Submit')}}</button>
+        {% endif %}
     </div>
 </div>
 </div>
@@ -277,7 +281,13 @@ function courseSubmissionConfirmed(){
             "courses": selectedCourses
         },
         callback: (res) => {
-            location.reload()
+            if (res.message.msg){
+                frappe.msgprint(res.message.msg)
+                location.reload()
+            }else if (res.message.error){
+                frappe.msgprint(res.message.error)
+            }
+            
         }
     })
 }

@@ -16,6 +16,7 @@
   "academic_term_reqd",
   "user_creation_skip",
   "fetch_courses_from_program",
+  "graduation_for_prerequisites",
   "section_break_7",
   "instructor_created_by"
  ],
@@ -98,11 +99,18 @@
    "fieldname": "minimum_number_of_hours",
    "fieldtype": "Int",
    "label": "Minimum number of hours"
+  },
+  {
+   "default": "0",
+   "description": "Finishing a course is required for opening the next course.",
+   "fieldname": "graduation_for_prerequisites",
+   "fieldtype": "Check",
+   "label": "Prerequisites Are Based On Graduation"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-03-06 09:44:49.476562",
+ "modified": "2023-03-18 17:57:14.603097",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

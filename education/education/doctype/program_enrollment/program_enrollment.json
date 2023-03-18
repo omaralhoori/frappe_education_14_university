@@ -12,6 +12,7 @@
   "enrollment_date",
   "column_break_4",
   "program",
+  "educational_year",
   "academic_year",
   "academic_term",
   "image",
@@ -156,12 +157,20 @@
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "educational_year",
+   "fieldtype": "Link",
+   "label": "Educational Year",
+   "options": "Educational Year",
+   "reqd": 1
   }
  ],
  "image_field": "image",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-02-06 12:14:58.433251",
+ "modified": "2023-03-18 20:13:02.051255",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program Enrollment",
