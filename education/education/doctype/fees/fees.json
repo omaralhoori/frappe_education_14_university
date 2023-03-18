@@ -373,6 +373,7 @@
    "label": "Receipt Uploaded"
   },
   {
+   "allow_on_submit": 1,
    "default": "Bank Draft",
    "fieldname": "mode_of_payment",
    "fieldtype": "Link",
@@ -382,7 +383,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-11 13:37:40.208389",
+ "modified": "2023-03-11 21:41:27.507723",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fees",
