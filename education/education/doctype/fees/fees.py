@@ -159,7 +159,7 @@ def get_fee_list(
 ):
 	user = frappe.session.user
 	student = frappe.db.sql(
-		"select name from `tabStudent` where student_email_id= %s", user
+		"select name from `tabStudent` where (student_email_id= %(user)s or student_mobile_number=%(user)s)", {"user":user}
 	)
 	limit_stmt = ""
 	if student:

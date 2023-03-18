@@ -24,7 +24,7 @@ class StudentAdmission(WebsiteGenerator):
 	def is_program_registered(self, program):
 		registered = frappe.db.sql("""
 			select name from `tabStudent Applicant`
-			WHERE program=%(program)s AND student_email_id=%(student)s
+			WHERE program=%(program)s AND (student_email_id=%(student)s OR student_mobile_number=%(student)s)
 		""", {"program": program, "student": frappe.session.user})
 		return True if registered else False
 

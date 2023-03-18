@@ -50,7 +50,8 @@ class Student(Document):
 		"""Create a website user for student creation if not already exists"""
 		if not frappe.get_single("Education Settings").get(
 			"user_creation_skip"
-		) and not frappe.db.exists("User", self.student_email_id):
+		) and not frappe.db.exists("User", self.student_email_id
+			     ) and not frappe.db.exists("User", self.student_mobile_number) and  self.student_email_id:
 			student_user = frappe.get_doc(
 				{
 					"doctype": "User",
