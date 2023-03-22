@@ -232,3 +232,29 @@ def get_fees_details(doc):
 	""", {"doc": doc}, as_dict=True)
 	for detail in details: detail['fees_category'] = _(detail['fees_category'])
 	return details
+
+
+def get_fees_due_date():
+	fees_due_date_from = frappe.db.get_single_value("Education Settings","fees_due_date_from")
+	if fees_due_date_from == "After Specific Days":
+		after_days = frappe.db.get_single_value("Education Settings","fees_due_after_days") or 0
+		if after_days < 0: after_days = 0
+		return frappe.utils.add_days(frappe.utils.nowdate(), after_days)
+	elif fees_due_date_from == "Specific Date":
+		return frappe.db.get_single_value("Education Settings","fees_due_date") or frappe.utils.nowdate()
+	elif fees_due_date_from == "Enrollment End Date":
+		academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		if academic_term:
+			enrollment_end_date = frappe.db.get_value("Academic Term", academic_term, "enrollment_end_date", cache=True)
+			if enrollment_end_date: return enrollment_end_date
+	elif fees_due_date_from == "Academic Term End Date":
+		academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		if academic_term:
+			term_end_date = frappe.db.get_value("Academic Term", academic_term, "term_end_date", cache=True)
+			if term_end_date: return term_end_date
+	elif fees_due_date_from == "Academic Term Fees Due Date":
+		academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		if academic_term:
+			fees_due_date = frappe.db.get_value("Academic Term", academic_term, "fees_due_date", cache=True)
+			if fees_due_date: return fees_due_date
+	return frappe.utils.nowdate()

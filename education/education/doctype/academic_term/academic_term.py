@@ -72,3 +72,14 @@ def validate_duplication(self):
 				"An academic term with this 'Academic Year' {0} and 'Term Name' {1} already exists. Please modify these entries and try again."
 			).format(self.academic_year, self.term_name)
 		)
+
+
+def is_course_enrollment_avilable():
+	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+	if not current_academic_term: return False
+	enrollment_start_date = frappe.db.get_value("Academic Term", current_academic_term, "enrollment_start_date", cache=True)
+	enrollment_end_date = frappe.db.get_value("Academic Term", current_academic_term, "enrollment_end_date", cache=True)
+	if not enrollment_start_date or not enrollment_end_date: return False
+	if enrollment_end_date >= getdate() >= enrollment_start_date:
+		return True
+	return False

@@ -12,6 +12,9 @@
   "term_name",
   "term_start_date",
   "term_end_date",
+  "enrollment_start_date",
+  "enrollment_end_date",
+  "fees_due_date",
   "title",
   "semester"
  ],
@@ -59,10 +62,25 @@
    "label": "Semester",
    "options": "Educational Semester",
    "reqd": 1
+  },
+  {
+   "fieldname": "enrollment_start_date",
+   "fieldtype": "Date",
+   "label": "Course Enrollment Start Date"
+  },
+  {
+   "fieldname": "enrollment_end_date",
+   "fieldtype": "Date",
+   "label": "Course Enrollment End Date"
+  },
+  {
+   "fieldname": "fees_due_date",
+   "fieldtype": "Date",
+   "label": "Fees Due Date"
   }
  ],
  "links": [],
- "modified": "2023-02-16 10:48:07.111935",
+ "modified": "2023-03-22 14:06:37.692524",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Academic Term",

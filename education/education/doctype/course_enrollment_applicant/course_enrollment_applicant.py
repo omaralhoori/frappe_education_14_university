@@ -1,6 +1,7 @@
 # Copyright (c) 2023, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from education.education.doctype.fees.fees import get_fees_due_date
 import frappe
 from frappe.model.document import Document
 from frappe import _
@@ -38,7 +39,7 @@ class CourseEnrollmentApplicant(Document):
 				"against_doctype": "Course Enrollment Applicant",
 				"against_doctype_name": self.name,
 				"program": self.program,
-				"due_date": frappe.utils.add_days(frappe.utils.nowdate(), 7)
+				"due_date": get_fees_due_date()
 			})
 			if total_fees > 0:
 				component = fees_doc.append("components")

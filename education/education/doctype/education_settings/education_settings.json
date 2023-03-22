@@ -8,17 +8,22 @@
   "current_academic_year",
   "current_academic_term",
   "attendance_freeze_date",
-  "maximum_number_of_hours",
-  "minimum_number_of_hours",
   "column_break_4",
   "validate_batch",
   "validate_course",
   "academic_term_reqd",
   "user_creation_skip",
-  "fetch_courses_from_program",
-  "graduation_for_prerequisites",
   "section_break_7",
-  "instructor_created_by"
+  "instructor_created_by",
+  "course_enrollment_tab",
+  "maximum_number_of_hours",
+  "minimum_number_of_hours",
+  "fees_due_date_from",
+  "fees_due_after_days",
+  "fees_due_date",
+  "column_break_i9kl",
+  "graduation_for_prerequisites",
+  "fetch_courses_from_program"
  ],
  "fields": [
   {
@@ -106,11 +111,39 @@
    "fieldname": "graduation_for_prerequisites",
    "fieldtype": "Check",
    "label": "Prerequisites Are Based On Graduation"
+  },
+  {
+   "fieldname": "course_enrollment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Course Enrollment"
+  },
+  {
+   "fieldname": "column_break_i9kl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.fees_due_date_from==\"After Specific Days\"",
+   "fieldname": "fees_due_after_days",
+   "fieldtype": "Int",
+   "label": "Fees Due After Days"
+  },
+  {
+   "depends_on": "eval:doc.fees_due_date_from==\"Specific Date\"",
+   "fieldname": "fees_due_date",
+   "fieldtype": "Date",
+   "label": "Fees Due Date",
+   "mandatory_depends_on": "eval:doc.fees_due_date_from==\"Specific Date\""
+  },
+  {
+   "fieldname": "fees_due_date_from",
+   "fieldtype": "Select",
+   "label": "Fees Due Date From",
+   "options": "After Specific Days\nSpecific Date\nEnrollment End Date\nAcademic Term End Date\nAcademic Term Fees Due Date"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-03-18 17:57:14.603097",
+ "modified": "2023-03-22 14:06:55.747859",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

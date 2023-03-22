@@ -1,3 +1,4 @@
+from education.education.doctype.academic_term.academic_term import is_course_enrollment_avilable
 from education.education.doctype.course_enrollment_applicant.course_enrollment_applicant import has_student_registred_courses
 from education.education.doctype.academic_curriculum.academic_curriculum import get_academic_curriculum_for_student
 import frappe
@@ -12,7 +13,8 @@ def get_context(context):
     context.title = _("Course Enrollment")
     context.maximum_hours= frappe.db.get_single_value("Education Settings" ,"maximum_number_of_hours")
     context.minimum_hours= frappe.db.get_single_value("Education Settings" ,"minimum_number_of_hours")
-
+    context.is_course_enrollment_avilable = is_course_enrollment_avilable()
+    if not context.is_course_enrollment_avilable: return context
     student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
     courses = get_academic_curriculum_for_student(student)
     context.courses_registered= has_student_registred_courses(student)
