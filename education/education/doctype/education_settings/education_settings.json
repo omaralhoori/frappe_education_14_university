@@ -23,7 +23,8 @@
   "fees_due_date",
   "column_break_i9kl",
   "graduation_for_prerequisites",
-  "fetch_courses_from_program"
+  "fetch_courses_from_program",
+  "allow_adding_and_removing"
  ],
  "fields": [
   {
@@ -139,11 +140,18 @@
    "fieldtype": "Select",
    "label": "Fees Due Date From",
    "options": "After Specific Days\nSpecific Date\nEnrollment End Date\nAcademic Term End Date\nAcademic Term Fees Due Date"
+  },
+  {
+   "default": "0",
+   "description": "Student can add and remove courses after submission during enrollment dates.",
+   "fieldname": "allow_adding_and_removing",
+   "fieldtype": "Check",
+   "label": "Allow Adding And Removing"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-03-22 14:06:55.747859",
+ "modified": "2023-03-22 15:18:07.399182",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

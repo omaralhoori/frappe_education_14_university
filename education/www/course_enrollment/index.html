@@ -59,7 +59,7 @@
         <div class="col-8 h4">{{_(pool_name)}}</div>
         <div class="col-4"> {% if available_courses[pool_name][0]['requirement_type'] == 'Hour' %}{{_('Required Hours')}}{% else %}{{_('Required Courses')}} {%endif%} : {{available_courses[pool_name][0]['required_course_count'] or _('All')}}</div>
       </div>
-    <table class="table table-striped available_courses_table courses-table-{{loop.index}}">
+    <table class="table table-striped available_courses_table courses-table-{{loop.index}}" table-code="{{pool_name}}">
         <thead>
             <tr>
                 <th scope="col">{{_('Code')}}</th>
@@ -73,7 +73,7 @@
         <tbody>
     {% for course in available_courses[pool_name] %}
         {% if course['applicant_status'] == 0 or course['enrollment_status'] == 1 %}
-            <tr>
+            <tr table-code="{{pool_name}}">
                 <td>
                     {{course['course_code']}}
                     <input class="course-id" type="hidden" value="{{course['course_id']}}" />
@@ -152,9 +152,10 @@ aria-labelledby="selected-courses-tab"
             {% for pool_name in available_courses %}
             {% for course in available_courses[pool_name] %}
         {% if course['applicant_status'] == 1 and course['enrollment_status'] == 0 %}
-            <tr>
+            <tr table-code="{{pool_name}}">
                 <td>
                     {{course['course_code']}}
+                    <input class="course-id" type="hidden" value="{{course['course_id']}}" />
                 </td>
                 <td>
                     {{_(course['course_name'])}}
@@ -173,7 +174,12 @@ aria-labelledby="selected-courses-tab"
                     {% endif %}
                 </td>
                 <td>
+                    {% if enable_add_remove %}
+                     <button class="btn btn-sm btn-primary d-none add-course-btn" onclick="addBtnClicked(this)">{{_('Add')}}</button>
+                    <button class="btn btn-sm btn-danger remove-course-btn" onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                    {% else %}
                     <span class="badge badge-info">{{_('Applied')}}</span>
+                    {%endif%}
                 </td>
             </tr>
             {% endif %}
@@ -203,13 +209,13 @@ document.querySelector(".next-tab-btn")
 function addBtnClicked(btn){
     // Delete the selected course from the table
     var row = btn.parentNode.parentNode;
-    var previousTable = row.parentNode.parentNode.classList.value.replaceAll(" ", ".")
+    //var previousTable = row.parentNode.parentNode.classList.value.replaceAll(" ", ".")
     row.parentNode.removeChild(row);
 
     // Add row to the selected courses table
     row.querySelector('.remove-course-btn').classList.remove("d-none");
     row.querySelector('.add-course-btn').classList.add("d-none");
-    row.setAttribute("previous-table", previousTable);
+    //row.setAttribute("previous-table", previousTable);
     document.querySelector('.selected-courses-table tbody').appendChild(row)
     setTotalHours();
     frappe.show_alert({
@@ -226,8 +232,8 @@ function removeBtnClicked(btn){
     row.querySelector('.add-course-btn').classList.remove("d-none");
     row.querySelector('.remove-course-btn').classList.add("d-none");
 
-    var previousTable = row.getAttribute("previous-table")
-    document.querySelector(`${previousTable} tbody`).appendChild(row)
+    var previousTable = row.getAttribute("table-code")
+    document.querySelector(`table[table-code="${previousTable}"] tbody`).appendChild(row)
     setTotalHours();
     frappe.show_alert({
         message:'{{_("Course removed successfully")}}',

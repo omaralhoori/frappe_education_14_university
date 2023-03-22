@@ -102,6 +102,7 @@
    "fieldtype": "Link",
    "label": "Academic Year",
    "options": "Academic Year",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -109,12 +110,13 @@
    "fieldtype": "Link",
    "label": "Academic Term",
    "options": "Academic Term",
+   "read_only": 1,
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-18 17:12:47.571756",
+ "modified": "2023-03-22 19:04:24.764858",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",
