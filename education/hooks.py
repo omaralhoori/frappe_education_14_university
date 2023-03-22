@@ -51,7 +51,21 @@ standard_portal_menu_items = [
 		"title": _("Admission"),
 		"route": "/admissions",
 		"reference_doctype": "Student Admission",
+	},
+	{
+		"title": _("Course Enrollment"),
+		"route": "/course-enrollment",
+		"reference_doctype": "Course Enrollment",
 		"role": "Student",
+	},
+	{
+		"title": _("Academic Calendar"),
+		"route": "/academic_calendar",
+		"reference_doctype": "Academic Calendar",
+	},
+	{
+		"title": _("Personal Information"),
+		"route": "/personal_information",
 	},
 ]
 
