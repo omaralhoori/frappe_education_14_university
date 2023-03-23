@@ -101,7 +101,17 @@ class CourseEnrollment(Document):
 
 			activity.insert(ignore_permissions=True)
 			return activity.name
-
+	
+	@frappe.whitelist()
+	def pull_enrollment(self):
+		allowed_weeks = frappe.db.get_single_value("Education Settings", "pulling_allowed_weeks")
+		academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		start_date = frappe.db.get_value("Academic Term", academic_term, "term_start_date")
+		allowed_date = frappe.utils.add_to_date(start_date, weeks=allowed_weeks)
+		if frappe.utils.getdate() <= frappe.utils.getdate(allowed_date):
+			self.db_set("enrollment_status", "Pulled")
+		else:
+			self.db_set("enrollment_status", "Partially Pulled")
 
 def check_activity_exists(enrollment, content_type, content):
 	activity = frappe.get_all(

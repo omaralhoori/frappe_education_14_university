@@ -1,7 +1,8 @@
 {
+ "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:topic_name",
+ "autoname": "TPC-.YY.-.MM.-.#####",
  "creation": "2018-12-12 11:37:39.917760",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -18,8 +19,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Name",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "fieldname": "topic_content",
@@ -40,10 +40,12 @@
   }
  ],
  "image_field": "hero_image",
- "modified": "2019-06-12 12:34:49.911300",
+ "links": [],
+ "modified": "2023-03-23 13:56:18.081066",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Topic",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -84,7 +86,11 @@
   }
  ],
  "quick_entry": 1,
+ "search_fields": "topic_name",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
+ "title_field": "topic_name",
  "track_changes": 1
 }

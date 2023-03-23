@@ -2,7 +2,7 @@
  "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:title",
+ "autoname": "ART-.YY.-.MM.-.#####",
  "creation": "2018-10-17 05:45:38.471670",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -17,8 +17,7 @@
   {
    "fieldname": "title",
    "fieldtype": "Data",
-   "label": "Title",
-   "unique": 1
+   "label": "Title"
   },
   {
    "fieldname": "author",
@@ -37,11 +36,11 @@
   }
  ],
  "links": [],
- "modified": "2023-02-06 12:23:28.330556",
+ "modified": "2023-03-23 13:55:44.877919",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Article",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -69,8 +68,11 @@
    "write": 1
   }
  ],
+ "search_fields": "title",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "title",
  "track_changes": 1
 }

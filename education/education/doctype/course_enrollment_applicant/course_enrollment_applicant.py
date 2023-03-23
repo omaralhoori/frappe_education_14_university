@@ -17,7 +17,8 @@ class CourseEnrollmentApplicant(Document):
 			filters = {
 				"student": self.student,
 				"course": course.course,
-				"program_enrollment": enrolled_program
+				"program_enrollment": enrolled_program,
+				"enrollment_status": "Enrolled"
 			}
 			if not frappe.db.exists("Course Enrollment", filters):
 				filters.update({

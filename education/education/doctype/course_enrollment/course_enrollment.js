@@ -2,6 +2,13 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Course Enrollment', {
+	refresh: function(frm){
+		if (frm.doc.enrollment_status == "Enrolled"){
+			frm.add_custom_button(__("Pull Enrollment"), function() {
+				frm.events.pull_enrollment(frm);
+			});
+		}
+	},
 	onload: function(frm) {
 		frm.set_query('course', function() {
 			return {
@@ -11,5 +18,19 @@ frappe.ui.form.on('Course Enrollment', {
 				}
 			};
 		});
+	},
+	pull_enrollment: function(frm){
+		frappe.confirm(__('Are you sure you want to proceed?'),
+    () => {
+        frappe.call({
+			method: "pull_enrollment",
+			doc: frm.doc,
+			callback: (res)=>{
+				frm.reload_doc()
+			}
+		})
+    }, () => {
+    })
+		
 	}
 });

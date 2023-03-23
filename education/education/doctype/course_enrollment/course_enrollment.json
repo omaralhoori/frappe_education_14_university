@@ -10,11 +10,12 @@
   "program_enrollment",
   "program",
   "enrollment_date",
-  "graduation_date",
+  "enrollment_status",
   "column_break_uisg",
   "course",
   "student",
   "student_name",
+  "graduation_date",
   "graduation_grade"
  ],
  "fields": [
@@ -29,6 +30,7 @@
   {
    "fieldname": "student",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Student",
    "options": "Student",
@@ -39,6 +41,7 @@
    "fieldname": "course",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Course",
    "options": "Course",
    "reqd": 1,
@@ -81,10 +84,17 @@
    "fieldtype": "Data",
    "label": "Graduation Grade",
    "read_only": 1
+  },
+  {
+   "fieldname": "enrollment_status",
+   "fieldtype": "Select",
+   "label": "Enrollment Status",
+   "options": "\nEnrolled\nPartially Pulled\nPulled\nGraduated",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2023-03-07 08:50:28.592767",
+ "modified": "2023-03-22 23:23:32.592860",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment",
