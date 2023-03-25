@@ -75,6 +75,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 	if graduation_for_prerequisites:
 		graduation_stmt = "and tce.graduation_date is not null"
 	if not educational_year or not semester: return []
+	print(enrolled_program, student)
 	return frappe.db.sql("""
 			SELECT 	tcrs.name as course_id,tcrs.course_code, tcrs.course_name, tcrs.course_language, tcrs.total_course_hours,
 		tpoec.pool_name, tpoec.required_course_count, tey.year_name, tacc.compulsory ,
@@ -104,7 +105,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 @frappe.whitelist()
 def register_student_courses(courses):
 	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
-	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"], cache=True)
+	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"])
 	if not enrolled_program: 
 		return {"error": _('You are not registered in any program')}
 
@@ -116,10 +117,10 @@ def register_student_courses(courses):
 	if  frappe.utils.getdate()  > enrollment_end_date or frappe.utils.getdate() < enrollment_start_date:
 		return {"error": _("Enrollment is not allowed in this date.")}
 	if not frappe.db.get_single_value("Education Settings","allow_adding_and_removing"):
-		if frappe.db.exists("Course Enrollment Applicant", {"program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
+		if frappe.db.exists("Course Enrollment Applicant", {"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
 			return {"error": _('You have already registered the courses for this semester')}
 	else:
-		enrollment = frappe.db.exists("Course Enrollment Applicant", {"program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
+		enrollment = frappe.db.exists("Course Enrollment Applicant", {"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
 		if enrollment:
 			enrollment_applicant = frappe.get_doc("Course Enrollment Applicant", enrollment)
 	#print(enrolled_program, courses, student)
