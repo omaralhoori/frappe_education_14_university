@@ -58,13 +58,13 @@
         method: "POST",
         data: vals,
         success: function(data) {
-            console.log(data);
             var awaitTime = 5;
             if (data.message.msg){
                 frappe.show_alert({
                 message: data.message.msg,
                 indicator:'green'
             }, awaitTime);
+            location.reload();
             }else if(data.message.error){
                 frappe.show_alert({
                 message: data.message.error,
@@ -77,9 +77,6 @@
             }, awaitTime);
 
             }
-            setTimeout(()=> {
-                location.reload()
-            }, awaitTime * 1000)
         }
     });
 

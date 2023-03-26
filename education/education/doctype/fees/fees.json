@@ -251,6 +251,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "grand_total",
    "fieldtype": "Currency",
@@ -383,7 +384,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-11 21:41:27.507723",
+ "modified": "2023-03-26 13:39:36.709937",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fees",

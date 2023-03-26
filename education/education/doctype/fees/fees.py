@@ -153,6 +153,79 @@ class Fees(AccountsController ,DocumentAttach):
 			merge_entries=False,
 		)
 
+	def make_extra_amount_gl_entries(self, amount):
+		if amount < 0:
+			return self.make_extra_amount_reverse_gl_entries(abs(amount))
+		student_gl_entries = self.get_gl_dict(
+			{
+				"account": self.receivable_account,
+				"party_type": "Student",
+				"party": self.student,
+				"against": self.income_account,
+				"debit": amount,
+				"debit_in_account_currency": amount,
+				"against_voucher": self.name,
+				"against_voucher_type": self.doctype,
+			},
+			item=self,
+		)
+
+		fee_gl_entry = self.get_gl_dict(
+			{
+				"account": self.income_account,
+				"against": self.student,
+				"credit": amount,
+				"credit_in_account_currency": amount,
+				"cost_center": self.cost_center,
+			},
+			item=self,
+		)
+
+		from erpnext.accounts.general_ledger import make_gl_entries
+
+		make_gl_entries(
+			[student_gl_entries, fee_gl_entry],
+			cancel=(self.docstatus == 2),
+			update_outstanding="Yes",
+			merge_entries=False,
+		)
+
+	def make_extra_amount_reverse_gl_entries(self, amount):
+		if amount < 0:
+			return
+		student_gl_entries = self.get_gl_dict(
+			{
+				"account": self.receivable_account,
+				"party_type": "Student",
+				"party": self.student,
+				"against": self.income_account,
+				"credit": amount,
+				"credit_in_account_currency": amount,
+				"against_voucher": self.name,
+				"against_voucher_type": self.doctype,
+			},
+			item=self,
+		)
+
+		fee_gl_entry = self.get_gl_dict(
+			{
+				"account": self.income_account,
+				"against": self.student,
+				"debit": amount,
+				"debit_in_account_currency": amount,
+				"cost_center": self.cost_center,
+			},
+			item=self,
+		)
+
+		from erpnext.accounts.general_ledger import make_gl_entries
+
+		make_gl_entries(
+			[student_gl_entries, fee_gl_entry],
+			cancel=(self.docstatus == 2),
+			update_outstanding="Yes",
+			merge_entries=False,
+		)
 
 def get_fee_list(
 	doctype, txt, filters, limit_start, limit_page_length=20, order_by="modified"

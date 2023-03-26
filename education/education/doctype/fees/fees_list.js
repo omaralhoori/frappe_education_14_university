@@ -1,7 +1,7 @@
 frappe.listview_settings['Fees'] = {
 	add_fields: ["grand_total", "outstanding_amount", "due_date", "receipt_uploaded"],
 	get_indicator: function(doc) {
-		if(flt(doc.outstanding_amount)==0) {
+		if(flt(doc.outstanding_amount)<=0) {
 			return [__("Paid"), "green", "outstanding_amount,=,0"];
 		} 
 		else if (doc.receipt_uploaded == 1 && flt(doc.outstanding_amount) > 0 && doc.due_date >= frappe.datetime.get_today()) {

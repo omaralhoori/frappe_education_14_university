@@ -45,16 +45,21 @@ class CourseEnrollmentApplicant(Document):
 		removed_total_fees, removed_hour_rate, removed_total_hours = self.calculate_courses_fees(removed_courses)
 		fees_name = frappe.db.exists("Fees", {"student": self.student, "against_doctype": "Course Enrollment Applicant",
 					"against_doctype_name": self.name,"program": self.program})
+		new_amount = added_total_fees - removed_total_fees
 		if fees_name:
 			fees_doc = frappe.get_doc("Fees", fees_name)
-			if fees_doc.outstanding_amount > 0 and (fees_doc.outstanding_amount + added_total_fees - removed_total_fees) >= 0:
+			# Unpaid Fees and new added-removed courses are greater than zero or less than zero
+			if fees_doc.outstanding_amount > 0:
 				for cmpnt in fees_doc.components:
 					if cmpnt.fees_category == "Hour Rate":
-						cmpnt.amount += added_total_fees - removed_total_fees
+						cmpnt.amount += new_amount
 						cmpnt.description = ""
+						fees_doc.grand_total += new_amount
 						fees_doc.save(ignore_permissions=True)
+						fees_doc.make_extra_amount_gl_entries(new_amount)
 						return
-			elif (added_total_fees - removed_total_fees) > 0:
+			# Paid Fees and added-removed courses are greater than zero	
+			elif new_amount > 0:
 				fees_doc = frappe.get_doc({
 				"doctype": "Fees",
 				"student": self.student,
@@ -66,16 +71,15 @@ class CourseEnrollmentApplicant(Document):
 				component = fees_doc.append("components")
 				component.fees_category = 'Hour Rate'
 				component.description = _("The total number of registered hours: {0}, hour rate: {1}").format(added_total_hours - removed_total_hours, added_hour_rate)
-				component.amount = added_total_fees - removed_total_fees
+				component.amount = new_amount
 
 				fees_doc.save(ignore_permissions=True)
 				fees_doc.submit()
 				self.paid= 0
+			# Paid Fees and added-removed courses are lower than zero
 			else:
-				self.save_student_amount(removed_total_fees - added_total_fees)
+				fees_doc.make_extra_amount_reverse_gl_entries(removed_total_fees - added_total_fees)
 				
-	def save_student_amount(self, amount):
-		if amount <= 0: return
 		
 	def after_insert(self):
 		self.create_fees_record()

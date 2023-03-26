@@ -31,7 +31,7 @@
 			<th scope="row">{{loop.index}}</th>
 			<td>{{ doc.name }}</td>
 			<td>
-				{% if doc.outstanding_amount == 0 %}
+				{% if doc.outstanding_amount <= 0 %}
 				<strong>{{_('Paid')}}</strong>
 				{% elif doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) < today %} 
 				<strong> {{_('Overdue')}}</strong>
