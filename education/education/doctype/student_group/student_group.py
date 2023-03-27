@@ -107,6 +107,7 @@ def get_students(
 	enrolled_students = get_program_enrollment(
 		academic_year, academic_term, program, batch, student_category, course
 	)
+	print(enrolled_students)
 
 	if enrolled_students:
 		student_list = []
@@ -142,8 +143,8 @@ def get_program_enrollment(
 	if student_category:
 		condition1 += " and pe.student_category = %(student_category)s"
 	if course:
-		condition1 += " and pe.name = pec.parent and pec.course = %(course)s"
-		condition2 = ", `tabProgram Enrollment Course` pec"
+		condition1 += " and pe.program = pec.program and pec.course = %(course)s"
+		condition2 = ", `tabCourse Enrollment` pec"
 
 	return frappe.db.sql(
 		"""
