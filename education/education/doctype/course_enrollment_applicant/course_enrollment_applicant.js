@@ -6,10 +6,10 @@ frappe.ui.form.on("Course Enrollment Applicant", {
         if (!frm.is_new() && frm.doc.application_status==="Applied") {
 			if(frm.doc.paid){
                 frm.add_custom_button(__("Approve"), function() {
-                    frm.set_value("application_status", "Approved");
+                    //frm.set_value("application_status", "Approved");
                     frm.events.enroll(frm)
-                    frm.save_or_update();
-    
+                    //frm.save_or_update();
+                    frm.reload_doc();
                 }, 'Actions');
             }
 

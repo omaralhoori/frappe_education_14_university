@@ -143,9 +143,8 @@ def get_program_enrollment(
 	if student_category:
 		condition1 += " and pe.student_category = %(student_category)s"
 	if course:
-		condition1 += " and pe.program = pec.program and pec.course = %(course)s"
+		condition1 += " and pe.name = pec.program_enrollment and pec.course = %(course)s"
 		condition2 = ", `tabCourse Enrollment` pec"
-
 	return frappe.db.sql(
 		"""
 		select

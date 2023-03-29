@@ -10,7 +10,7 @@ from frappe import _
 class CourseEnrollmentApplicant(Document):
 	@frappe.whitelist()
 	def enroll_student_in_courses(self):
-		enrolled_program = frappe.db.get_value("Program Enrollment", {"student": self.student}, ["name"], cache=True)
+		enrolled_program = frappe.db.get_value("Program Enrollment", {"student": self.student}, ["name"])
 		if not enrolled_program: frappe.throw(_('Student is not registered in any program'), frappe.DoesNotExistError)
 		#print(enrolled_program, courses, student)
 		for course in self.courses:
@@ -26,6 +26,7 @@ class CourseEnrollmentApplicant(Document):
 					"enrollment_date": frappe.utils.nowdate()
 				})
 				frappe.get_doc(filters).save(ignore_permissions=True)
+		self.db_set("application_status", "Approved")
 		frappe.msgprint(_("Student enrolled successfully"))
 
 	def register_courses(self, courses):
