@@ -19,7 +19,10 @@
   "paid",
   "applied_courses_section",
   "courses",
-  "amended_from"
+  "amended_from",
+  "section_break_dasn",
+  "student_comment",
+  "comment_seen"
  ],
  "fields": [
   {
@@ -114,11 +117,27 @@
    "options": "Academic Term",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_dasn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "student_comment",
+   "fieldtype": "Small Text",
+   "label": "Comment"
+  },
+  {
+   "default": "0",
+   "fieldname": "comment_seen",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Comment Seen"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-26 13:17:02.494252",
+ "modified": "2023-04-02 17:45:55.205317",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",

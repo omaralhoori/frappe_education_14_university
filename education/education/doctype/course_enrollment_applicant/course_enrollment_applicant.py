@@ -9,6 +9,11 @@ from frappe import _
 
 
 class CourseEnrollmentApplicant(Document):
+	def on_update(self):
+		old_doc = self.get_doc_before_save()
+		if old_doc and old_doc.student_comment != self.student_comment:
+			self.db_set("comment_seen", 0)
+	
 	@frappe.whitelist()
 	def enroll_student_in_courses(self):
 		enrolled_program = frappe.db.get_value("Program Enrollment", {"student": self.student}, ["name"])
@@ -192,7 +197,21 @@ def has_student_registred_courses(student):
 	return True if frappe.db.exists("Course Enrollment Applicant", {"program": enrolled_program, "academic_year":current_academic_year, "academic_term": current_academic_term}) else False
 	
 
+@frappe.whitelist()
+def get_student_comments():
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
+	return frappe.db.sql("""
+		SELECT student_comment, name FROM `tabCourse Enrollment Applicant`
+		WHERE student=%(student)s AND student_comment IS NOT NULL AND comment_seen=0 
+	""",{"student": student}, as_dict=True)
 
+@frappe.whitelist()
+def dismiss_comment(application_id):
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
+	frappe.db.sql("""
+		UPDATE `tabCourse Enrollment Applicant` SET comment_seen=1
+		WHERE name=%(application_id)s AND student=%(student)s
+	""",{"student": student, "application_id": application_id}, as_dict=True)
 @frappe.whitelist()
 def register_student_courses(courses):
 	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
@@ -208,10 +227,10 @@ def register_student_courses(courses):
 	if  frappe.utils.getdate()  > enrollment_end_date or frappe.utils.getdate() < enrollment_start_date:
 		return {"error": _("Enrollment is not allowed in this date.")}
 	if not frappe.db.get_single_value("Education Settings","allow_adding_and_removing"):
-		if frappe.db.exists("Course Enrollment Applicant", {"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
+		if frappe.db.exists("Course Enrollment Applicant", {"application_status": ["!=", "Rejected"],"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
 			return {"error": _('You have already registered the courses for this semester')}
 	else:
-		enrollment = frappe.db.exists("Course Enrollment Applicant", {"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
+		enrollment = frappe.db.exists("Course Enrollment Applicant", {"application_status": ["!=", "Rejected"], "student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
 		if enrollment:
 			enrollment_applicant = frappe.get_doc("Course Enrollment Applicant", enrollment)
 	#print(enrolled_program, courses, student)

@@ -12,6 +12,16 @@
 {% block page_content %}
 
 {% set today = frappe.utils.getdate(frappe.utils.nowdate()) %}
+
+{% for comment in comments %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>{{comment.get("student_comment")}}</strong>
+  <button application-id="{{comment.get('name')}}" type="button" class="close" data-dismiss="alert" onclick="dismiss_comment(this)" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{%endfor%}
+
 <!-- Tabs navs -->
 <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
     <li class="nav-item" role="presentation">
@@ -344,5 +354,13 @@ function checkSelectedHoursLimits(){
 document.addEventListener("DOMContentLoaded", () => {
     setTotalHours();
 });
+function dismiss_comment(e){
+    frappe.call({
+        method: "education.education.doctype.course_enrollment_applicant.course_enrollment_applicant.dismiss_comment",
+        args: {
+            application_id: e.getAttribute("application-id")
+        },
+    })
+}
 </script>
 {% endblock %}
