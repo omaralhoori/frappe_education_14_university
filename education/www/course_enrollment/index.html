@@ -282,14 +282,28 @@ function courseSubmissionConfirmed(){
     document.querySelectorAll('.selected-courses-table .course-id').forEach(e => selectedCourses.push(e.value))
     
     frappe.call({
-        "method": "education.education.doctype.academic_curriculum.academic_curriculum.register_student_courses",
+        "method": "education.education.doctype.course_enrollment_applicant.course_enrollment_applicant.register_student_courses",
         "args": {
             "courses": selectedCourses
         },
         callback: (res) => {
             if (res.message.msg){
-                frappe.msgprint(res.message.msg)
-                location.reload()
+                var msg = { 
+                        message: res.message.msg,
+                        onhide: () => {
+                            location.reload()
+                        }
+                    };
+                if (res.message.pay){
+                    msg.primary_action =  {
+                            'label': "{{_('Pay')}}",
+                            action(values) {
+                               location.href="/fees"
+                            }
+                    };
+                } 
+               
+                frappe.msgprint(msg)
             }else if (res.message.error){
                 frappe.msgprint(res.message.error)
             }

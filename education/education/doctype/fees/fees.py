@@ -154,6 +154,7 @@ class Fees(AccountsController ,DocumentAttach):
 		)
 
 	def make_extra_amount_gl_entries(self, amount):
+		if amount == 0: return
 		if amount < 0:
 			return self.make_extra_amount_reverse_gl_entries(abs(amount))
 		student_gl_entries = self.get_gl_dict(
@@ -191,7 +192,7 @@ class Fees(AccountsController ,DocumentAttach):
 		)
 
 	def make_extra_amount_reverse_gl_entries(self, amount):
-		if amount < 0:
+		if amount <= 0:
 			return
 		student_gl_entries = self.get_gl_dict(
 			{

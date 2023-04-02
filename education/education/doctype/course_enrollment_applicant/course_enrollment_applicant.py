@@ -1,6 +1,7 @@
 # Copyright (c) 2023, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import json
 from education.education.doctype.fees.fees import get_fees_due_date
 import frappe
 from frappe.model.document import Document
@@ -190,3 +191,57 @@ def has_student_registred_courses(student):
 	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"], cache=True)
 	return True if frappe.db.exists("Course Enrollment Applicant", {"program": enrolled_program, "academic_year":current_academic_year, "academic_term": current_academic_term}) else False
 	
+
+
+@frappe.whitelist()
+def register_student_courses(courses):
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
+	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"])
+	if not enrolled_program: 
+		return {"error": _('You are not registered in any program')}
+
+	academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year", cache=True)
+	academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term", cache=True)
+	enrollment_start_date = frappe.db.get_value("Academic Term", academic_term, "enrollment_start_date")
+	enrollment_end_date = frappe.db.get_value("Academic Term", academic_term, "enrollment_end_date")
+	enrollment_applicant = None
+	if  frappe.utils.getdate()  > enrollment_end_date or frappe.utils.getdate() < enrollment_start_date:
+		return {"error": _("Enrollment is not allowed in this date.")}
+	if not frappe.db.get_single_value("Education Settings","allow_adding_and_removing"):
+		if frappe.db.exists("Course Enrollment Applicant", {"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
+			return {"error": _('You have already registered the courses for this semester')}
+	else:
+		enrollment = frappe.db.exists("Course Enrollment Applicant", {"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
+		if enrollment:
+			enrollment_applicant = frappe.get_doc("Course Enrollment Applicant", enrollment)
+	#print(enrolled_program, courses, student)
+	courses = json.loads(courses)
+	if not enrollment_applicant:
+		filters = {
+				"doctype": "Course Enrollment Applicant",
+				"application_date": frappe.utils.nowdate(),
+				"student": student,
+				"program": enrolled_program,
+				"academic_term": academic_term,
+				"academic_year": academic_year
+			}
+		enrollment_applicant = frappe.get_doc(filters)
+		for course in courses:
+			course_row = enrollment_applicant.append("courses")
+			course_row.course = course
+	else:
+		enrollment_applicant.application_date = frappe.utils.nowdate()
+		enrollment_applicant.register_courses(courses)
+
+	enrollment_applicant.save(ignore_permissions=True)
+	pay_msg = get_pay_fees_msg(student)
+	return {"msg": _("Courses registered successfully.") + " " + pay_msg, "pay": 1 if pay_msg else 0}
+
+def get_pay_fees_msg(student):
+	fees_msg = ""
+	res = frappe.db.sql("""
+		select sum(outstanding_amount) as amount FROM `tabFees` WHERE student=%(student)s AND outstanding_amount > 0
+	""", {"student": student}, as_dict=True)
+	if res and res[0].get('amount') and  res[0].get('amount') > 0:
+		fees_msg = _("Please pay courses fees {0}here{1}.").format("<a href='/fees'>", "</a>")
+	return fees_msg
