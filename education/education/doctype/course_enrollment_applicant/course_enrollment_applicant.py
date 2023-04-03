@@ -24,6 +24,8 @@ class CourseEnrollmentApplicant(Document):
 				"student": self.student,
 				"course": course.course,
 				"program_enrollment": enrolled_program,
+				"academic_year": self.academic_year,
+				"academic_term": self.academic_term,
 				"enrollment_status": "Enrolled"
 			}
 			if not frappe.db.exists("Course Enrollment", filters):
@@ -32,10 +34,16 @@ class CourseEnrollmentApplicant(Document):
 					"enrollment_date": frappe.utils.nowdate()
 				})
 				frappe.get_doc(filters).save(ignore_permissions=True)
+			if course.group:
+				student_group = frappe.get_doc("Student Group", course.group)
+				if not any(student.student == self.student for student in student_group.students):
+					student_row = student_group.append("students")
+					student_row.student = self.student
+					student_group.save(ignore_permissions=True)
 		self.db_set("application_status", "Approved")
 		frappe.msgprint(_("Student enrolled successfully"))
 
-	def register_courses(self, courses):
+	def register_courses(self, courses, groups):
 		removed_courses = [courseObj.course for courseObj in self.courses if courseObj.course not in courses]
 		added_courses = [course for course in courses if not any(courseObj.course == course for courseObj in self.courses)]
 		
@@ -44,6 +52,8 @@ class CourseEnrollmentApplicant(Document):
 		for course in added_courses:
 			row = self.append("courses")
 			row.course = course
+			if groups.get(course):
+				row.group = groups.get(course)
 		
 		self.create_added_removed_courses_fees(added_courses, removed_courses)
 
@@ -213,7 +223,7 @@ def dismiss_comment(application_id):
 		WHERE name=%(application_id)s AND student=%(student)s
 	""",{"student": student, "application_id": application_id}, as_dict=True)
 @frappe.whitelist()
-def register_student_courses(courses):
+def register_student_courses(courses, groups):
 	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
 	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"])
 	if not enrolled_program: 
@@ -235,6 +245,7 @@ def register_student_courses(courses):
 			enrollment_applicant = frappe.get_doc("Course Enrollment Applicant", enrollment)
 	#print(enrolled_program, courses, student)
 	courses = json.loads(courses)
+	groups = json.loads(groups)
 	if not enrollment_applicant:
 		filters = {
 				"doctype": "Course Enrollment Applicant",
@@ -248,9 +259,11 @@ def register_student_courses(courses):
 		for course in courses:
 			course_row = enrollment_applicant.append("courses")
 			course_row.course = course
+			if groups.get(course):
+				course_row.group = groups.get(course)
 	else:
 		enrollment_applicant.application_date = frappe.utils.nowdate()
-		enrollment_applicant.register_courses(courses)
+		enrollment_applicant.register_courses(courses, groups)
 
 	enrollment_applicant.save(ignore_permissions=True)
 	pay_msg = get_pay_fees_msg(student)

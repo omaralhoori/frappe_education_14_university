@@ -158,10 +158,14 @@ domains = {
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "education.utils.jinja_methods",
-# 	"filters": "education.utils.jinja_filters"
-# }
+jinja = {
+	"methods": [
+    "education.education.doctype.student_group.student_group.get_course_groups",
+    "education.education.doctype.student_group.student_group.get_course_registered_group",
+    "education.education.utils.get_weekday",
+	],
+	#"filters": "education_lms.utils.jinja_filters"
+}
 
 # Installation
 # ------------

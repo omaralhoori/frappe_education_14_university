@@ -432,3 +432,16 @@ def check_quiz_completion(quiz, enrollment_name):
 		if result == "Pass":
 			status = True
 	return status, score, result, time_taken
+
+
+def get_weekday(day):
+	week_days = {
+		0: _("Monday"),
+		1: _("Tuesday"),
+		2: _("Wednesday"),
+		3: _("Thursday"),
+		4: _("Friday"),
+		5: _("Saturday"),
+		6: _("Sunday"),
+	}
+	return week_days.get(day)

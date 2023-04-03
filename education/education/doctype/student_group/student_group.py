@@ -107,7 +107,6 @@ def get_students(
 	enrolled_students = get_program_enrollment(
 		academic_year, academic_term, program, batch, student_category, course
 	)
-	print(enrolled_students)
 
 	if enrolled_students:
 		student_list = []
@@ -134,8 +133,9 @@ def get_program_enrollment(
 
 	condition1 = " "
 	condition2 = " "
-	if academic_term:
-		condition1 += " and pe.academic_term = %(academic_term)s"
+	# if academic_term:
+	# 	condition1 += " and pe.academic_term = %(academic_term)s"
+	# pe.academic_year = %(academic_year)s  
 	if program:
 		condition1 += " and pe.program = %(program)s"
 	if batch:
@@ -151,9 +151,7 @@ def get_program_enrollment(
 			pe.student, pe.student_name
 		from
 			`tabProgram Enrollment` pe {condition2}
-		where
-			pe.academic_year = %(academic_year)s  
-			and pe.docstatus = 1 {condition1}
+		where pe.docstatus = 1 {condition1}
 		order by
 			pe.student_name asc
 		""".format(
@@ -212,3 +210,38 @@ def fetch_students(doctype, txt, searchfield, start, page_len, filters):
 			),
 			tuple(["%%%s%%" % txt, "%%%s%%" % txt, start, page_len]),
 		)
+
+
+def get_course_registered_group(course):
+	current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
+	group = frappe.db.sql("""
+		select enrlAppCrs.group as application_group FROM `tabCourse Enrollment Applied Course` as enrlAppCrs
+		INNER JOIN `tabCourse Enrollment Applicant` as crsEnrlApp ON  crsEnrlApp.name=enrlAppCrs.parent
+		WHERE crsEnrlApp.student=%(student)s AND academic_term=%(academic_term)s AND academic_year=%(academic_year)s and course=%(course)s
+	""", {
+		"student": student,
+		"academic_term": current_academic_term, 
+       "academic_year": current_academic_year, 
+	   "course": course}, as_dict=True)
+	if len(group) > 0: return group[0]
+
+def get_course_groups(course):
+	current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+
+	return frappe.db.sql("""
+		select tsg.name as group_id, tsg.student_group_name,tsg.max_strength, crs_scd.course_day, IFNULL(grp_std.student_count,0) as student_count ,
+		crs_scd.from_time, crs_scd.to_time, crs_scd.instructor FROM `tabStudent Group` tsg
+		INNER JOIN
+		(select tcs.student_group, WEEKDAY(tcs.schedule_date) as course_day, tcs.from_time, tcs.to_time, tcs.instructor
+		FROM `tabCourse Schedule` tcs) as crs_scd
+		ON crs_scd.student_group=tsg.name
+		LEFT JOIN
+		(select IFNULL(count(name), 0) as student_count, parent  FROM `tabStudent Group Student` tsgs
+		GROUP BY parent
+		) as grp_std ON grp_std.parent=tsg.name
+		WHERE tsg.course=%(course)s AND tsg.academic_year=%(academic_year)s AND tsg.academic_term=%(academic_term)s
+		GROUP By tsg.name, crs_scd.course_day, crs_scd.from_time
+	""", {"academic_term": current_academic_term, "academic_year": current_academic_year, "course": course}, as_dict=True)
