@@ -7,8 +7,8 @@
 {% macro course_group_select_btn(course, groups) %}
     {% if groups|length > 1 %}
         <button
-				class="btn btn-info btn-sm select-group-btn" data-toggle="modal" data-target="#{{course.course_id}}-group"
-				> {{ _('Select Group')}}</button>
+				class="btn btn-info btn-sm select-group-btn" onclick="showGroupsModal(this)" data-toggle="modal" data-target="#{{course.course_id}}-group"
+				>{{ _('Select Group')}}</button>
     {%endif%}
 {%endmacro%}
 
@@ -272,7 +272,10 @@
             event.preventDefault()
             document.querySelector('#selected-courses-tab').click();
         });
-
+    function showGroupsModal(e){
+        var courseId = e.getAttribute("data-target")
+        $(courseId).modal("show")
+    }
     function selectCourseGroup(e){
         var courseId = e.getAttribute("course-id")
         var groupName = e.getAttribute("group-name")
@@ -280,6 +283,7 @@
         var courseRow = document.querySelector(`.selected-group-container[course-id="${courseId}"]`)
         courseRow.setAttribute("group-id", groupId)
         courseRow.innerHTML = groupName;
+         $(`#${courseId}-group`).modal("hide")
     }
 
     function checkCourseGroupSelected(row){
