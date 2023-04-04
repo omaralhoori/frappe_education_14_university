@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "format:EDU-CE-{YYYY}-{#####}",
  "beta": 1,
  "creation": "2018-10-15 15:35:39.375161",
@@ -110,7 +111,7 @@
   }
  ],
  "links": [],
- "modified": "2023-04-03 04:17:35.516267",
+ "modified": "2023-04-03 22:59:13.942015",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment",
