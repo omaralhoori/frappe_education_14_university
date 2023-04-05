@@ -12,9 +12,9 @@
     {%endif%}
 {%endmacro%}
 
-{% macro course_groups(course, groups, selected_group) %}
+{% macro course_groups(course, groups, selected_group, enrolled=False) %}
     {% set selected_group_list = [] %}
-    {% if groups|length > 1 %}
+    {% if groups|length >= 1 %}
         <div class="modal fade" id="{{course.course_id}}-group" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
             aria-hidden="true">
             <div class="modal-dialog text-center" style="max-width: 650px" role="document">
@@ -42,12 +42,16 @@
                                 <td>{{group.from_time}}</td>
                                 <td>{{group.to_time}}</td>
                                 <td>{{group.student_count}}{% if group.max_strength > 0 %}/{{group.max_strength}}{%endif%}</td>
-                                <td><button 
+                                <td>
+                                {% if not enrolled or not selected_group %}
+                                <button 
                                 group-id="{{group['group_id']}}" 
                                 course-id="{{course['course_id']}}" 
                                 group-name="{{group['student_group_name']}}" 
                                 onclick="selectCourseGroup(this)"
-                                class="btn btn-sm btn-success">{{_("Select")}}</button></td>
+                                class="btn btn-sm btn-success">{{_("Select")}}</button>
+                                {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -56,16 +60,15 @@
                 </div>
             </div>
         </div>
-    {% elif groups|length == 1 %}
+    {%endif%}
+    {% if groups|length == 1 %}
        {%set temp = selected_group_list.append(groups[0]) %}
-    {% else %}
-
     {% endif %}
     {% if selected_group_list|length > 0 %}
         {% set selected_group = selected_group_list[0] %}
-        <span class="selected-group-container" course-id="{{course.course_id}}" group-id="{{selected_group.group_id}}">{{selected_group.student_group_name}}</span>
+        <a onclick="showGroupsModal(this)" href="#" data-target="#{{course.course_id}}-group" class="selected-group-container link-info" course-id="{{course.course_id}}" group-id="{{selected_group.group_id}}">{{selected_group.student_group_name}}</a>
     {% else %}
-        <span class="selected-group-container" course-id="{{course.course_id}}" group-id=""></span>
+        <a onclick="showGroupsModal(this)" href="#" data-target="#{{course.course_id}}-group" class="selected-group-container link-info" course-id="{{course.course_id}}" group-id=""></a>
 
     {% endif %}
 {%endmacro%}
@@ -130,6 +133,8 @@
                 </thead>
                 <tbody>
                     {% for course in available_courses[pool_name] %}
+                    {% set groups = get_course_groups(course['course_id']) %}
+                    {% if groups|length > 0 %}
                     {% if course['applicant_status'] == 0 or course['enrollment_status'] == 1 %}
                     <tr table-code="{{pool_name}}">
                         <td>
@@ -151,8 +156,7 @@
                             {% else %}
                             {{_('Elective')}}
                             {% endif %} #}
-                            {% set groups = get_course_groups(course['course_id']) %}
-                            {{course_groups(course, groups)}}
+                            {{course_groups(course, groups, get_course_registered_group(course['course_id']), true)}}
                         </td>
                         <td>
                             {% if course['enrollment_status'] == 1 %}
@@ -171,6 +175,7 @@
                         </td>
                     </tr>
                     {% endif %}
+                    {%endif%}
                     {% endfor %}
                 </tbody>
             </table>

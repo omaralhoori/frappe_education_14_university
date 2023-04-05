@@ -39,8 +39,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Student Group",
-   "options": "Student Group",
-   "reqd": 1
+   "options": "Student Group"
   },
   {
    "fieldname": "assessment_name",
@@ -53,8 +52,7 @@
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Assessment Group",
-   "options": "Assessment Group",
-   "reqd": 1
+   "options": "Assessment Group"
   },
   {
    "fetch_from": "course.default_grading_scale",
@@ -87,7 +85,8 @@
    "fieldtype": "Link",
    "in_global_search": 1,
    "label": "Program",
-   "options": "Program"
+   "options": "Program",
+   "reqd": 1
   },
   {
    "fetch_from": "student_group.academic_year",
@@ -114,8 +113,7 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Schedule Date",
-   "no_copy": 1,
-   "reqd": 1
+   "no_copy": 1
   },
   {
    "fieldname": "room",
@@ -144,15 +142,13 @@
    "fieldname": "from_time",
    "fieldtype": "Time",
    "label": "From Time",
-   "no_copy": 1,
-   "reqd": 1
+   "no_copy": 1
   },
   {
    "fieldname": "to_time",
    "fieldtype": "Time",
    "label": "To Time",
-   "no_copy": 1,
-   "reqd": 1
+   "no_copy": 1
   },
   {
    "fieldname": "supervisor",
@@ -198,10 +194,11 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-10-23 15:55:35.076251",
+ "modified": "2023-04-05 17:54:32.675381",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Assessment Plan",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -220,8 +217,8 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "assessment_name"
 }

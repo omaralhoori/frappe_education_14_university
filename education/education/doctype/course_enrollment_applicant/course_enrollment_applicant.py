@@ -39,6 +39,7 @@ class CourseEnrollmentApplicant(Document):
 				if not any(student.student == self.student for student in student_group.students):
 					student_row = student_group.append("students")
 					student_row.student = self.student
+					student_row.active = 1
 					student_group.save(ignore_permissions=True)
 		self.db_set("application_status", "Approved")
 		frappe.msgprint(_("Student enrolled successfully"))

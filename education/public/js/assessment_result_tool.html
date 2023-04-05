@@ -21,8 +21,7 @@
 		{% for s in students %}
 		<tr
 			{% if(s.assessment_details && s.docstatus && s.docstatus == 1) { %} class="text-muted" {% } %}
-			data-student="{{s.student}}">
-
+			data-student="{{s.student}}" data-student-group="{{s.student_group}}">
 			<td>{{ s.student }}</td>
 			<td>{{ s.student_name }}</td>
 			{% for c in criteria %}
@@ -36,6 +35,7 @@
 					data-max-score="{{c.maximum_score}}"
 					data-criteria="{{c.assessment_criteria}}"
 					data-student="{{s.student}}"
+					data-student-group="{{s.student_group}}"
 					{% if(s.assessment_details && s.docstatus && s.docstatus == 1) { %} disabled {% } %}
 					{% if(s.assessment_details) { %}
 						value="{{s.assessment_details[c.assessment_criteria][0]}}"

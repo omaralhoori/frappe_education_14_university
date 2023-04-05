@@ -22,8 +22,8 @@ frappe.ui.form.on('Assessment Result Tool', {
 	assessment_plan: function(frm) {
 		frm.doc.show_submit = false;
 		if(frm.doc.assessment_plan) {
-			if (!frm.doc.student_group)
-				return
+			// if (!frm.doc.student_group)
+			// 	return
 			frappe.call({
 				method: "education.education.api.get_assessment_students",
 				args: {
@@ -76,6 +76,7 @@ frappe.ui.form.on('Assessment Result Tool', {
 
 		result_table.on('change', 'input', function(e) {
 			let $input = $(e.target);
+			let student_group = $input.data().studentGroup;
 			let student = $input.data().student;
 			let max_score = $input.data().maxScore;
 			let value = $input.val();
@@ -102,6 +103,7 @@ frappe.ui.form.on('Assessment Result Tool', {
 			}
 			if (Object.keys(student_scores["assessment_details"]).length === criteria_list.length) {
 				student_scores["student"] = student;
+				student_scores["group"] = student_group;
 				student_scores["total_score"] = total_score;
 				result_table.find(`[data-student=${student}].result-comment`)
 					.each(function(el, input){

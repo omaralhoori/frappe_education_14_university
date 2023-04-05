@@ -89,6 +89,7 @@
   },
   {
    "fetch_from": "assessment_plan.student_group",
+   "fetch_if_empty": 1,
    "fieldname": "student_group",
    "fieldtype": "Link",
    "label": "Student Group",
@@ -173,10 +174,11 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-08-03 11:47:54.119489",
+ "modified": "2023-04-05 17:47:15.336563",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Assessment Result",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -195,9 +197,9 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "student_name"
 }

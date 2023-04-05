@@ -189,6 +189,7 @@ def get_student_group_students(student_group, include_inactive=0):
 			filters={"parent": student_group, "active": 1},
 			order_by="group_roll_number",
 		)
+	students = [frappe._dict(student, **{'student_group':student_group}) for student in students]
 	return students
 
 
@@ -292,10 +293,26 @@ def get_assessment_criteria(course):
 		order_by="idx",
 	)
 
+def get_course_student_groups(program, course, academic_year, academic_term):
+	return frappe.db.get_all(
+		"Student Group",
+		fields=["name"],
+		filters={"program": program, "course": course,
+	   			"academic_year": academic_year, "academic_term": academic_term}
+	)
 
 @frappe.whitelist()
-def get_assessment_students(assessment_plan, student_group):
-	student_list = get_student_group_students(student_group)
+def get_assessment_students(assessment_plan, student_group=None):
+	if student_group:
+		student_list = get_student_group_students(student_group)
+	else:
+		program, course, academic_year, academic_term = frappe.db.get_value("Assessment Plan", assessment_plan, ['program','course', 'academic_year', 'academic_term'])
+		if not academic_year: academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+		if not academic_term: academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		course_groups = get_course_student_groups(program, course, academic_year, academic_term)
+		student_list = []
+		for group in course_groups:
+			student_list.extend(get_student_group_students(group['name']))
 	for i, student in enumerate(student_list):
 		result = get_result(student.student, assessment_plan)
 		if result:
@@ -400,6 +417,7 @@ def mark_assessment_result(assessment_plan, scores):
 			"comment": student_score.get("comment"),
 			"total_score": student_score.get("total_score"),
 			"details": assessment_details,
+			"student_group": student_score.get("group")
 		}
 	)
 	assessment_result.save()
@@ -417,9 +435,19 @@ def mark_assessment_result(assessment_plan, scores):
 
 
 @frappe.whitelist()
-def submit_assessment_results(assessment_plan, student_group):
+def submit_assessment_results(assessment_plan, student_group=None):
 	total_result = 0
-	student_list = get_student_group_students(student_group)
+	if student_group:
+		student_list = get_student_group_students(student_group)
+	else:
+		program, course, academic_year, academic_term = frappe.db.get_value("Assessment Plan", assessment_plan, ['program','course', 'academic_year', 'academic_term'])
+		if not academic_year: academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+		if not academic_term: academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		course_groups = get_course_student_groups(program, course, academic_year, academic_term)
+		student_list = []
+		for group in course_groups:
+			student_list.extend(get_student_group_students(group['name']))
+			
 	for i, student in enumerate(student_list):
 		doc = get_result(student.student, assessment_plan)
 		if doc and doc.docstatus == 0:
