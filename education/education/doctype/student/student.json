@@ -158,8 +158,9 @@
   },
   {
    "fieldname": "nationality",
-   "fieldtype": "Data",
-   "label": "Nationality"
+   "fieldtype": "Link",
+   "label": "Nationality",
+   "options": "Nationality"
   },
   {
    "fieldname": "student_applicant",
@@ -290,7 +291,7 @@
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-02-25 16:04:20.099607",
+ "modified": "2023-04-05 20:18:58.124652",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

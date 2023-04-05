@@ -12,6 +12,7 @@
   "group_based_on",
   "student_group_name",
   "max_strength",
+  "group_gender",
   "column_break_3",
   "academic_term",
   "program",
@@ -130,10 +131,16 @@
    "fieldtype": "Link",
    "label": "Student Category",
    "options": "Student Category"
+  },
+  {
+   "fieldname": "group_gender",
+   "fieldtype": "Link",
+   "label": "Group Gender",
+   "options": "Gender"
   }
  ],
  "links": [],
- "modified": "2022-12-05 10:50:08.798494",
+ "modified": "2023-04-05 20:50:21.589556",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Group",
@@ -157,7 +164,6 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "",
  "search_fields": "program, batch, course",
  "sort_field": "modified",
  "sort_order": "DESC",

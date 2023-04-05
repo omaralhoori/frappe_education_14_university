@@ -26,7 +26,7 @@
  "list_title": "Test",
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-04-03 15:20:00.148727",
+ "modified": "2023-04-05 20:49:01.335942",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "student-applicant",
@@ -201,7 +201,7 @@
    "max_value": 0,
    "options": "Gender",
    "read_only": 0,
-   "reqd": 0,
+   "reqd": 1,
    "show_in_filter": 0
   },
   {
@@ -218,17 +218,17 @@
    "show_in_filter": 0
   },
   {
-   "allow_read_on_all_link_options": 0,
+   "allow_read_on_all_link_options": 1,
    "default": "",
    "fieldname": "nationality",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "hidden": 0,
    "label": "Nationality",
    "max_length": 0,
    "max_value": 0,
-   "options": "",
+   "options": "Nationality",
    "read_only": 0,
-   "reqd": 0,
+   "reqd": 1,
    "show_in_filter": 0
   },
   {
