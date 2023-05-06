@@ -13,6 +13,7 @@
   "student_group_name",
   "max_strength",
   "group_gender",
+  "virtual_room_link",
   "column_break_3",
   "academic_term",
   "program",
@@ -137,10 +138,15 @@
    "fieldtype": "Link",
    "label": "Group Gender",
    "options": "Gender"
+  },
+  {
+   "fieldname": "virtual_room_link",
+   "fieldtype": "Data",
+   "label": "Virtual Room Link"
   }
  ],
  "links": [],
- "modified": "2023-04-05 20:50:21.589556",
+ "modified": "2023-04-22 11:50:53.648408",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Group",
