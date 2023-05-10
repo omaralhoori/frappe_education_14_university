@@ -14,12 +14,15 @@
   "first_name",
   "middle_name",
   "last_name",
-  "educational_year",
+  "first_name_arabic",
+  "middle_name_arabic",
+  "last_name_arabic",
   "column_break_4",
   "naming_series",
   "joining_date",
   "user",
   "student_applicant",
+  "educational_year",
   "image",
   "section_break_7",
   "student_email_id",
@@ -29,6 +32,10 @@
   "student_mobile_number",
   "gender",
   "nationality",
+  "education_data_tab",
+  "native_language",
+  "latest_educational_certificate",
+  "educational_level",
   "address_tab",
   "section_break_22",
   "address_line_1",
@@ -43,6 +50,9 @@
   "guardians",
   "section_break_20",
   "siblings",
+  "student_data_section",
+  "marital_status",
+  "current_job",
   "exit_tab",
   "exit",
   "date_of_leaving",
@@ -287,11 +297,61 @@
    "label": "Educational Year",
    "options": "Educational Year",
    "read_only": 1
+  },
+  {
+   "fieldname": "first_name_arabic",
+   "fieldtype": "Data",
+   "label": "First Name Arabic"
+  },
+  {
+   "fieldname": "middle_name_arabic",
+   "fieldtype": "Data",
+   "label": "Middle Name Arabic"
+  },
+  {
+   "fieldname": "last_name_arabic",
+   "fieldtype": "Data",
+   "label": "Last Name Arabic"
+  },
+  {
+   "fieldname": "education_data_tab",
+   "fieldtype": "Tab Break",
+   "label": "Education Data"
+  },
+  {
+   "fieldname": "native_language",
+   "fieldtype": "Data",
+   "label": "Native Language"
+  },
+  {
+   "fieldname": "latest_educational_certificate",
+   "fieldtype": "Data",
+   "label": "Latest Educational Certificate"
+  },
+  {
+   "fieldname": "educational_level",
+   "fieldtype": "Data",
+   "label": "Educational Level"
+  },
+  {
+   "fieldname": "student_data_section",
+   "fieldtype": "Section Break",
+   "label": "Student Data"
+  },
+  {
+   "fieldname": "marital_status",
+   "fieldtype": "Data",
+   "label": "Marital Status"
+  },
+  {
+   "fieldname": "current_job",
+   "fieldtype": "Data",
+   "label": "Current Job"
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-04-05 20:18:58.124652",
+ "modified": "2023-05-06 22:32:02.465996",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",
