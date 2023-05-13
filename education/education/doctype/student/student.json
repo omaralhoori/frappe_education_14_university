@@ -26,10 +26,12 @@
   "image",
   "section_break_7",
   "student_email_id",
+  "student_secondary_email_address",
   "date_of_birth",
   "blood_group",
   "column_break_3",
   "student_mobile_number",
+  "student_secondary_mobile_number",
   "gender",
   "nationality",
   "education_data_tab",
@@ -347,11 +349,21 @@
    "fieldname": "current_job",
    "fieldtype": "Data",
    "label": "Current Job"
+  },
+  {
+   "fieldname": "student_secondary_email_address",
+   "fieldtype": "Data",
+   "label": "Student Secondary Email Address"
+  },
+  {
+   "fieldname": "student_secondary_mobile_number",
+   "fieldtype": "Data",
+   "label": "Student Secondary Mobile Number"
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-05-06 22:32:02.465996",
+ "modified": "2023-05-13 14:17:58.679566",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

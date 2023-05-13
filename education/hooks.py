@@ -59,6 +59,12 @@ standard_portal_menu_items = [
 		"role": "Student",
 	},
 	{
+		"title": _("Update Student Info"),
+		"route": "//update-student-info",
+		"reference_doctype": "Student",
+		"role": "Student",
+	},
+	{
 		"title": _("Academic Calendar"),
 		"route": "/academic_calendar",
 		"reference_doctype": "Academic Calendar",

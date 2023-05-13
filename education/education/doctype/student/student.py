@@ -10,6 +10,7 @@ from frappe.utils import getdate, today
 
 from education.education.utils import (check_content_completion,
                                        check_quiz_completion)
+from frappe.utils.password import update_password
 
 
 class Student(Document):
@@ -23,7 +24,10 @@ class Student(Document):
 		if self.student_applicant:
 			self.check_unique()
 			self.update_applicant_status()
-
+	def on_update(self):
+		if self.user == frappe.session.user:
+			frappe.db.set_value("User", frappe.session.user ,{"first_login":1})
+		
 	def validate_dates(self):
 		for sibling in self.siblings:
 			if sibling.date_of_birth and getdate(sibling.date_of_birth) > getdate():
@@ -48,6 +52,9 @@ class Student(Document):
 
 	def validate_user(self):
 		"""Create a website user for student creation if not already exists"""
+		if self.user: return
+		if self.student_mobile_number:
+			self.student_mobile_number = reformat_mobile_number(self.student_mobile_number)
 		if not frappe.get_single("Education Settings").get(
 			"user_creation_skip"
 		) and not frappe.db.exists("User", self.student_email_id
@@ -56,19 +63,26 @@ class Student(Document):
 				{
 					"doctype": "User",
 					"first_name": self.first_name,
+					"middle_name": self.middle_name,
 					"last_name": self.last_name,
 					"email": self.student_email_id,
+					"mobile_no": self.student_mobile_number,
 					"gender": self.gender,
-					"send_welcome_email": 1,
+					"send_welcome_email": 0,
 					"user_type": "Website User",
+					"enabled": 1
 				}
 			)
 			student_user.flags.ignore_permissions = True
 			student_user.add_roles("Student")
 			student_user.save()
-
+			if self.student_mobile_number:
+				update_password(user=student_user.name, pwd=self.student_mobile_number)
+			else:
+				update_password(user=student_user.name, pwd='12345678')
 			self.user = student_user.name
-
+			self.owner = student_user.name
+			
 	def update_student_name_in_linked_doctype(self):
 		linked_doctypes = get_linked_doctypes("Student")
 		for d in linked_doctypes:
@@ -229,3 +243,12 @@ def get_timeline_data(doctype, name):
 			name,
 		)
 	)
+
+
+def reformat_mobile_number(mobile_number):
+	removed_chars = ['"', "'", "+", ")", "(", " ", "-", "_", "{", "}", "[", "]"]
+	for char in removed_chars:
+		mobile_number = mobile_number.replace(char, "")
+	if mobile_number.startswith("00"):
+		mobile_number = mobile_number[2:]
+	return mobile_number
