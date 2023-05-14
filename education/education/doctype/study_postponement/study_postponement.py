@@ -14,3 +14,10 @@ class StudyPostponement(Document):
 @frappe.whitelist()
 def get_apporved_requests_count(student):
 	return frappe.db.count("Study Postponement", {"student": student, "status": "Approved"})
+
+
+def check_postponed_semester(student):
+	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+
+	return False if frappe.db.get_value("Study Postponement", 
+				    {"student": student, "status": "Approved", "academic_term": current_academic_term}) else True
