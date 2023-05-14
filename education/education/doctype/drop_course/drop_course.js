@@ -14,8 +14,33 @@ frappe.ui.form.on("Drop Course", {
 				frm.save_or_update();
 			}, 'Actions');
 		}
-	},
 
+        if (!frm.is_new()){
+            
+            frappe.call({
+                method: "education.education.doctype.drop_course.drop_course.get_apporved_requests_count",
+                args: {
+                    student: frm.doc.student,
+                },
+                callback: (res) => {
+                    if (res.message){
+                        frm.events.render_requests_counter(frm, res.message)
+                    }else{
+                        frm.events.render_requests_counter(frm,0)
+                    }
+                }
+            })
+        }
+	},
+    render_requests_counter(frm, approve_requests){
+        let html = `
+            <div class="m-3">
+            <strong>${__('Student Approved Requests')} : ${approve_requests}</strong>
+            </div>
+        `;
+
+        $(frm.fields_dict['student_approved_requests'].wrapper).html(html)
+    },
     approve(frm){
         frm.set_value("status", "Approved");
         frm.save_or_update();

@@ -14,6 +14,7 @@
   "column_break_iwhu",
   "academic_year",
   "academic_term",
+  "student_approved_requests",
   "section_break_q5kl",
   "request_reason"
  ],
@@ -77,11 +78,17 @@
    "fieldtype": "Small Text",
    "label": "Request Reason",
    "read_only": 1
+  },
+  {
+   "fieldname": "student_approved_requests",
+   "fieldtype": "HTML",
+   "label": "Student Approved Requests",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-05 19:46:08.143219",
+ "modified": "2023-05-14 16:15:13.118976",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Study Postponement",
