@@ -92,7 +92,7 @@
    "fieldname": "enrollment_status",
    "fieldtype": "Select",
    "label": "Enrollment Status",
-   "options": "\nEnrolled\nPartially Pulled\nPulled\nGraduated",
+   "options": "\nEnrolled\nPartially Pulled\nPulled\nGraduated\nFailed",
    "read_only": 1
   },
   {
@@ -111,7 +111,7 @@
   }
  ],
  "links": [],
- "modified": "2023-04-03 22:59:13.942015",
+ "modified": "2023-05-13 21:18:24.498651",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment",
