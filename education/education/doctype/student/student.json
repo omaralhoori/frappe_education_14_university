@@ -327,13 +327,15 @@
   },
   {
    "fieldname": "latest_educational_certificate",
-   "fieldtype": "Data",
-   "label": "Latest Educational Certificate"
+   "fieldtype": "Link",
+   "label": "Latest Educational Certificate",
+   "options": "Educational Certificate"
   },
   {
    "fieldname": "educational_level",
-   "fieldtype": "Data",
-   "label": "Educational Level"
+   "fieldtype": "Link",
+   "label": "Educational Level",
+   "options": "Educational Level"
   },
   {
    "fieldname": "student_data_section",
@@ -342,8 +344,9 @@
   },
   {
    "fieldname": "marital_status",
-   "fieldtype": "Data",
-   "label": "Marital Status"
+   "fieldtype": "Select",
+   "label": "Marital Status",
+   "options": "\nSingle\nMarried\nWidowed\nDivorced"
   },
   {
    "fieldname": "current_job",
@@ -363,7 +366,7 @@
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-05-13 14:17:58.679566",
+ "modified": "2023-05-20 15:57:29.143845",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",
