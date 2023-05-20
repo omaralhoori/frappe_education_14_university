@@ -9,3 +9,9 @@ class DropCourse(Document):
 		if not self.student:
 			student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
 			self.student = student
+
+
+
+@frappe.whitelist()
+def get_apporved_requests_count(student):
+	return frappe.db.count("Drop Course", {"student": student, "status": "Approved"})

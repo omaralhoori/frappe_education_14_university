@@ -1,6 +1,7 @@
 from education.education.doctype.academic_term.academic_term import is_course_enrollment_avilable
 from education.education.doctype.course_enrollment_applicant.course_enrollment_applicant import get_student_comments, has_student_registred_courses
 from education.education.doctype.academic_curriculum.academic_curriculum import get_academic_curriculum_for_student
+from education.education.doctype.study_postponement.study_postponement import check_postponed_semester
 import frappe
 from frappe import _
 
@@ -13,10 +14,14 @@ def get_context(context):
     context.title = _("Course Enrollment")
     context.maximum_hours= frappe.db.get_single_value("Education Settings" ,"maximum_number_of_hours")
     context.minimum_hours= frappe.db.get_single_value("Education Settings" ,"minimum_number_of_hours")
+    student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
     context.is_course_enrollment_avilable = is_course_enrollment_avilable()
     context.comments = get_student_comments()
     if not context.is_course_enrollment_avilable: return context
-    student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
+
+    context.is_course_enrollment_avilable = check_postponed_semester(student)
+    if not context.is_course_enrollment_avilable: return context
+    
     courses = get_academic_curriculum_for_student(student)
     context.enable_add_remove = frappe.db.get_single_value("Education Settings","allow_adding_and_removing")
     if not context.enable_add_remove:
