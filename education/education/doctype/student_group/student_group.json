@@ -25,7 +25,10 @@
   "get_students",
   "students",
   "section_break_12",
-  "instructors"
+  "instructors",
+  "messages_section",
+  "student_group_message",
+  "group_image"
  ],
  "fields": [
   {
@@ -143,10 +146,28 @@
    "fieldname": "virtual_room_link",
    "fieldtype": "Data",
    "label": "Virtual Room Link"
+  },
+  {
+   "fieldname": "messages_section",
+   "fieldtype": "Section Break",
+   "label": "Messages"
+  },
+  {
+   "fieldname": "student_group_message",
+   "fieldtype": "Table",
+   "label": "Student Group Message",
+   "options": "Student Group Message"
+  },
+  {
+   "fieldname": "group_image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Group Image"
   }
  ],
+ "image_field": "group_image",
  "links": [],
- "modified": "2023-04-22 11:50:53.648408",
+ "modified": "2023-05-17 15:47:47.904879",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Group",
