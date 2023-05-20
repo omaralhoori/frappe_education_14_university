@@ -420,6 +420,7 @@ def mark_assessment_result(assessment_plan, scores):
 			"student_group": student_score.get("group")
 		}
 	)
+	print(student_score.get("group"))
 	assessment_result.save()
 	details = {}
 	for d in assessment_result.details:

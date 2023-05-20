@@ -109,6 +109,7 @@ frappe.ui.form.on('Assessment Result Tool', {
 					.each(function(el, input){
 					student_scores["comment"] = $(input).val();
 				});
+				console.log(student_scores);
 				frappe.call({
 					method: "education.education.api.mark_assessment_result",
 					args: {
@@ -122,8 +123,8 @@ frappe.ui.form.on('Assessment Result Tool', {
 							frm.events.submit_result;
 						}
 						for (var criteria of Object.keys(assessment_result.details)) {
-							result_table.find(`[data-criteria=${criteria}][data-student=${assessment_result
-								.student}].student-result-grade`).each(function(e1, input) {
+							result_table.find(`[data-criteria="${criteria}"][data-student="${assessment_result
+								.student}"].student-result-grade`).each(function(e1, input) {
 									$(input).html(assessment_result.details[criteria]);
 							});
 						}
