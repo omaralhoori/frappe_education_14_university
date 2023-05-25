@@ -60,7 +60,7 @@ standard_portal_menu_items = [
 	},
 	{
 		"title": _("Update Student Info"),
-		"route": "//update-student-info",
+		"route": "/update-student-info",
 		"reference_doctype": "Student",
 		"role": "Student",
 	},

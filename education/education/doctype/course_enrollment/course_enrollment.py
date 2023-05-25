@@ -122,3 +122,60 @@ def check_activity_exists(enrollment, content_type, content):
 		return activity[0].name
 	else:
 		return None
+
+
+@frappe.whitelist()
+def create_enrollment(
+	course
+):
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, ["name"])
+	if not student: return {
+		"error": _("You are not student")
+	}
+	program_enrollment = frappe.db.get_value("Program Enrollment", {"student": student}, ["name"])
+	if not program_enrollment:
+		return {
+			"error": _("You did not enroll in any program")
+		}
+	filters = {
+		"student": student,
+		"program_enrollment": program_enrollment,
+		"course": course,
+		"academic_year": frappe.db.get_single_value("Education Settings", "current_academic_year"),
+		"academic_term": frappe.db.get_single_value("Education Settings", "current_academic_term"),
+	}
+	if frappe.db.exists("Course Enrollment", filters):
+		return {
+			"error": _("You enrolled in this course before")
+		}
+	filters = {
+		"enrollment_status": "Enrolled",
+		"doctype" :"Course Enrollment",
+		"enrollment_date": frappe.utils.nowdate(),
+		**filters
+	}
+	enrollment = frappe.get_doc(
+		filters
+	)
+	enrollment.save(ignore_permissions=True)
+	progress = get_enrollment_progress(enrollment)
+	if len(progress) > 0:
+		enrollment.current_lesson_type = progress[0]['content_type']
+		enrollment.current_lesson = progress[0]['content']
+		enrollment.save(ignore_permissions=True)
+	return {
+		"success": 1,
+		"current_lesson": enrollment.current_lesson,
+		"current_lesson_type": enrollment.current_lesson_type,
+	}
+
+def get_enrollment_progress(enrollment):
+	progress = frappe.db.sql("""
+		select cntn.content_type, cntn.content FROM `tabTopic Content` as cntn
+		INNER JOIN `tabTopic` as tpc ON tpc.name=cntn.parent
+		INNER JOIN `tabCourse Topic` as crsTpc ON crsTpc.topic = tpc.name
+		WHERE crsTpc.parent=%(course)s
+		ORDER BY crsTpc.idx, cntn.idx
+		LIMIT 1
+	""", {"course": enrollment.course}, as_dict=True)
+	return progress

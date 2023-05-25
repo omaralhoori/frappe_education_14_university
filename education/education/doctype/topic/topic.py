@@ -74,3 +74,31 @@ def add_content_to_topics(content_type, content, topics):
 		title=_("Topics updated"),
 		indicator="green",
 	)
+
+
+@frappe.whitelist()
+def add_multicontents(
+					topic,
+					title,
+					author,
+					pages,
+					parts,
+					content):
+	start_page = 1
+	topic_doc = frappe.get_doc("Topic", topic)
+	for i in range(int(parts)):
+		new_title =title +  " " + _('From Page: ') +  str(start_page) + ", " + _('To Page: ') + str(start_page + int(pages))
+		start_page += int(pages)
+		new_content= topic_doc.append("topic_content")
+		article = frappe.get_doc({
+			"doctype": "Article",
+			"title": new_title,
+			"author": author,
+			"content":content
+		})
+		article.save(ignore_permissions=True)
+		new_content.content_type= 'Article'
+		new_content.content = article.name
+		topic_doc.save(ignore_permissions=True)
+
+	return True
