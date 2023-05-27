@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-05-25 09:37:41.179993",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "course_enrollment_section",
+  "course_enrollment_file",
+  "column_break_fifv",
+  "create_fees",
+  "import_course_enrollment"
+ ],
+ "fields": [
+  {
+   "fieldname": "course_enrollment_section",
+   "fieldtype": "Section Break",
+   "label": "Course Enrollment"
+  },
+  {
+   "fieldname": "course_enrollment_file",
+   "fieldtype": "Attach",
+   "label": "Course Enrollment File"
+  },
+  {
+   "fieldname": "column_break_fifv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_course_enrollment",
+   "fieldtype": "Button",
+   "label": "Import Course Enrollment"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_fees",
+   "fieldtype": "Check",
+   "label": "Create Fees"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-05-27 14:53:09.907715",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Import Education Files",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

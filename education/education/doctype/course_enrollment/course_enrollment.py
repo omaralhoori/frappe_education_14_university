@@ -38,6 +38,7 @@ class CourseEnrollment(Document):
 				"student": self.student,
 				"course": self.course,
 				"program_enrollment": self.program_enrollment,
+				"academic_term": self.academic_term,
 				"name": ("!=", self.name),
 			},
 		)

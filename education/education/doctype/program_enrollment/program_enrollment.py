@@ -15,7 +15,7 @@ class ProgramEnrollment(Document):
 		self.validate_duplication()
 		self.validate_academic_year()
 		if self.academic_term:
-			self.validate_academic_term()
+			self.validate_academic_term()		
 		if not self.student_name:
 			self.student_name = frappe.db.get_value("Student", self.student, "title")
 		# if not self.courses:
