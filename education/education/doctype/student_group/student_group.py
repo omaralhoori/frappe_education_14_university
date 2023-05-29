@@ -31,8 +31,8 @@ class StudentGroup(Document):
 			frappe.throw(_("""Max strength cannot be less than zero."""))
 		if self.max_strength and len(self.students) > self.max_strength:
 			frappe.throw(
-				_("""Cannot enroll more than {0} students for this student group.""").format(
-					self.max_strength
+				_("""Cannot enroll more than {0} students for {1} student group.""").format(
+					self.max_strength, self.name
 				)
 			)
 
