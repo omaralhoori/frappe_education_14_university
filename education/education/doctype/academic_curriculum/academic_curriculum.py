@@ -75,7 +75,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 	if graduation_for_prerequisites:
 		graduation_stmt = "and tce.graduation_date is not null"
 	if not educational_year or not semester: return []
-	print(enrolled_program, student)
+
 	return frappe.db.sql("""
 			SELECT 	tcrs.name as course_id,tcrs.course_code, tcrs.course_name, tcrs.course_language, tcrs.total_course_hours,
 		tpoec.pool_name, tpoec.required_course_count, tey.year_name, tacc.compulsory ,

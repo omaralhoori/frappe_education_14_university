@@ -119,50 +119,50 @@ class Fees(AccountsController ,DocumentAttach):
 	def make_gl_entries(self):
 		if not self.grand_total:
 			return
-		student_gl_entries = self.get_gl_dict(
-			{
-				"account": self.receivable_account,
-				"party_type": "Student",
-				"party": self.student,
-				"against": self.income_account,
-				"debit": self.grand_total,
-				"debit_in_account_currency": self.grand_total,
-				"against_voucher": self.name,
-				"against_voucher_type": self.doctype,
-			},
-			item=self,
-		)
-
-		fee_gl_entry = self.get_gl_dict(
-			{
-				"account": self.income_account,
-				"against": self.student,
-				"credit": self.grand_total,
-				"credit_in_account_currency": self.grand_total,
-				"cost_center": self.cost_center,
-			},
-			item=self,
-		)
-
 		from erpnext.accounts.general_ledger import make_gl_entries
+		for component in self.components:
+			student_gl_entries = self.get_gl_dict(
+				{
+					"account": component.receivable_account or self.receivable_account,
+					"party_type": "Student",
+					"party": self.student,
+					"against": component.income_account or  self.income_account,
+					"debit":  component.amount,#self.grand_total,
+					"debit_in_account_currency": component.amount,#self.grand_total,
+					"against_voucher": self.name,
+					"against_voucher_type": self.doctype,
+				},
+				item=self,
+			)
 
-		make_gl_entries(
-			[student_gl_entries, fee_gl_entry],
-			cancel=(self.docstatus == 2),
-			update_outstanding="Yes",
-			merge_entries=False,
-		)
+			fee_gl_entry = self.get_gl_dict(
+				{
+					"account": component.income_account or self.income_account,
+					"against": self.student,
+					"credit": component.amount,#self.grand_total,
+					"credit_in_account_currency": component.amount,#self.grand_total,
+					"cost_center": component.cost_center or self.cost_center,
+				},
+				item=self,
+			)
 
-	def make_extra_amount_gl_entries(self, amount):
+			make_gl_entries(
+				[student_gl_entries, fee_gl_entry],
+				cancel=(self.docstatus == 2),
+				update_outstanding="Yes",
+				merge_entries=False,
+			)
+
+	def make_extra_amount_gl_entries(self, amount, receivable_account, cost_center, income_account):
 		if amount == 0: return
 		if amount < 0:
-			return self.make_extra_amount_reverse_gl_entries(abs(amount))
+			return self.make_extra_amount_reverse_gl_entries(abs(amount), receivable_account, cost_center, income_account)
 		student_gl_entries = self.get_gl_dict(
 			{
-				"account": self.receivable_account,
+				"account": receivable_account or self.receivable_account,
 				"party_type": "Student",
 				"party": self.student,
-				"against": self.income_account,
+				"against": income_account or self.income_account,
 				"debit": amount,
 				"debit_in_account_currency": amount,
 				"against_voucher": self.name,
@@ -173,11 +173,11 @@ class Fees(AccountsController ,DocumentAttach):
 
 		fee_gl_entry = self.get_gl_dict(
 			{
-				"account": self.income_account,
+				"account": income_account or self.income_account,
 				"against": self.student,
 				"credit": amount,
 				"credit_in_account_currency": amount,
-				"cost_center": self.cost_center,
+				"cost_center": cost_center or self.cost_center,
 			},
 			item=self,
 		)
@@ -191,15 +191,15 @@ class Fees(AccountsController ,DocumentAttach):
 			merge_entries=False,
 		)
 
-	def make_extra_amount_reverse_gl_entries(self, amount):
+	def make_extra_amount_reverse_gl_entries(self, amount, receivable_account, cost_center, income_account):
 		if amount <= 0:
 			return
 		student_gl_entries = self.get_gl_dict(
 			{
-				"account": self.receivable_account,
+				"account": receivable_account or self.receivable_account,
 				"party_type": "Student",
 				"party": self.student,
-				"against": self.income_account,
+				"against": income_account or self.income_account,
 				"credit": amount,
 				"credit_in_account_currency": amount,
 				"against_voucher": self.name,
@@ -210,11 +210,11 @@ class Fees(AccountsController ,DocumentAttach):
 
 		fee_gl_entry = self.get_gl_dict(
 			{
-				"account": self.income_account,
+				"account": income_account or self.income_account,
 				"against": self.student,
 				"debit": amount,
 				"debit_in_account_currency": amount,
-				"cost_center": self.cost_center,
+				"cost_center": cost_center or self.cost_center,
 			},
 			item=self,
 		)

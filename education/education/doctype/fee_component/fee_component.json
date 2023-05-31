@@ -10,7 +10,12 @@
   "fees_category",
   "description",
   "column_break_2",
-  "amount"
+  "amount",
+  "accounts_section",
+  "receivable_account",
+  "cost_center",
+  "column_break_ismg",
+  "income_account"
  ],
  "fields": [
   {
@@ -45,12 +50,39 @@
    "oldfieldtype": "Small Text",
    "reqd": 1,
    "width": "300px"
+  },
+  {
+   "fieldname": "accounts_section",
+   "fieldtype": "Section Break",
+   "label": "Accounts"
+  },
+  {
+   "fieldname": "receivable_account",
+   "fieldtype": "Link",
+   "label": "Receivable Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "column_break_ismg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "income_account",
+   "fieldtype": "Link",
+   "label": "Income Account",
+   "options": "Account"
   }
  ],
  "icon": "fa fa-flag",
  "istable": 1,
  "links": [],
- "modified": "2023-03-22 18:23:55.979145",
+ "modified": "2023-05-30 05:16:56.296019",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fee Component",

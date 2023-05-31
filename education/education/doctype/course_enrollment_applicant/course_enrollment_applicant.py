@@ -59,8 +59,8 @@ class CourseEnrollmentApplicant(Document):
 		self.create_added_removed_courses_fees(added_courses, removed_courses)
 
 	def create_added_removed_courses_fees(self, added_courses, removed_courses):
-		added_total_fees, added_hour_rate, added_total_hours = self.calculate_courses_fees(added_courses)
-		removed_total_fees, removed_hour_rate, removed_total_hours = self.calculate_courses_fees(removed_courses)
+		added_total_fees, added_hour_rate, added_total_hours, course_receivable_account, course_cost_center, course_income_account = self.calculate_courses_fees(added_courses)
+		removed_total_fees, removed_hour_rate, removed_total_hours, _course_receivable_account, _course_cost_center, _course_income_account = self.calculate_courses_fees(removed_courses)
 		fees_name = frappe.db.exists("Fees", {"student": self.student, "against_doctype": "Course Enrollment Applicant",
 					"against_doctype_name": self.name,"program": self.program})
 		new_amount = added_total_fees - removed_total_fees
@@ -74,7 +74,10 @@ class CourseEnrollmentApplicant(Document):
 						cmpnt.description = ""
 						fees_doc.grand_total += new_amount
 						fees_doc.save(ignore_permissions=True)
-						fees_doc.make_extra_amount_gl_entries(new_amount)
+						if len(added_courses) > 0:
+							fees_doc.make_extra_amount_gl_entries(new_amount, course_receivable_account, course_cost_center, course_income_account)
+						else:
+							fees_doc.make_extra_amount_gl_entries(new_amount, _course_receivable_account, _course_cost_center, _course_income_account)
 						return
 			# Paid Fees and added-removed courses are greater than zero	
 			elif new_amount > 0:
@@ -90,13 +93,19 @@ class CourseEnrollmentApplicant(Document):
 				component.fees_category = 'Hour Rate'
 				component.description = _("The total number of registered hours: {0}, hour rate: {1}").format(added_total_hours - removed_total_hours, added_hour_rate)
 				component.amount = new_amount
+				component.receivable_account = course_receivable_account
+				component.cost_center = course_cost_center
+				component.income_account = course_income_account
 
 				fees_doc.save(ignore_permissions=True)
 				fees_doc.submit()
 				self.paid= 0
 			# Paid Fees and added-removed courses are lower than zero
 			else:
-				fees_doc.make_extra_amount_reverse_gl_entries(removed_total_fees - added_total_fees)
+				if len(added_courses) > 0:
+					fees_doc.make_extra_amount_reverse_gl_entries(removed_total_fees - added_total_fees, course_receivable_account, course_cost_center, course_income_account)
+				else:
+					fees_doc.make_extra_amount_reverse_gl_entries(removed_total_fees - added_total_fees, _course_receivable_account, _course_cost_center, _course_income_account)
 				
 		
 	def after_insert(self):
@@ -106,16 +115,19 @@ class CourseEnrollmentApplicant(Document):
 		total_fees = 0
 		total_hours =0
 		hour_rate = 0
-		if len(courses) == 0: return total_fees, hour_rate, total_hours
+		course_receivable_account, course_cost_center, course_income_account = None, None, None
+		if len(courses) == 0: return total_fees, hour_rate, total_hours, course_receivable_account, course_cost_center, course_income_account
 		current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year", cache=True)
 		current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term", cache=True)
 		results = frappe.db.sql("""
-			SELECT tbl1.total_courses_hours * tbl2.amount as total_fees, tbl1.total_courses_hours,  tbl2.amount as hour_rate FROM 
+			SELECT tbl1.total_courses_hours * tbl2.amount as total_fees, tbl1.total_courses_hours,  tbl2.amount as hour_rate,
+			  tbl2.receivable_account as course_receivable_account, tbl2.cost_center as course_cost_center, tbl2.income_account as course_income_account
+			   FROM 
 			(SELECT SUM(tcurs.total_course_hours) AS total_courses_hours 
 			FROM `tabCourse` AS tcurs
 				WHERE tcurs.name IN ({courses})
 				) as tbl1,
-				(SELECT cmpnt.amount
+				(SELECT cmpnt.amount, cmpnt.receivable_account, cmpnt.cost_center, cmpnt.income_account
 					FROM `tabFee Component` as cmpnt
 					INNER JOIN `tabFee Structure` as tfs ON tfs.name=cmpnt.parent
 				WHERE cmpnt.fees_category='Hour Rate' 
@@ -132,10 +144,13 @@ class CourseEnrollmentApplicant(Document):
 			total_fees = float(results[0]['total_fees'])
 			hour_rate = float(results[0]['hour_rate'])
 			total_hours = float(results[0]['total_courses_hours'])
-		return total_fees, hour_rate, total_hours
+			course_receivable_account, course_cost_center, course_income_account = (results[0]['course_receivable_account'],
+									   												results[0]['course_cost_center'],
+																					results[0]['course_income_account'])
+		return total_fees, hour_rate, total_hours, course_receivable_account, course_cost_center, course_income_account
 
 	def create_fees_record(self):
-		total_fees, application_fees, hour_rate, total_hours  = self.calculate_total_fees()
+		total_fees, application_fees, hour_rate, total_hours, course_receivable_account, course_cost_center, course_income_account, application_receivable_account, application_cost_center, application_income_account  = self.calculate_total_fees()
 		if total_fees > 0 or application_fees > 0:
 			fees_doc = frappe.get_doc({
 				"doctype": "Fees",
@@ -150,10 +165,16 @@ class CourseEnrollmentApplicant(Document):
 				component.fees_category = 'Hour Rate'
 				component.description = _("The total number of registered hours: {0}, hour rate: {1}").format(total_hours, hour_rate)
 				component.amount = total_fees
+				component.receivable_account = course_receivable_account
+				component.cost_center = course_cost_center
+				component.income_account = course_income_account
 			if application_fees > 0:
 				component = fees_doc.append("components")
 				component.fees_category = 'Application Fee'
 				component.amount = application_fees
+				component.receivable_account = application_receivable_account
+				component.cost_center = application_cost_center
+				component.income_account = application_income_account
 			fees_doc.save(ignore_permissions=True)
 			fees_doc.submit()
 
@@ -162,16 +183,21 @@ class CourseEnrollmentApplicant(Document):
 		application_fees = 0
 		total_hours =0
 		hour_rate = 0
+		course_receivable_account, course_cost_center, course_income_account = None, None, None
+		application_receivable_account, application_cost_center, application_income_account = None, None, None
 		current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year", cache=True)
 		current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term", cache=True)
 		results = frappe.db.sql("""
-			SELECT tbl1.total_courses_hours * tbl2.amount as total_fees, tbl3.application_fee, tbl1.total_courses_hours,  tbl2.amount as hour_rate FROM 
+			SELECT tbl1.total_courses_hours * tbl2.amount as total_fees, tbl3.application_fee, tbl1.total_courses_hours,  tbl2.amount as hour_rate,
+			tbl2.receivable_account as course_receivable_account, tbl2.income_account as course_income_account, tbl2.cost_center as course_cost_center,
+			tbl3.receivable_account as application_receivable_account, tbl3.income_account as application_income_account, tbl3.cost_center as application_cost_center
+			FROM 
 			(SELECT SUM(tcurs.total_course_hours) AS total_courses_hours 
 			FROM `tabCourse Enrollment Applied Course` AS tceac
 				INNER JOIN `tabCourse` AS tcurs ON tcurs.name=tceac.course
 				WHERE tceac.parent=%(applicant_name)s
 				) as tbl1,
-				(SELECT cmpnt.amount
+				(SELECT cmpnt.amount, cmpnt.receivable_account, cmpnt.income_account, cmpnt.cost_center
 					FROM `tabFee Component` as cmpnt
 					INNER JOIN `tabFee Structure` as tfs ON tfs.name=cmpnt.parent
 				WHERE cmpnt.fees_category='Hour Rate' 
@@ -179,7 +205,7 @@ class CourseEnrollmentApplicant(Document):
 				AND (academic_year=%(current_academic_year)s or academic_year='' or academic_year is null) 
 				AND (academic_term=%(current_academic_term)s or academic_term='' or academic_term is null) 
 					ORDER BY program DESC, academic_year DESC, academic_term DESC LIMIT 1) as tbl2,
-				(SELECT cmpnt.amount as application_fee
+				(SELECT cmpnt.amount as application_fee, cmpnt.receivable_account, cmpnt.income_account, cmpnt.cost_center
 					FROM `tabFee Component` as cmpnt
 					INNER JOIN `tabFee Structure` as tfs ON tfs.name=cmpnt.parent
 				WHERE cmpnt.fees_category='Application Fee' 
@@ -198,7 +224,17 @@ class CourseEnrollmentApplicant(Document):
 			application_fees = float(results[0]['application_fee'])
 			hour_rate = float(results[0]['hour_rate'])
 			total_hours = float(results[0]['total_courses_hours'])
-		return total_fees, application_fees, hour_rate, total_hours
+			course_receivable_account, course_cost_center, course_income_account = (results[0]['course_receivable_account'],
+									   												results[0]['course_cost_center'],
+																					results[0]['course_income_account'])
+			application_receivable_account, application_cost_center, application_income_account = (results[0]['application_receivable_account'],
+									   												results[0]['application_cost_center'],
+																					results[0]['application_income_account'])
+			
+		return (total_fees, application_fees, hour_rate, total_hours, 
+	  course_receivable_account, course_cost_center, course_income_account,
+	  application_receivable_account, application_cost_center, application_income_account
+	  )
 	
 @frappe.whitelist()
 def has_student_registred_courses(student):

@@ -22,11 +22,12 @@ def import_course_enrollment(data_file, create_fees=0):
 		      'enrollment_status': 'Enrollment Status', 'graduation_grade': 'Graduation Grade' }
 	required_columns_indexes = get_required_columns_indexes(data[0], list(required_columns.values()))
 	data = data[1:]
-	count = 0
+	errors = []
 	for enrollment_data in data:
 		added = add_enrollment_data(required_columns, required_columns_indexes, enrollment_data, create_fees=create_fees)
-		if not added: count += 1
-	print("Not added enrollments: "+ str(count))
+		if added.get('error'): errors.append(added)
+	print("Not added enrollments: ")
+	print(errors)
 def add_enrollment_data(required_columns, required_columns_indexes, enrollment_data, create_fees=0):
 	course = enrollment_data[required_columns_indexes[required_columns['course']]]
 	student = enrollment_data[required_columns_indexes[required_columns['student']]]
@@ -34,13 +35,13 @@ def add_enrollment_data(required_columns, required_columns_indexes, enrollment_d
 	academic_term = enrollment_data[required_columns_indexes[required_columns['academic_term']]]
 	enrollment_status = enrollment_data[required_columns_indexes[required_columns['enrollment_status']]]
 	graduation_grade = enrollment_data[required_columns_indexes[required_columns['graduation_grade']]]
-	if frappe.db.exists("Course Enrollment", {"course": course, "student": student, "academic_term": academic_term}): return False
+	if frappe.db.exists("Course Enrollment", {"course": course, "student": student, "academic_term": academic_term}): return {"error": True, "student": student, "course": course}
 	term_info = frappe.db.get_value('Academic Term', academic_term, ['academic_year', 'term_start_date', 'term_end_date'])
 	try:
 		program_enrollment = check_program_enrolled(student, term_info, academic_term)
 	except:
 		print("error with student: " + str(student))
-		return False
+		return {"error": True, "student": student, "course": course}
 	enrollment_doc = frappe.get_doc({
 		'doctype': 'Course Enrollment',
 		"program_enrollment": program_enrollment,
@@ -59,7 +60,7 @@ def add_enrollment_data(required_columns, required_columns_indexes, enrollment_d
 	else:
 		frappe.throw("error")
 	frappe.db.commit()
-	return True
+	return {"error": False, "student": student, "course": course}
 def check_program_enrolled(student, term_info, academic_term):
 	program_enrollment = frappe.db.get_value("Program Enrollment", {"student": student}, ['name'])
 	if program_enrollment: return program_enrollment
