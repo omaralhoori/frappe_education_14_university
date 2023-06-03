@@ -59,6 +59,11 @@ standard_portal_menu_items = [
 		"role": "Student",
 	},
 	{
+		"title": _("Transcript"),
+		"route": "/transcript",
+		"role": "Student",
+	},
+	{
 		"title": _("Update Student Info"),
 		"route": "/update-student-info",
 		"reference_doctype": "Student",

@@ -1,0 +1,38 @@
+{%  extends "templates/web.html" %}
+
+{% block title %}{{ _("Transcript") }}{% endblock %}
+
+{% block page_content %}
+
+{% if not transcript_data %}
+<div class="alert alert-info">{{_('There are no grades to show.')}}</div>
+
+{% else %}
+    {% for term in transcript_data %}
+        <table class="table table-striped mb-3">
+            <thead>
+                <th colspan="2">{{_(term)}}</th>
+                <th>{{_('Grade')}}</th>
+                <th>{{_('Result')}}</th>
+            </thead>
+            <tbody>
+            {% for grade in transcript_data[term] %}
+                <tr>
+                    <td>
+                        {{grade['course']}}
+                    </td>
+                    <td>{{grade['course_name']}}</td>
+                    <td>
+                        {{grade['graduation_grade'] or '' }}
+                    </td>
+                    <td>
+                        {{_(grade['enrollment_status'] )}}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

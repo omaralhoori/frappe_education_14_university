@@ -56,9 +56,10 @@ def add_enrollment_data(required_columns, required_columns_indexes, enrollment_d
 	})
 	enrollment_doc.save(ignore_permissions=True)
 	if cint(create_fees):
-		create_course_enrollment(student, program_enrollment, term_info[0], academic_term, [course])
+		create_course_enrollment_fees(student, program_enrollment, term_info[0], academic_term, [course])
 	else:
-		frappe.throw("error")
+		pass
+		#frappe.throw("error")
 	frappe.db.commit()
 	return {"error": False, "student": student, "course": course}
 def check_program_enrolled(student, term_info, academic_term):
@@ -78,7 +79,7 @@ def check_program_enrolled(student, term_info, academic_term):
 	program_enrollment.submit()
 	return program_enrollment.name
 
-def create_course_enrollment(student, enrolled_program, academic_year, academic_term, courses):
+def create_course_enrollment_fees(student, enrolled_program, academic_year, academic_term, courses):
 	enrollment_applicant = None
 	program = frappe.db.get_value("Program Enrollment", enrolled_program, ['program'])
 

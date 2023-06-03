@@ -459,28 +459,6 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/assets/frappe/icons/icons/22.png",
-   "icon_type": "Image",
-   "is_query_report": 0,
-   "label": "Other Reports",
-   "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "Program Enrollment",
-   "hidden": 0,
-   "icon_type": "Icon",
-   "is_query_report": 1,
-   "label": "Student and Guardian Contact Details",
-   "link_count": 0,
-   "link_to": "Student and Guardian Contact Details",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
    "icon_image": "/assets/frappe/icons/icons/141.png",
    "icon_type": "Image",
    "is_query_report": 0,
@@ -827,9 +805,40 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon_image": "/assets/frappe/icons/icons/22.png",
+   "icon_type": "Image",
+   "is_query_report": 0,
+   "label": "Other Reports",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "Program Enrollment",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Student and Guardian Contact Details",
+   "link_count": 0,
+   "link_to": "Student and Guardian Contact Details",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Unenrolled Students",
+   "link_count": 0,
+   "link_to": "Unenrolled Students",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-04-05 20:10:16.693366",
+ "modified": "2023-06-03 04:50:52.418885",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education",

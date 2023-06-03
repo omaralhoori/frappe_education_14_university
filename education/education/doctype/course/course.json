@@ -17,6 +17,8 @@
   "column_break_tflc",
   "description",
   "published",
+  "course_points",
+  "resource_link",
   "section_break_6",
   "topics",
   "assessment_tab",
@@ -136,6 +138,16 @@
    "fieldname": "published",
    "fieldtype": "Check",
    "label": "Published"
+  },
+  {
+   "fieldname": "course_points",
+   "fieldtype": "Int",
+   "label": "Course Points"
+  },
+  {
+   "fieldname": "resource_link",
+   "fieldtype": "Attach",
+   "label": "Resource"
   }
  ],
  "image_field": "hero_image",
@@ -145,7 +157,8 @@
    "link_fieldname": "course"
   }
  ],
- "modified": "2023-05-23 19:58:00.704496",
+ "make_attachments_public": 1,
+ "modified": "2023-05-31 12:20:31.444743",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course",

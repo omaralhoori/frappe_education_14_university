@@ -13,6 +13,7 @@
   "validate_course",
   "academic_term_reqd",
   "user_creation_skip",
+  "force_student_to_update_info",
   "section_break_7",
   "instructor_created_by",
   "course_enrollment_tab",
@@ -155,11 +156,17 @@
    "fieldname": "pulling_allowed_weeks",
    "fieldtype": "Int",
    "label": "Pulling Allowed Weeks"
+  },
+  {
+   "default": "0",
+   "fieldname": "force_student_to_update_info",
+   "fieldtype": "Check",
+   "label": "Force Student To Update Info"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-03-22 23:41:12.015592",
+ "modified": "2023-06-03 05:38:09.520218",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

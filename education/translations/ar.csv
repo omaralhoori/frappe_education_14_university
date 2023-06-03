@@ -32,3 +32,12 @@ Due Date,تاريخ الاستحقاق
 "The total number of registered hours: {0}, hour rate: {1}","إجمالي عدد الساعات المسجلة: {0} ، معدل الساعة: {1}"
 You have already registered the courses for this semester,لقد قمت بتسجيل المقررات لهذا الفصل من قبل
 You are not registered in any program,أنت غير مسجل في أي برنامج
+There are no grades to show.,لا يوجد درجات للعرض.
+Transcript,كشف الدرجات
+Graduated,ناجح
+Failed,راسب
+Drop Course Request,طلب إسقاط درس
+Study Postponement Request,طلب تأجيل دراسي
+Update Student Info,تحديث بيانات الطالب
+Enrolled Courses,الدروس المسجلة
+Personal Information,البيانات الشخصية

@@ -14,9 +14,15 @@
   "status",
   "naming_series",
   "department",
+  "supervisor",
   "image",
   "log_details",
-  "instructor_log"
+  "instructor_log",
+  "lft",
+  "rgt",
+  "is_group",
+  "old_parent",
+  "parent_instructor"
  ],
  "fields": [
   {
@@ -86,14 +92,57 @@
    "label": "Gender",
    "options": "Gender",
    "read_only_depends_on": "employee"
+  },
+  {
+   "fieldname": "supervisor",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supervisor",
+   "options": "Instructor"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "label": "Old Parent",
+   "options": "Instructor"
+  },
+  {
+   "fieldname": "parent_instructor",
+   "fieldtype": "Link",
+   "label": "Parent Instructor",
+   "options": "Instructor"
   }
  ],
  "image_field": "image",
+ "is_tree": 1,
  "links": [],
- "modified": "2020-07-23 18:33:57.904398",
+ "modified": "2023-05-31 22:04:49.377166",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Instructor",
+ "naming_rule": "By \"Naming Series\" field",
+ "nsm_parent_field": "parent_instructor",
  "owner": "Administrator",
  "permissions": [
   {
@@ -117,9 +166,9 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "instructor_name"
 }
