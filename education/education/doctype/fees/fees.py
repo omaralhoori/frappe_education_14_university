@@ -332,3 +332,31 @@ def get_fees_due_date():
 			fees_due_date = frappe.db.get_value("Academic Term", academic_term, "fees_due_date", cache=True)
 			if fees_due_date: return fees_due_date
 	return frappe.utils.nowdate()
+
+
+def get_fees_accounts(fees_category, program=None):
+	"""
+		return ->
+			amount, receivable_account, income_account, cost_center
+	"""
+	current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year", cache=True)
+	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term", cache=True)
+	results = frappe.db.sql("""
+			SELECT cmpnt.amount, cmpnt.receivable_account, cmpnt.cost_center, cmpnt.income_account
+				FROM `tabFee Component` as cmpnt
+				INNER JOIN `tabFee Structure` as tfs ON tfs.name=cmpnt.parent
+			WHERE cmpnt.fees_category=%(fees_category)s 
+			AND (program=%(program)s or program='' or program is null) 
+			AND (academic_year=%(current_academic_year)s or academic_year='' or academic_year is null) 
+			AND (academic_term=%(current_academic_term)s or academic_term='' or academic_term is null) 
+				ORDER BY program DESC, academic_year DESC, academic_term DESC LIMIT 1
+	""", {
+		"fees_category": fees_category,
+		"program": program,
+		"current_academic_year": current_academic_year,
+		"current_academic_term": current_academic_term
+	}, as_dict=True)
+
+	if len(results) > 0:
+		return results[0]['amount'], results[0]['receivable_account'], results[0]['income_account'], results[0]['cost_center']
+	

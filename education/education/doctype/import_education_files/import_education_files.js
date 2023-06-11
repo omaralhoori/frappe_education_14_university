@@ -16,5 +16,16 @@ frappe.ui.form.on("Import Education Files", {
                 frappe.msgprint('Done')
             }
         })
-    }
+    },
+    import_certificate_file(frm){
+        frappe.call({
+            method: "education.education.doctype.import_education_files.import_education_files.import_certificate_file",
+            args: {
+                data_file: frm.doc.program_certificate_file,
+            },
+            callback: (res) => {
+                frappe.msgprint('Done')
+            }
+        })
+    },
 });

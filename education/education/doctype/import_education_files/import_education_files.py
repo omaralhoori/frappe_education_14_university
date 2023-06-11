@@ -1,6 +1,7 @@
 # Copyright (c) 2023, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from education.education.doctype.fees.fees import get_fees_accounts
 import frappe
 from frappe.model.document import Document
 import os
@@ -12,6 +13,68 @@ from frappe.utils.xlsxutils import read_xls_file_from_attached_file, read_xlsx_f
 class ImportEducationFiles(Document):
 	pass
 
+@frappe.whitelist()
+def import_certificate_file(data_file):
+	content, extn = read_file(data_file)
+	data = read_content(content, extn)
+	required_columns = {'amount': 'Amount', 'student': 'Student'}
+	required_columns_indexes = get_required_columns_indexes(data[0], list(required_columns.values()))
+	data = data[1:]
+	errors = []
+	for enrollment_data in data:
+		added = add_program_certifcate_fee(required_columns, required_columns_indexes, enrollment_data)
+		if added.get('error'): errors.append(added)
+	print("Not added enrollments: ")
+	print(errors)
+
+def add_program_certifcate_fee(required_columns, required_columns_indexes, enrollment_data):
+	amount = enrollment_data[required_columns_indexes[required_columns['amount']]]
+	student_column = enrollment_data[required_columns_indexes[required_columns['student']]]
+	if not student_column: return {"error": True, "student": student_column, 'msg': 'student null'}
+	student = frappe.db.get_value("Student", {"student_email_id":student_column}, ['name'])
+	if not student: return {"error": True, "student": student_column, 'msg': 'student not found'}
+
+	program = frappe.db.get_value("Program Enrollment", {"student": student}, ['program'])
+	if not program: return {"error": True, "student": student, 'msg': 'program not enrolled'}
+	accounts = get_fees_accounts('Program Certificate', program)
+	if not accounts: return {"error": True, "student": student, 'msg': 'accounts not found'}
+	if check_if_has_fees(student, 'Program Certificate'):
+		return {"error": False, "student": student}
+	fees_doc = frappe.get_doc({
+	"doctype": "Fees",
+	"student": student,
+	"against_doctype": "Student",
+	"against_doctype_name": student,
+	"program": program,
+	"due_date": frappe.utils.nowdate(),
+	"receivable_account" : accounts[1],
+	"cost_center" : accounts[3],
+	"income_account": accounts[2]
+	})
+	if float(amount) > 0:
+		component = fees_doc.append("components")
+		component.fees_category = 'Program Certificate'
+		component.description = ''
+		component.amount = float(amount)
+		component.receivable_account = accounts[1]
+		component.cost_center = accounts[3]
+		component.income_account = accounts[2]
+	
+	fees_doc.save(ignore_permissions=True)
+	fees_doc.submit()
+	frappe.db.commit()
+	return {"error": False, "student": student}
+
+def check_if_has_fees(student, fees_category):
+	results = frappe.db.sql("""
+		SELECT cmpnt.name FROM `tabFee Component` as cmpnt
+		INNER JOIN `tabFees` as tfs ON tfs.name=cmpnt.parent
+		WHERE cmpnt.fees_category=%(fees_category)s AND tfs.student=%(student)s
+	""",{"student": student, "fees_category": fees_category})
+
+	if len(results)> 0:
+		return True
+	return False
 
 @frappe.whitelist()
 def import_course_enrollment(data_file, create_fees=0):
@@ -28,9 +91,11 @@ def import_course_enrollment(data_file, create_fees=0):
 		if added.get('error'): errors.append(added)
 	print("Not added enrollments: ")
 	print(errors)
+
 def add_enrollment_data(required_columns, required_columns_indexes, enrollment_data, create_fees=0):
 	course = enrollment_data[required_columns_indexes[required_columns['course']]]
 	student = enrollment_data[required_columns_indexes[required_columns['student']]]
+	if not student: return {"error": True, "student": student, "course": course}
 	student = frappe.db.get_value("Student", {"student_email_id":student}, ['name'])
 	academic_term = enrollment_data[required_columns_indexes[required_columns['academic_term']]]
 	enrollment_status = enrollment_data[required_columns_indexes[required_columns['enrollment_status']]]

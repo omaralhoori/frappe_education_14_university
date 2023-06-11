@@ -11,7 +11,11 @@
   "course_enrollment_file",
   "column_break_fifv",
   "create_fees",
-  "import_course_enrollment"
+  "import_course_enrollment",
+  "program_certificate_section",
+  "program_certificate_file",
+  "column_break_4mxk",
+  "import_certificate_file"
  ],
  "fields": [
   {
@@ -38,13 +42,32 @@
    "fieldname": "create_fees",
    "fieldtype": "Check",
    "label": "Create Fees"
+  },
+  {
+   "fieldname": "program_certificate_section",
+   "fieldtype": "Section Break",
+   "label": "Program Certificate"
+  },
+  {
+   "fieldname": "program_certificate_file",
+   "fieldtype": "Attach",
+   "label": "Program Certificate File"
+  },
+  {
+   "fieldname": "column_break_4mxk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_certificate_file",
+   "fieldtype": "Button",
+   "label": "Import Certificate File"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-05-27 14:53:09.907715",
+ "modified": "2023-06-11 08:03:26.621425",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Import Education Files",
