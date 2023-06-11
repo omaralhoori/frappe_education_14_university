@@ -24,6 +24,8 @@
   "enrolled_courses",
   "courses",
   "fees_tab",
+  "scholarship_section",
+  "has_scholarship",
   "section_break_7",
   "fees",
   "amended_from",
@@ -167,12 +169,23 @@
    "label": "Educational Year",
    "options": "Educational Year",
    "reqd": 1
+  },
+  {
+   "fieldname": "scholarship_section",
+   "fieldtype": "Section Break",
+   "label": "Scholarship"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_scholarship",
+   "fieldtype": "Check",
+   "label": "Has Scholarship"
   }
  ],
  "image_field": "image",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-03-27 04:49:25.564313",
+ "modified": "2023-06-11 11:49:04.634588",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program Enrollment",

@@ -48,6 +48,10 @@ class Fees(AccountsController ,DocumentAttach):
 			self.cost_center = accounts_details.cost_center
 		if not self.student_email:
 			self.student_email = self.get_student_emails()
+	def on_update_after_submit(self):
+		self.calculate_total()
+		self.delete_gl_entries()
+		self.make_gl_entries()
 
 	def get_student_emails(self):
 		student_emails = frappe.db.sql_list(
@@ -117,8 +121,8 @@ class Fees(AccountsController ,DocumentAttach):
 		# frappe.db.set(self, 'status', 'Cancelled')
 
 	def make_gl_entries(self):
-		if not self.grand_total:
-			return
+		# if not self.grand_total:
+		# 	return
 		from erpnext.accounts.general_ledger import make_gl_entries
 		for component in self.components:
 			student_gl_entries = self.get_gl_dict(
@@ -152,6 +156,16 @@ class Fees(AccountsController ,DocumentAttach):
 				update_outstanding="Yes",
 				merge_entries=False,
 			)
+	
+	def delete_gl_entries(self):
+		frappe.db.delete("GL Entry", {
+			"voucher_type": 'Fees',
+			"voucher_no": self.name
+		})
+		frappe.db.delete("Payment Ledger Entry", {
+			"voucher_type": 'Fees',
+			"voucher_no": self.name
+		})
 
 	def make_extra_amount_gl_entries(self, amount, receivable_account, cost_center, income_account):
 		if amount == 0: return

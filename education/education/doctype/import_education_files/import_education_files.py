@@ -40,17 +40,20 @@ def add_program_certifcate_fee(required_columns, required_columns_indexes, enrol
 	if not accounts: return {"error": True, "student": student, 'msg': 'accounts not found'}
 	if check_if_has_fees(student, 'Program Certificate'):
 		return {"error": False, "student": student}
-	fees_doc = frappe.get_doc({
-	"doctype": "Fees",
-	"student": student,
-	"against_doctype": "Student",
-	"against_doctype_name": student,
-	"program": program,
-	"due_date": frappe.utils.nowdate(),
-	"receivable_account" : accounts[1],
-	"cost_center" : accounts[3],
-	"income_account": accounts[2]
-	})
+	fees_doc = None
+	fees_new = False
+	if frappe.db.exists("Fees", {"student": student,}):
+		fees_doc = frappe.get_doc("Fees", {"student": student,})
+	else:
+		fees_new = True
+		fees_doc = frappe.get_doc({
+		"doctype": "Fees",
+		"student": student,
+		"against_doctype": "Student",
+		"against_doctype_name": student,
+		"program": program,
+		"due_date": frappe.utils.nowdate(),
+		})
 	if float(amount) > 0:
 		component = fees_doc.append("components")
 		component.fees_category = 'Program Certificate'
@@ -59,9 +62,10 @@ def add_program_certifcate_fee(required_columns, required_columns_indexes, enrol
 		component.receivable_account = accounts[1]
 		component.cost_center = accounts[3]
 		component.income_account = accounts[2]
-	
+	fees_doc.calculate_total()
 	fees_doc.save(ignore_permissions=True)
-	fees_doc.submit()
+	if fees_new:
+		fees_doc.submit()
 	frappe.db.commit()
 	return {"error": False, "student": student}
 
