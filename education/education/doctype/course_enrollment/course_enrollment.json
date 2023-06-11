@@ -89,8 +89,7 @@
   {
    "fieldname": "graduation_grade",
    "fieldtype": "Data",
-   "label": "Graduation Grade",
-   "read_only": 1
+   "label": "Graduation Grade"
   },
   {
    "fieldname": "enrollment_status",
@@ -138,7 +137,7 @@
   }
  ],
  "links": [],
- "modified": "2023-05-23 19:15:42.669204",
+ "modified": "2023-06-04 21:59:32.254291",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment",
