@@ -4,7 +4,7 @@
 frappe.ui.form.on("Course Enrollment Applicant", {
 	refresh(frm) {
         if (!frm.is_new() && frm.doc.application_status==="Applied") {
-			if(frm.doc.paid){
+			if(frm.doc.paid || true){
                 frm.add_custom_button(__("Approve"), function() {
                     //frm.set_value("application_status", "Approved");
                     frm.events.enroll(frm)

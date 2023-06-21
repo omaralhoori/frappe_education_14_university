@@ -101,8 +101,8 @@ class Fees(AccountsController ,DocumentAttach):
 				_("Payment request {0} created").format(getlink("Payment Request", pr.name))
 			)
 	@frappe.whitelist()
-	def pay_fee(self):
-		payment_entry = get_payment_entry("Fees", self.name, party_amount=self.outstanding_amount, party_type='Student', payment_type='Receive', ignore_account_permission=True)
+	def pay_fee(self, amount=None):
+		payment_entry = get_payment_entry("Fees", self.name, party_amount=amount or self.outstanding_amount, party_type='Student', payment_type='Receive', ignore_account_permission=True)
 		payment_entry.save(ignore_permissions=True)
 		payment_entry.submit()
 		if self.against_doctype and self.against_doctype_name:
@@ -276,19 +276,77 @@ def get_list_context(context=None):
 		"get_list": get_fee_list,
 		"row_template": "templates/includes/fee/fee_row.html",
 	}
-
-
+import requests
+import json
 @frappe.whitelist()
 def pay_fee():
 	try:
-		fee_doc = frappe.get_doc("Fees", frappe.local.form_dict.get('doc-name'))
-		fee_doc.pay_fee()
+		fee_doc = frappe.get_doc("Fees", frappe.form_dict.get('doc_name'))
+	except:
+			return {
+			"error": _('These fees are not exist.')
+		}
+	try:
+		header = {
+			"authorization": frappe.db.get_single_value("Fees Payment Settings", "server_key"),
+			"content-type": "application/json"
+		}
+		amount = frappe.form_dict.get('amount')
+		if float(amount) < frappe.db.get_single_value('Fees Payment Settings', 'amount_limit') and float(fee_doc.outstanding_amount) != float(amount):
+			return {
+				"error": _('Cart amount is not valid')
+			}
+		
+		data = {
+			"profile_id": frappe.db.get_single_value('Fees Payment Settings', 'profile_id'),
+			"tran_type": "sale",
+			"tran_class": "ecom",
+			"cart_description": "fees payment",
+			"cart_id": fee_doc.name,
+			"cart_currency": frappe.db.get_value('Company', fee_doc.company,'default_currency', cache=True),
+			"cart_amount": float(amount),
+			"payment_token": frappe.form_dict.token,
+			"callback": f"https://rewaq-jo.com/api/method/education.education.doctype.fees.fees.payment_callback",
+				"customer_details": {
+					"name": frappe.form_dict.card_holder,
+					"email": "jsmith@gmail.com",
+					"street1": "404, 11th st, void",
+					"city": "Dubai",
+					"state": "DU",
+					"country": "AE",
+					"ip": "91.74.146.168"
+				}
+		}
+	except:
+		return {
+			"error": _('Missing information')
+		}
+	try:
+	# fee_doc.pay_fee()
+		
+		res = requests.post("https://secure-jordan.paytabs.com/payment/request", headers=header, data=json.dumps(data))
+		results_json = json.loads(res.content)
+		with open("tresults.txt", "w") as f:
+			f.write(str(results_json))
+		if results_json.get('redirect_url'):
+			return {
+				'redirect_url': results_json.get('redirect_url')
+			}
 	except:
 		return {
 			"error": _('You are not allowed to pay this fee')
 		}
 	return {"msg": _("The fee is paid successfully")}
 
+@frappe.whitelist(allow_guest=True)
+def payment_callback():
+	with open("docname.txt", "w") as f:
+		f.write(str(frappe.request.headers) + str(frappe.form_dict))
+	fee_name = frappe.form_dict.get('cart_id')
+	paid_amount = frappe.form_dict.get('tran_total')
+	fee_doc = frappe.get_doc('Fees', fee_name)
+	fee_doc.pay_fee(float(paid_amount))
+	return True
 
 @frappe.whitelist()
 def upload_receipt():

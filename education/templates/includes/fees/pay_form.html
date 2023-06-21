@@ -3,9 +3,15 @@
 <form action="" id="payform" method="post">
     <span id="paymentErrors"></span>
     <div class="row form-group">
-        <label class="col-sm-5 col-form-label">{{_('Outstanding Amount')}}</label>
+        <label class="col-sm-5 col-form-label">{{_('Amount')}}</label>
         <div class="col-sm-7 outstanding-container">
             
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-sm-5 col-form-label">{{_('Card Holder Name')}}</label>
+        <div class="col-sm-7">
+            <input type="text" class="form-control card-holder" name='card_holder_name' size="20">
         </div>
     </div>
     <div class="row form-group">
@@ -38,18 +44,70 @@
 
 <script type="text/javascript">
     var myform = document.getElementById('payform');
-    // paylib.inlineForm({
-    //     'key': '{{client_key}}',
-    //     'form': myform,
-    //     'autoSubmit': true,
-    //     'callback': function (response) {
-    //         document.getElementById('paymentErrors').innerHTML = '';
-    //         if (response.error) {
-    //             paylib.handleError(document.getElementById('paymentErrors'), response);
-    //         }
-    //     }
-    // });
+    
+    paylib.inlineForm({
+         'key': '{{client_key}}',
+         'form': myform,
+         'autoSubmit': false,
+         'callback': function (response) {
+            console.log('test');
+            console.log(response);
+             document.getElementById('paymentErrors').innerHTML = '';
+             console.log('eroro');
+             if (response.error) {
+                console.log('error');
+                console.log(response.error);
+                 paylib.handleError(document.getElementById('paymentErrors'), response);
+             }else{
+                var payform = document.getElementById('payform');
+                var docName =  payform.getElementsByClassName('doc-name-input')[0].value;
+                var holderName =  payform.getElementsByClassName('card-holder')[0].value;
+                var cartAmount =  payform.getElementsByClassName('cart-amount')[0].value;
+                 $.ajax({
+                    url: "{{pay_form_url}}",  
+                    method: "POST",
+                    data: {
+                        "token": response.token,
+                         "card_holder":holderName,
+                         "doc_name": docName,
+                         "amount": cartAmount
+                         },
+                    success: function(data) {
+                        console.log(data);
+                        var awaitTime = 5;
+                        if (data.message.msg){
+                            frappe.show_alert({
+                            message: data.message.msg,
+                            indicator:'green'
+                        }, awaitTime);
+                        location.reload();
+                        }else if(data.message.error){
+                            frappe.show_alert({
+                            message: data.message.error,
+                            indicator:'red'
+                        }, awaitTime);
+                        }else if (data.message.redirect_url) {
+                            var strWindowFeatures = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
+                            var win = window.open(data.message.redirect_url, "_blank", strWindowFeatures);
+                            var timer = setInterval(function() { 
+                                if(win.closed) {
+                                    clearInterval(timer);
+                                    location.reload();
+                                }
+                            }, 1000);
+                        } else{
+                            frappe.show_alert({
+                            message: __('Something went wrong'),
+                            indicator:'red'
+                        }, awaitTime);
 
+                        }
+                    }
+                });
+             }
+         }
+     });
+/*
     myform.onsubmit = function(){
     var vals = $(this).serialize();
 
@@ -82,9 +140,22 @@
 
     return false; // prevent from submit
 };
-
+*/
+    const checkCartAmount = function(e) {
+        if(Number(e.value) < Number('{{amount_limit}}')){
+            e.value = '{{amount_limit}}';
+            frappe.show_alert({
+                message: '{{amount_msg}} {{amount_limit}}',
+                indicator:'orange'
+            }, 3);
+        }
+    }
     const payBtnOnClick = function(e) {
-        document.querySelector('.outstanding-container').innerHTML = e.getAttribute('doc-price')
+        if (Number(e.getAttribute('doc-price')) < Number('{{amount_limit}}')){
+            document.querySelector('.outstanding-container').innerHTML = `${e.getAttribute('doc-price')} <input type="hidden" onchange="checkCartAmount(this)" class="form-control cart-amount" size="20" value="${e.getAttribute('doc-price')}">`
+        }else{
+            document.querySelector('.outstanding-container').innerHTML = `<input type="number" onchange="checkCartAmount(this)" class="form-control cart-amount" size="20" value="${e.getAttribute('doc-price')}">`
+        }
         document.querySelector('.doc-name-input').value = e.getAttribute('doc-name')
     }
 </script>
