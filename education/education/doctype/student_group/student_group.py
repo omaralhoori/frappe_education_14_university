@@ -230,7 +230,10 @@ def get_course_registered_group(course):
 def get_course_groups(course):
 	current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
 	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
-
+	student_gender = frappe.db.get_value("Student", {"user": frappe.session.user}, ['gender'])
+	where_stmt = ""
+	if student_gender:
+		where_stmt = f"AND (tsg.group_gender='{student_gender}' or tsg.group_gender is NULL)"
 	return frappe.db.sql("""
 		select tsg.name as group_id, tsg.student_group_name,tsg.max_strength, crs_scd.course_day, IFNULL(grp_std.student_count,0) as student_count ,
 		crs_scd.from_time, crs_scd.to_time, crs_scd.instructor FROM `tabStudent Group` tsg
@@ -242,6 +245,6 @@ def get_course_groups(course):
 		(select IFNULL(count(name), 0) as student_count, parent  FROM `tabStudent Group Student` tsgs
 		GROUP BY parent
 		) as grp_std ON grp_std.parent=tsg.name
-		WHERE tsg.course=%(course)s AND tsg.academic_year=%(academic_year)s AND tsg.academic_term=%(academic_term)s
+		WHERE tsg.course=%(course)s AND tsg.academic_year=%(academic_year)s AND tsg.academic_term=%(academic_term)s {where_stmt}
 		GROUP By tsg.name, crs_scd.course_day, crs_scd.from_time
-	""", {"academic_term": current_academic_term, "academic_year": current_academic_year, "course": course}, as_dict=True)
+	""".format(where_stmt=where_stmt), {"academic_term": current_academic_term, "academic_year": current_academic_year, "course": course}, as_dict=True)

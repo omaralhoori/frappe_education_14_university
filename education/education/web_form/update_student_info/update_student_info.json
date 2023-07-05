@@ -20,7 +20,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-07-04 22:07:03.391934",
+ "modified": "2023-07-05 16:15:42.839452",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "update-student-info",
@@ -86,12 +86,12 @@
   {
    "allow_read_on_all_link_options": 1,
    "fieldname": "educational_level",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "hidden": 0,
    "label": "Educational Level",
    "max_length": 0,
    "max_value": 0,
-   "options": "",
+   "options": "Educational Level",
    "read_only": 0,
    "reqd": 1,
    "show_in_filter": 0
