@@ -194,3 +194,39 @@ def get_student_admission_data(student_admission, program):
 		return student_admission[0]
 	else:
 		return None
+
+
+def create_student_by_user(user):
+	if user.email and frappe.db.exists("Student", {"student_email_id": user.email}):
+		print("exists by email")
+		return  frappe.get_doc("Student", {"student_email_id": user.email})
+	if user.mobile_no and frappe.db.exists("Student", {"student_mobile_number": user.mobile_no}):
+		print("exists by phone")
+		return frappe.get_doc("Student", {"student_mobile_number":user.mobile_no })
+	print("not exists")
+	student = frappe.get_doc({
+		"doctype": "Student",
+		"first_name": user.first_name,
+		"last_name": user.last_name,
+		"joining_date": frappe.utils.nowdate(),
+		"student_email_id": user.email,
+		"student_mobile_number": user.mobile_no,
+		"user": user.name,
+		"owner": user.name
+	})
+	educational_year = frappe.db.sql("""
+			SELECT name FROM `tabEducational Year` ORDER BY year_order LIMIT 1;
+		""",as_dict=True)
+	if educational_year: student.educational_year = educational_year[0]['name']
+	student.save(ignore_permissions=True)
+	# user = frappe.get_doc("User", student.user)
+	user.append_roles(['Student'])
+	user.save(ignore_permissions=True)
+	frappe.db.sql("""
+		UPDATE `tabStudent` SET owner=%(user)s
+		WHERE name=%(student)s
+	""", {"user": user.name, "student": student.name})
+	# student.owner = user.name
+	# student.save(ignore_permissions=True)
+	print("every thing ok-----------------------------------------")
+	return student
