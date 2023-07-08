@@ -22,10 +22,16 @@ class StudentAdmission(WebsiteGenerator):
 			frappe.throw(_("Please add programs to enable admission application."))
 
 	def is_program_registered(self, program):
+		student = frappe.db.get_value('Student', {"user": frappe.session.user}, "name")
 		registered = frappe.db.sql("""
-			select name from `tabStudent Applicant`
-			WHERE program=%(program)s AND (student_email_id=%(student)s OR student_mobile_number=%(student)s)
-		""", {"program": program, "student": frappe.session.user})
+			select name from `tabProgram Enrollment`
+			WHERE program=%(program)s AND student=%(student)s 
+		""", {"program": program, "student": student})
+		if len(registered) == 0 :
+			registered = frappe.db.sql("""
+				select name from `tabStudent Applicant`
+				WHERE program=%(program)s AND student=%(student)s
+			""", {"program": program, "student": student})
 		return True if registered else False
 
 	def get_context(self, context):
