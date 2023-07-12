@@ -18,6 +18,7 @@
   "description",
   "published",
   "course_points",
+  "resource_type",
   "resource_link",
   "section_break_6",
   "topics",
@@ -148,6 +149,12 @@
    "fieldname": "resource_link",
    "fieldtype": "Attach",
    "label": "Resource"
+  },
+  {
+   "fieldname": "resource_type",
+   "fieldtype": "Select",
+   "label": "Resource Type",
+   "options": "\nEssential Book\nAdditional Book\nRecord\nArticle\nDiscernment Talk\nMagazine\nDiscussion Participation"
   }
  ],
  "image_field": "hero_image",
@@ -158,7 +165,7 @@
   }
  ],
  "make_attachments_public": 1,
- "modified": "2023-05-31 12:20:31.444743",
+ "modified": "2023-07-12 14:44:42.437057",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course",
