@@ -14,6 +14,7 @@
   "max_strength",
   "group_gender",
   "virtual_room_link",
+  "whatsapp_link",
   "column_break_3",
   "academic_term",
   "program",
@@ -163,11 +164,16 @@
    "fieldtype": "Attach Image",
    "hidden": 1,
    "label": "Group Image"
+  },
+  {
+   "fieldname": "whatsapp_link",
+   "fieldtype": "Data",
+   "label": "Whatsapp Link"
   }
  ],
  "image_field": "group_image",
  "links": [],
- "modified": "2023-05-17 15:47:47.904879",
+ "modified": "2023-07-12 19:51:29.308576",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Group",

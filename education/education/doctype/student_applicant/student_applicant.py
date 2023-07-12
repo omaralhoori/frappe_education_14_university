@@ -242,5 +242,69 @@ def create_student_by_user(user, additional_data={}):
 		""", {"user": user.name})
 	# student.owner = user.name
 	# student.save(ignore_permissions=True)
+	add_student_to_group(student)	
 
 	return student
+
+def add_student_to_group(student):
+	if not frappe.db.get_single_value("Education Settings", "add_new_students_to_groups"):
+		return True
+	batch_name = frappe.db.get_single_value("Education Settings", "batch_name")
+	batch_count =  frappe.db.get_single_value("Education Settings", "batch_count")
+	max_strength =  frappe.db.get_single_value("Education Settings", "max_group_strength")
+	if not batch_name: batch_name = 'Batch'
+	batch_name_count = batch_name + " - " + str(int(batch_count))
+	academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+	academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+	student_group = None
+	if exists := frappe.db.exists("Student Group", {"batch": batch_name_count, "academic_year": academic_year, "academic_term": academic_term}):
+		student_group = frappe.get_doc("Student Group", exists)
+		if len(student_group.students) < student_group.max_strength:
+			student_row = student_group.append('students')
+			student_row.student = student.name
+			student_row.active = 1
+			student_group.save(ignore_permissions=True)
+			return True
+	
+	batch_count += 1
+	batch_name_count = batch_name + " - " + str(int(batch_count))
+	while frappe.db.exists("Student Batch Name", batch_name_count):
+		batch_count += 1
+		batch_name_count = batch_name + " - " + str(int(batch_count))
+	else:
+		frappe.get_doc({
+			"doctype": "Student Batch Name",
+			"batch_name": batch_name_count
+		}).save(ignore_permissions=True)
+	program = frappe.db.get_all("Program")
+	group_name = batch_name_count
+	if academic_term:
+		group_name += " - " + academic_term
+	whats_app_links = frappe.db.sql("""
+		SELECT 	name, group_link FROM `tabWhatsapp Group`
+		WHERE is_used=0
+	""", as_dict=True)
+	student_group = frappe.get_doc({
+		"doctype": "Student Group",
+		"max_strength": max_strength,
+		"group_based_on": "Batch",
+		"batch": batch_name_count,
+		"program": program[0].get('name'),
+		"academic_year": academic_year,
+		"academic_term": academic_term,
+		"student_group_name": group_name,
+	})
+	student_row = student_group.append('students')
+	student_row.student = student.name
+	student_row.active = 1
+	student_group.save(ignore_permissions=True)
+	frappe.db.set_single_value("Education Settings", "batch_count", batch_count)
+	if len(whats_app_links) > 0:
+		student_group.whatsapp_link = whats_app_links[0].get('group_link')
+		frappe.db.sql("""
+			UPDATE `tabWhatsapp Group` SET is_used=1, associated_group=%(student_group)s
+			WHERE name=%(name)s
+		""", {"student_group": student_group.name, "name": whats_app_links[0].get('name')})
+		student_group.save(ignore_permissions=True)
+	frappe.db.commit()
+	return True

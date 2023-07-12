@@ -26,7 +26,14 @@
   "pulling_allowed_weeks",
   "graduation_for_prerequisites",
   "fetch_courses_from_program",
-  "allow_adding_and_removing"
+  "allow_adding_and_removing",
+  "signup_process_tab",
+  "add_new_students_to_groups",
+  "max_group_strength",
+  "batch_name",
+  "batch_count",
+  "whatsapp_groups_section",
+  "whatsapp_groups"
  ],
  "fields": [
   {
@@ -162,11 +169,51 @@
    "fieldname": "force_student_to_update_info",
    "fieldtype": "Check",
    "label": "Force Student To Update Info"
+  },
+  {
+   "fieldname": "signup_process_tab",
+   "fieldtype": "Tab Break",
+   "label": "Signup Process"
+  },
+  {
+   "default": "0",
+   "fieldname": "add_new_students_to_groups",
+   "fieldtype": "Check",
+   "label": "Add New Students to Groups"
+  },
+  {
+   "depends_on": "eval:doc.add_new_students_to_groups==1",
+   "fieldname": "max_group_strength",
+   "fieldtype": "Int",
+   "label": "Max Group Strength"
+  },
+  {
+   "depends_on": "eval:doc.add_new_students_to_groups==1",
+   "fieldname": "batch_name",
+   "fieldtype": "Data",
+   "label": "Batch Name"
+  },
+  {
+   "fieldname": "whatsapp_groups_section",
+   "fieldtype": "Section Break",
+   "label": "Whatsapp Groups"
+  },
+  {
+   "fieldname": "whatsapp_groups",
+   "fieldtype": "Table",
+   "label": "Whatsapp Groups",
+   "options": "Whatsapp Group"
+  },
+  {
+   "default": "0",
+   "fieldname": "batch_count",
+   "fieldtype": "Int",
+   "label": "Batch Count"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-06-03 05:38:09.520218",
+ "modified": "2023-07-12 19:07:29.344827",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",
