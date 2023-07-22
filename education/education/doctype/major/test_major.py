@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestEducationalCertificate(FrappeTestCase):
+class TestMajor(FrappeTestCase):
 	pass

@@ -215,7 +215,7 @@ def create_student_by_user(user, additional_data={}):
 		"nationality": additional_data.get('student_nationality'),
 		"date_of_birth": additional_data.get('student_dob'),
 		"native_language": additional_data.get('student_language'),
-		"latest_educational_certificate": additional_data.get('educational_certificate'),
+		"major": additional_data.get('major'),
 		"educational_level": additional_data.get('educational_level'),
 		"country": additional_data.get('student_country'),
 		"city": additional_data.get('student_city'),
