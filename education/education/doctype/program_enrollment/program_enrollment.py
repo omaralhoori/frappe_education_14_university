@@ -50,12 +50,12 @@ class ProgramEnrollment(Document):
 			"Academic Term", self.academic_term, ["term_start_date", "term_end_date"]
 		)
 		if self.enrollment_date:
-			if start_date and getdate(self.enrollment_date) < getdate(start_date):
-				frappe.throw(
-					_(
-						"Enrollment Date cannot be before the Start Date of the Academic Term {0}"
-					).format(get_link_to_form("Academic Term", self.academic_term))
-				)
+			# if start_date and getdate(self.enrollment_date) < getdate(start_date):
+			# 	frappe.throw(
+			# 		_(
+			# 			"Enrollment Date cannot be before the Start Date of the Academic Term {0}"
+			# 		).format(get_link_to_form("Academic Term", self.academic_term))
+			# 	)
 
 			if end_date and getdate(self.enrollment_date) > getdate(end_date):
 				frappe.throw(

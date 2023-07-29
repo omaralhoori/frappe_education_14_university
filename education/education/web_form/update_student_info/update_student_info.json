@@ -9,6 +9,7 @@
  "amount": 0.0,
  "amount_based_on_field": 0,
  "apply_document_permissions": 0,
+ "banner_image": "",
  "button_label": "Save",
  "creation": "2023-05-13 13:41:31.889459",
  "currency": "JOD",
@@ -20,7 +21,8 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-07-22 18:03:31.711586",
+ "meta_image": "",
+ "modified": "2023-07-29 19:44:04.555685",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "update-student-info",
@@ -30,7 +32,7 @@
  "route": "update-student-info",
  "show_attachments": 0,
  "show_list": 0,
- "show_sidebar": 0,
+ "show_sidebar": 1,
  "title": "Update Student Info",
  "web_form_fields": [
   {
@@ -72,19 +74,6 @@
   },
   {
    "allow_read_on_all_link_options": 1,
-   "fieldname": "major",
-   "fieldtype": "Link",
-   "hidden": 0,
-   "label": "Major",
-   "max_length": 0,
-   "max_value": 0,
-   "options": "Major",
-   "read_only": 0,
-   "reqd": 1,
-   "show_in_filter": 0
-  },
-  {
-   "allow_read_on_all_link_options": 1,
    "fieldname": "educational_level",
    "fieldtype": "Link",
    "hidden": 0,
@@ -94,6 +83,19 @@
    "options": "Educational Level",
    "read_only": 0,
    "reqd": 1,
+   "show_in_filter": 0
+  },
+  {
+   "allow_read_on_all_link_options": 1,
+   "fieldname": "major",
+   "fieldtype": "Link",
+   "hidden": 0,
+   "label": "Major",
+   "max_length": 0,
+   "max_value": 0,
+   "options": "Major",
+   "read_only": 0,
+   "reqd": 0,
    "show_in_filter": 0
   },
   {
@@ -134,5 +136,6 @@
    "reqd": 1,
    "show_in_filter": 0
   }
- ]
+ ],
+ "website_sidebar": "Student Sidebar"
 }

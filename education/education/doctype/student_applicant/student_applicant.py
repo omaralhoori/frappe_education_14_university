@@ -207,6 +207,7 @@ def create_student_by_user(user, additional_data={}):
 	student = frappe.get_doc({
 		"doctype": "Student",
 		"first_name": user.first_name,
+		"middle_name": user.middle_name,
 		"last_name": user.last_name,
 		"joining_date": frappe.utils.nowdate(),
 		"student_email_id": user.email,
