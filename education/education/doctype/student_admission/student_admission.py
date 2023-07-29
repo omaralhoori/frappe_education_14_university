@@ -27,11 +27,11 @@ class StudentAdmission(WebsiteGenerator):
 			select name from `tabProgram Enrollment`
 			WHERE program=%(program)s AND student=%(student)s 
 		""", {"program": program, "student": student})
-		if len(registered) == 0 :
-			registered = frappe.db.sql("""
-				select name from `tabStudent Applicant`
-				WHERE program=%(program)s AND student=%(student)s
-			""", {"program": program, "student": student})
+		# if len(registered) == 0 :
+		# 	registered = frappe.db.sql("""
+		# 		select name from `tabStudent Applicant`
+		# 		WHERE program=%(program)s AND student=%(student)s
+		# 	""", {"program": program, "student": student})
 		return True if registered else False
 
 	def get_context(self, context):

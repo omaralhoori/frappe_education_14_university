@@ -1,5 +1,4 @@
 Academic Calendar,التقويم الاكاديمي
-Afghanistan,افغانستان
 Student Applicant,طلب تسجيل
 You are not allowed to pay this fee,غير مسموح لك بسداد هذه الرسوم
 The fee is paid successfully,تم سداد الرسوم بنجاح
@@ -36,10 +35,10 @@ There are no grades to show.,لا يوجد درجات للعرض.
 Transcript,كشف الدرجات
 Graduated,ناجح
 Failed,راسب
-Drop Course Request,طلب إسقاط درس
+Drop Course Request,طلب إسقاط مادة
 Study Postponement Request,طلب تأجيل دراسي
 Update Student Info,تحديث بيانات الطالب
-Enrolled Courses,الدروس المسجلة
+Enrolled Courses,المواد المسجلة
 Personal Information,البيانات الشخصية
 Don't have an account?,ليس لديك حساب؟
 Login to {0},تسجيل الدخول إلى {0}
@@ -63,9 +62,9 @@ Please fill marital status field.,الرجاء ملء حقل الحالة الإ
 Card Holder Name,اسم حامل البطاقة
 Card number is not valid,رقم البطاقة غير صالح
 Lessons,دروس
-All Courses,جميع الدروس
+All Courses,جميع المواد
 Culmulative Grade Point Average,معدل الدرجات التراكمي
-Course Virtual Room,غرفة الدرس الأفتراضية
+Course Virtual Room,غرفة المادة الأفتراضية
 Essential Book,كتاب أساسي
 Additional Book,كتاب أضافي
 Record,تسجيل
@@ -74,3 +73,254 @@ Discernment Talk,فصل الخطاب
 Magazine,مجلة
 Discussion Participation,مشاركة في النقاش
 Major,التخصص
+Log out,تسجيل الخروج
+Afghanistan,أفغانستان
+Åland Islands,جزر آلاند
+Albania,ألبانيا
+Algeria,الجزائر
+American Samoa,ساموا الأمريكية
+Andorra,أندورا
+Angola,أنغولا
+Anguilla,أنغيلا
+Antarctica,أنتاركتيكا
+Antigua and Barbuda,أنتيغوا وبربودا
+Argentina,الأرجنتين
+Armenia,أرمينيا
+Aruba,أروبا
+Australia,أستراليا
+Austria,النمسا
+Azerbaijan,أذربيجان
+Bahamas,جزر البهاما
+Bahrain,البحرين
+Bangladesh,بنغلاديش
+Barbados,بربادوس
+Belarus,بيلاروسيا
+Belgium,بلجيكا
+Belize,بليز
+Benin,بنين
+Bermuda,برمودا
+Bhutan,بوتان
+"Bolivia, Plurinational State of",بوليفيا ، دولة متعددة القوميات
+"Bonaire, Sint Eustatius and Saba",بونير وسانت يوستاتيوس وسابا
+Bosnia and Herzegovina,البوسنة والهرسك
+Botswana,بوتسوانا
+Bouvet Island,جزيرة بوفيت
+Brazil,البرازيل
+British Indian Ocean Territory,إقليم المحيط البريطاني الهندي
+Brunei Darussalam,بروناي دار السلام
+Bulgaria,بلغاريا
+Burkina Faso,بوركينا فاسو
+Burundi,بوروندي
+Cambodia,كمبوديا
+Cameroon,الكاميرون
+Canada,كندا
+Cape Verde,الرأس الأخضر
+Cayman Islands,جزر كايمان
+Central African Republic,جمهورية افريقيا الوسطى
+Chad,تشاد
+Chile,تشيلي
+China,الصين
+Christmas Island,جزيرة الكريسماس
+Cocos (Keeling) Islands,جزر كوكوس (كيلينغ)
+Colombia,كولومبيا
+Comoros,جزر القمر
+Congo,الكونغو
+"Congo, The Democratic Republic of the",جمهورية الكونغو الديمقراطية
+Cook Islands,جزر كوك
+Costa Rica,كوستا ريكا
+Croatia,كرواتيا
+Cuba,كوبا
+Curaçao,كوراساو
+Cyprus,قبرص
+Czech Republic,الجمهورية التشيكية
+Denmark,الدنمارك
+Djibouti,جيبوتي
+Dominica,دومينيكا
+Dominican Republic,جمهورية الدومينيكان
+Ecuador,الاكوادور
+Egypt,مصر
+El Salvador,السلفادور
+Equatorial Guinea,غينيا الإستوائية
+Eritrea,إريتريا
+Estonia,إستونيا
+Ethiopia,أثيوبيا
+Falkland Islands (Malvinas),جزر فوكلاند (مالفيناس)
+Faroe Islands,جزر فاروس
+Fiji,فيجي
+Finland,فنلندا
+France,فرنسا
+French Guiana,غيانا الفرنسية
+French Polynesia,بولينيزيا الفرنسية
+French Southern Territories,المناطق الجنوبية لفرنسا
+Gabon,الجابون
+Gambia,غامبيا
+Georgia,جورجيا
+Germany,ألمانيا
+Ghana,غانا
+Gibraltar,جبل طارق
+Greece,اليونان
+Greenland,الأرض الخضراء
+Grenada,غرينادا
+Guadeloupe,جوادلوب
+Guam,غوام
+Guatemala,غواتيمالا
+Guernsey,غيرنسي
+Guinea,غينيا
+Guinea-Bissau,غينيا بيساو
+Guyana,غيانا
+Haiti,هايتي
+Heard Island and McDonald Islands,قلب الجزيرة وجزر ماكدونالز
+Holy See (Vatican City State),الكرسي الرسولي (دولة الفاتيكان)
+Honduras,هندوراس
+Hong Kong,هونج كونج
+Hungary,هنغاريا
+Iceland,أيسلندا
+India,الهند
+Indonesia,إندونيسيا
+Iran,إيران
+Iraq,العراق
+Ireland,أيرلندا
+Isle of Man,جزيرة آيل أوف مان
+Israel,إسرائيل
+Italy,إيطاليا
+Ivory Coast,ساحل العاج
+Jamaica,جامايكا
+Japan,اليابان
+Jersey,جيرسي
+Jordan,الأردن
+Kazakhstan,كازاخستان
+Kenya,كينيا
+Kiribati,كيريباتي
+"Korea, Democratic Peoples Republic of",كوريا، الجمهورية الشعبية الديمقراطية
+"Korea, Republic of",جمهورية كوريا
+Kuwait,الكويت
+Kyrgyzstan,قيرغيزستان
+Lao Peoples Democratic Republic,جمهورية لاو الديمقراطية الشعبية
+Latvia,لاتفيا
+Lebanon,لبنان
+Lesotho,ليسوتو
+Liberia,ليبيريا
+Libya,ليبيا
+Liechtenstein,ليختنشتاين
+Lithuania,ليتوانيا
+Luxembourg,لوكسمبورغ
+Macao,ماكاو
+Macedonia,مقدونيا
+Madagascar,مدغشقر
+Malawi,ملاوي
+Malaysia,ماليزيا
+Maldives,جزر المالديف
+Mali,مالي
+Malta,مالطا
+Marshall Islands,جزر مارشال
+Martinique,مارتينيك
+Mauritania,موريتانيا
+Mauritius,موريشيوس
+Mayotte,مايوت
+Mexico,المكسيك
+"Micronesia, Federated States of",ولايات ميكرونيزيا الموحدة
+"Moldova, Republic of",جمهورية مولدوفا
+Monaco,موناكو
+Mongolia,منغوليا
+Montenegro,الجبل الأسود
+Montserrat,مونتسيرات
+Morocco,المغرب
+Mozambique,موزمبيق
+Myanmar,ميانمار
+Namibia,ناميبيا
+Nauru,ناورو
+Nepal,نيبال
+Netherlands,هولندا
+New Caledonia,كاليدونيا الجديدة
+New Zealand,نيوزيلندا
+Nicaragua,نيكاراغوا
+Niger,النيجر
+Nigeria,نيجيريا
+Niue,نيوي
+Norfolk Island,جزيرة نورفولك
+Northern Mariana Islands,جزر مريانا الشمالية
+Norway,النرويج
+Oman,سلطنة عمان
+Pakistan,باكستان
+Palau,بالاو
+"Palestinian Territory, Occupied",الأراضي الفلسطينية المحتلة
+Panama,بنما
+Papua New Guinea,بابوا غينيا الجديدة
+Paraguay,باراغواي
+Peru,بيرو
+Philippines,فيلبيني
+Pitcairn,بيتكيرن
+Poland,بولندا
+Portugal,البرتغال
+Puerto Rico,بورتوريكو
+Qatar,قطر
+Réunion,جمع شمل
+Romania,رومانيا
+Russian Federation,الاتحاد الروسي
+Rwanda,رواندا
+Saint Barthélemy,سانت بارتيليمي
+"Saint Helena, Ascension and Tristan da Cunha",سانت هيلانة وأسنسيون وتريستان دا كونها
+Saint Kitts and Nevis,سانت كيتس ونيفيس
+Saint Lucia,القديسة لوسيا
+Saint Martin (French part),سانت مارتن (الجزء الفرنسي)
+Saint Pierre and Miquelon,سانت بيير وميكلون
+Saint Vincent and the Grenadines,سانت فنسنت وجزر غرينادين
+Samoa,ساموا
+San Marino,سان مارينو
+Sao Tome and Principe,ساو تومي وبرينسيبي
+Saudi Arabia,المملكة العربية السعودية
+Senegal,السنغال
+Serbia,صربيا
+Seychelles,سيشيل
+Sierra Leone,سيرا ليون
+Singapore,سنغافورة
+Sint Maarten (Dutch part),سينت مارتن (الجزء الهولندي)
+Slovakia,سلوفاكيا
+Slovenia,سلوفينيا
+Solomon Islands,جزر سليمان
+Somalia,الصومال
+South Africa,جنوب أفريقيا
+South Georgia and the South Sandwich Islands,جورجيا الجنوبية وجزر ساندويتش الجنوبية
+South Sudan,جنوب السودان
+Spain,إسبانيا
+Sri Lanka,سيريلانكا
+Sudan,السودان
+Suriname,سورينام
+Svalbard and Jan Mayen,سفالبارد وجان ماين
+Swaziland,سوازيلاند
+Sweden,السويد
+Switzerland,سويسرا
+Syria,سوريا
+Taiwan,تايوان
+Tajikistan,طاجيكستان
+Tanzania,تنزانيا
+Thailand,تايلاند
+Timor-Leste,تيمور ليشتي
+Togo,توجو
+Tokelau,توكيلاو
+Tonga,تونغا
+Trinidad and Tobago,ترينداد وتوباغو
+Tunisia,تونس
+Turkey,تركيا
+Turkmenistan,تركمانستان
+Turks and Caicos Islands,جزر تركس وكايكوس
+Tuvalu,توفالو
+Uganda,أوغندا
+Ukraine,أوكرانيا
+United Arab Emirates,الإمارات العربية المتحدة
+United Kingdom,المملكة المتحدة
+United States,الولايات المتحدة
+United States Minor Outlying Islands,جزر الولايات المتحدة البعيدة الصغرى
+Uruguay,أوروغواي
+Uzbekistan,أوزبكستان
+Vanuatu,فانواتو
+"Venezuela, Bolivarian Republic of",جمهورية فنزويلا البوليفارية
+Vietnam,فيتنام
+"Virgin Islands, British",جزر العذراء البريطانية
+"Virgin Islands, U.S.",جزر فيرجن الأمريكية
+Wallis and Futuna,واليس وفوتونا
+Western Sahara,الصحراء الغربية
+Yemen,اليمن
+Zambia,زامبيا
+Zimbabwe,زيمبابوي
+Eligibility and Other Details:,الأهلية وتفاصيل أخرى:

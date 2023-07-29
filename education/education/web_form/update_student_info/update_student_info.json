@@ -9,6 +9,7 @@
  "amount": 0.0,
  "amount_based_on_field": 0,
  "apply_document_permissions": 0,
+ "banner_image": "",
  "button_label": "Save",
  "creation": "2023-05-13 13:41:31.889459",
  "currency": "JOD",
@@ -72,19 +73,6 @@
   },
   {
    "allow_read_on_all_link_options": 1,
-   "fieldname": "major",
-   "fieldtype": "Link",
-   "hidden": 0,
-   "label": "Major",
-   "max_length": 0,
-   "max_value": 0,
-   "options": "Major",
-   "read_only": 0,
-   "reqd": 1,
-   "show_in_filter": 0
-  },
-  {
-   "allow_read_on_all_link_options": 1,
    "fieldname": "educational_level",
    "fieldtype": "Link",
    "hidden": 0,
@@ -94,6 +82,19 @@
    "options": "Educational Level",
    "read_only": 0,
    "reqd": 1,
+   "show_in_filter": 0
+  },
+  {
+   "allow_read_on_all_link_options": 1,
+   "fieldname": "major",
+   "fieldtype": "Link",
+   "hidden": 0,
+   "label": "Major",
+   "max_length": 0,
+   "max_value": 0,
+   "options": "Major",
+   "read_only": 0,
+   "reqd": 0,
    "show_in_filter": 0
   },
   {

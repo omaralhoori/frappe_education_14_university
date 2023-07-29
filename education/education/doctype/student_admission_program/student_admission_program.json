@@ -10,6 +10,7 @@
   "max_age",
   "column_break_4",
   "application_fee",
+  "hour_rate",
   "applicant_naming_series",
   "fee_category"
  ],
@@ -34,7 +35,6 @@
   {
    "fieldname": "applicant_naming_series",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Naming Series (for Student Applicant)"
   },
   {
@@ -55,11 +55,17 @@
    "fieldtype": "Link",
    "label": "Fee Category",
    "options": "Fee Category"
+  },
+  {
+   "fieldname": "hour_rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Hour Rate"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2023-02-24 19:18:43.564933",
+ "modified": "2023-07-29 20:49:47.043508",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Admission Program",
