@@ -20,7 +20,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-04-05 19:42:10.048684",
+ "modified": "2023-07-29 20:00:21.086190",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "study-postponement-request",
@@ -30,7 +30,7 @@
  "route": "study-postponement-request",
  "show_attachments": 0,
  "show_list": 1,
- "show_sidebar": 0,
+ "show_sidebar": 1,
  "title": "Study Postponement Request",
  "web_form_fields": [
   {
@@ -85,5 +85,6 @@
    "reqd": 0,
    "show_in_filter": 0
   }
- ]
+ ],
+ "website_sidebar": "Student Menu"
 }

@@ -20,7 +20,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-07-22 18:03:31.711586",
+ "modified": "2023-07-29 19:56:18.068216",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "update-student-info",
@@ -30,7 +30,7 @@
  "route": "update-student-info",
  "show_attachments": 0,
  "show_list": 0,
- "show_sidebar": 0,
+ "show_sidebar": 1,
  "title": "Update Student Info",
  "web_form_fields": [
   {
@@ -134,5 +134,6 @@
    "reqd": 1,
    "show_in_filter": 0
   }
- ]
+ ],
+ "website_sidebar": "Student Menu"
 }

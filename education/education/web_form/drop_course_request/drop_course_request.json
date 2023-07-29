@@ -20,7 +20,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-04-05 20:04:34.738776",
+ "modified": "2023-07-29 20:00:06.466342",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "drop-course-request",
@@ -30,7 +30,7 @@
  "route": "drop-course-request",
  "show_attachments": 0,
  "show_list": 1,
- "show_sidebar": 0,
+ "show_sidebar": 1,
  "title": "Drop Course Request",
  "web_form_fields": [
   {
@@ -98,5 +98,6 @@
    "reqd": 0,
    "show_in_filter": 0
   }
- ]
+ ],
+ "website_sidebar": "Student Menu"
 }
