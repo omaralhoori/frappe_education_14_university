@@ -445,3 +445,6 @@ def get_weekday(day):
 		6: _("Sunday"),
 	}
 	return week_days.get(day)
+
+def format_currency(amount):
+	pass
