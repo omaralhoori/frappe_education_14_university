@@ -38,7 +38,7 @@ class StudentAdmission(WebsiteGenerator):
 		context.no_cache = 1
 		context.show_sidebar = True
 		context.title = self.title
-		context.sidebar_items = frappe.db.get_all("Website Sidebar Item", {"parent": "Student Menu"},['title', 'name', 'route'])
+		context.sidebar_items = frappe.db.get_all("Website Sidebar Item", {"parent": "Student Menu"},['title', 'name', 'route'], order_by="idx")
 		context.parents = [
 			{"name": "admissions", "title": _("All Student Admissions"), "route": "admissions"}
 		]
@@ -51,7 +51,7 @@ def get_list_context(context=None):
 	context.update(
 		{
 			"show_sidebar": True,
-			"sidebar_items": frappe.db.get_all("Website Sidebar Item", {"parent": "Student Menu"},['title', 'name', 'route']),
+			"sidebar_items": frappe.db.get_all("Website Sidebar Item", {"parent": "Student Menu"},['title', 'name', 'route'], order_by="idx"),
 			"title": _("Student Admissions"),
 			"get_list": get_admission_list,
 			"row_template": "education/doctype/student_admission/templates/student_admission_row.html",
