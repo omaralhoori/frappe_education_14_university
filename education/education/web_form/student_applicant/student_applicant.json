@@ -26,7 +26,7 @@
  "list_title": "Test",
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-07-29 19:40:56.755117",
+ "modified": "2023-07-29 19:59:54.721403",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "student-applicant",
@@ -129,5 +129,5 @@
    "show_in_filter": 0
   }
  ],
- "website_sidebar": "Student Sidebar"
+ "website_sidebar": "Student Menu"
 }

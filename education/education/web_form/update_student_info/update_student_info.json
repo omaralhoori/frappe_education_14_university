@@ -21,8 +21,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "meta_image": "",
- "modified": "2023-07-29 19:44:04.555685",
+ "modified": "2023-07-29 19:56:18.068216",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "update-student-info",
@@ -137,5 +136,5 @@
    "show_in_filter": 0
   }
  ],
- "website_sidebar": "Student Sidebar"
+ "website_sidebar": "Student Menu"
 }
