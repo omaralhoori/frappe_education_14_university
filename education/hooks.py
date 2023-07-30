@@ -174,6 +174,7 @@ jinja = {
     "education.education.doctype.student_group.student_group.get_course_groups",
     "education.education.doctype.student_group.student_group.get_course_registered_group",
     "education.education.utils.get_weekday",
+    "education.education.utils.format_currency",
 	],
 	#"filters": "education_lms.utils.jinja_filters"
 }

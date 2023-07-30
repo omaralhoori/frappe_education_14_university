@@ -447,4 +447,4 @@ def get_weekday(day):
 	return week_days.get(day)
 
 def format_currency(amount):
-	pass
+	return frappe.utils.fmt_money(amount, currency=frappe.db.get_single_value("Global Defaults", "default_currency"))

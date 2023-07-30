@@ -58,8 +58,8 @@
 							<td>{{ row.program }}</td>
 							<td>{{ row.min_age }}</td>
 							<td>{{ row.max_age }}</td>
-							<td>{{ row.application_fee }}</td>
-							<td>{{ row.hour_rate }}</td>
+							<td>{{ format_currency(row.application_fee) }}</td>
+							<td>{{ format_currency(row.hour_rate) }}</td>
 							
 							<td>
 							{%- if doc.enable_admission_application and frappe.utils.getdate(doc.admission_start_date) <= today and not doc.is_program_registered(row.program) -%}
