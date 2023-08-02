@@ -13,19 +13,19 @@
 				{% else %}
 					gray
 				{% endif  %}
-				">{{ doc.title }}</span>
+				">{{ _(doc.title) }}</span>
 			</div>
 			<div class="col-sm-2 small">
 				<span class="text-muted">
-					Academic Year
+					{{_('Academic Year')}}
 				</span>
 				<div class="text-muted bold">
-					{{ doc.academic_year }}
+					{{ _(doc.academic_year) }}
 				</div>
 			</div>
 			<div class="col-sm-3 small">
 				<span class="text-muted">
-					Starts on
+					{{_('Starts on')}}
 				</span>
 				<div class="text-muted bold">
 					{{ frappe.format_date(doc.admission_start_date) }}
@@ -33,7 +33,7 @@
 			</div>
 			<div class="col-sm-3 small">
 				<span class="text-muted">
-					Ends on
+					{{_('Ends on')}}
 				</span>
 				<div class=" text-muted bold">
 					{{ frappe.format_date(doc.admission_end_date) }}
