@@ -26,7 +26,7 @@
  "list_title": "Test",
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-07-29 19:59:54.721403",
+ "modified": "2023-07-31 14:20:02.502394",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "student-applicant",
@@ -78,6 +78,18 @@
   },
   {
    "allow_read_on_all_link_options": 0,
+   "fieldname": "student_mobile_number",
+   "fieldtype": "Data",
+   "hidden": 0,
+   "label": "Student Mobile Number",
+   "max_length": 0,
+   "max_value": 0,
+   "read_only": 0,
+   "reqd": 0,
+   "show_in_filter": 0
+  },
+  {
+   "allow_read_on_all_link_options": 0,
    "fieldname": "",
    "fieldtype": "Column Break",
    "hidden": 0,
@@ -125,6 +137,19 @@
    "max_value": 0,
    "options": "",
    "read_only": 1,
+   "reqd": 0,
+   "show_in_filter": 0
+  },
+  {
+   "allow_read_on_all_link_options": 0,
+   "fieldname": "student_email_id",
+   "fieldtype": "Data",
+   "hidden": 0,
+   "label": "Student Email Address",
+   "max_length": 0,
+   "max_value": 0,
+   "options": "Email",
+   "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0
   }

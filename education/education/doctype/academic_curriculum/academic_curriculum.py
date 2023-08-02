@@ -68,9 +68,9 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term", cache=True)
 	graduation_for_prerequisites = frappe.db.get_single_value("Education Settings", "graduation_for_prerequisites", cache=True)
 	if not current_academic_term: return []
-	semester = frappe.db.get_value("Academic Term", current_academic_term, "semester", cache=True)
-	educational_year = frappe.db.get_value("Program Enrollment", {"student": student, "program": enrolled_program}, "educational_year", cache=True)
-	educational_year_order = frappe.db.get_value("Educational Year", educational_year, "year_order", cache=True)
+	semester = frappe.db.get_value("Academic Term", current_academic_term, "semester")
+	educational_year = frappe.db.get_value("Program Enrollment", {"student": student, "program": enrolled_program}, "educational_year")
+	educational_year_order = frappe.db.get_value("Educational Year", educational_year, "year_order")
 	graduation_stmt = ""
 	if graduation_for_prerequisites:
 		graduation_stmt = "and tce.graduation_date is not null"

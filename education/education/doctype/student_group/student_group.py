@@ -237,7 +237,7 @@ def get_course_groups(course):
 	return frappe.db.sql("""
 		select tsg.name as group_id, tsg.student_group_name,tsg.max_strength, crs_scd.course_day, IFNULL(grp_std.student_count,0) as student_count ,
 		crs_scd.from_time, crs_scd.to_time, crs_scd.instructor FROM `tabStudent Group` tsg
-		INNER JOIN
+		LEFT JOIN
 		(select tcs.student_group, WEEKDAY(tcs.schedule_date) as course_day, tcs.from_time, tcs.to_time, tcs.instructor
 		FROM `tabCourse Schedule` tcs) as crs_scd
 		ON crs_scd.student_group=tsg.name
