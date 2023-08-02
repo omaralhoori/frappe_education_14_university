@@ -27,7 +27,7 @@
                                 <th>{{_("Day")}}</th>
                                 <th>{{_("From Time")}}</th>
                                 <th>{{_("To Time")}}</th>
-                                <th>{{_("Student Count")}}</th>
+                                <!-- <th>{{_("Student Count")}}</th> -->
                                 <th>{{_("Action")}}</th>
                             </tr>
                         </thead>
@@ -41,7 +41,7 @@
                                 <td>{{get_weekday(group.course_day)}}</td>
                                 <td>{{group.from_time}}</td>
                                 <td>{{group.to_time}}</td>
-                                <td>{{group.student_count}}{% if group.max_strength > 0 %}/{{group.max_strength}}{%endif%}</td>
+                                <!-- <td>{{group.student_count}}{% if group.max_strength > 0 %}/{{group.max_strength}}{%endif%}</td> -->
                                 <td>
                                 {% if not enrolled or not selected_group %}
                                 <button 
@@ -393,8 +393,8 @@
             //}
             let courseGroup = e.querySelector(".selected-group-container");
             if (courseGroup && courseGroup.innerText != ""){
-                //courseData['course_group']= courseGroup.innerText;
-                courseGroups[courseId.value] = courseGroup.innerText;
+                //courseData['course_group']= courseGroup.innerText;s
+                courseGroups[courseId.value] = courseGroup.getAttribute('group-id');
             }
             selectedCourses.push(courseId.value);
 
@@ -409,6 +409,7 @@
                 if (res.message.msg) {
                     var msg = {
                         message: res.message.msg,
+                        title: "{{_('Message')}}",
                         onhide: () => {
                             location.reload()
                         }

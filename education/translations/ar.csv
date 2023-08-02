@@ -32,7 +32,7 @@ Due Date,تاريخ الاستحقاق
 You have already registered the courses for this semester,لقد قمت بتسجيل المقررات لهذا الفصل من قبل
 You are not registered in any program,أنت غير مسجل في أي برنامج
 There are no grades to show.,لا يوجد درجات للعرض.
-Transcript,كشف الدرجات
+Transcript,كشف العلامات
 Graduated,ناجح
 Failed,راسب
 Drop Course Request,طلب إسقاط مادة
@@ -329,3 +329,27 @@ Application open,التسجيل مفتوح
 Application will open,سيفتتح التسجيل
 Email or mobile no,البريد الإلكتروني أو رقم الهاتف
 Starts on,يبدأ في
+Click on this,اضغط على هذا
+if you are not redirected within,إذا لم يتم إعادة توجيهك خلال
+seconds.,ثواني.
+Thank you for spending your valuable time to fill this form,شكرًا لك على قضاء وقتك الثمين في ملء هذا النموذج
+Reset the password for your account,أعد تعيين كلمة المرور لحسابك
+Profile Picture,الصورة الشخصية
+Middle Name (Optional),الاسم الأوسط (اختياري)
+Edit Response,تعديل
+The program has been submitted successfully,تم التقديم بنجاح للبرنامج
+Number of Hours,عدد الساعات
+Course Language,اللغة
+Corse Code,رمز المقرر
+Total Hours,إجمالي الساعات
+Update your info,قم بتحديث معلوماتك
+Request Reason,سبب الطلب
+New Drop Course Request,طلب إسقاط مادة جديد
+"You haven't selected enough hours",لم تقم بتحديد ساعات كافية
+Submission Failed,فشل التقديم
+You have exceeded the maximum number of hours,لقد تجاوزت الحد الأقصى لعدد الساعات
+Please select course group,الرجاء اختيار المجموعة
+Courses registered successfully.,تم تسجيل المقررات بنجاح
+Please pay courses fees {0}here{1}.,الرجاء دفع رسوم المواد {0}هنا{1}.
+Enrolled,منجز
+Prerequisites Not Met,المتطلبات لم تحقق

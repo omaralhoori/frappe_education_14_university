@@ -245,14 +245,15 @@ class Fees(AccountsController ,DocumentAttach):
 def get_fee_list(
 	doctype, txt, filters, limit_start, limit_page_length=20, order_by="modified"
 ):
-	user = frappe.session.user
+	user = frappe.session.user #(student_email_id= %(user)s or student_mobile_number=%(user)s)
 	student = frappe.db.sql(
-		"select name from `tabStudent` where (student_email_id= %(user)s or student_mobile_number=%(user)s)", {"user":user}
+		"select name from `tabStudent` where user=%(user)s", {"user":user}
 	)
 	limit_stmt = ""
 	if student:
 		if limit_start != 0 and limit_page_length != 0:
 			limit_stmt = f"limit {limit_start} , {limit_page_length} "
+		print(student)
 		return frappe.db.sql(
 			"""
 			select name, program, due_date, grand_total - outstanding_amount as paid_amount,
