@@ -87,9 +87,9 @@ class StudentApplicant(Document):
 			)
 
 	def create_student(self):
-		if frappe.db.exists("Student", {"student_email_id": self.student_email_id}):
+		if self.student_email_id and frappe.db.exists("Student", {"student_email_id": self.student_email_id}):
 			return  frappe.get_doc("Student", {"student_email_id": self.student_email_id})
-		if frappe.db.exists("Student", {"student_mobile_number": self.student_mobile_number}):
+		if self.student_mobile_number and frappe.db.exists("Student", {"student_mobile_number": self.student_mobile_number}):
 			return frappe.get_doc("Student", {"student_mobile_number":self.student_mobile_number })
 		student = get_mapped_doc(
 		"Student Applicant",
