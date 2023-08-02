@@ -91,7 +91,7 @@ class CourseSchedule(Document):
 			validate_overlap_for(self, "Course Schedule", "student_group")
 
 		validate_overlap_for(self, "Course Schedule", "instructor")
-		validate_overlap_for(self, "Course Schedule", "room")
+		# validate_overlap_for(self, "Course Schedule", "room")
 
 		# validate overlapping assessment schedules.
 		if self.student_group:
