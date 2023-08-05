@@ -4,6 +4,7 @@
 
 
 from datetime import datetime
+from education.education.utils import get_weekday
 
 import frappe
 from frappe import _
@@ -20,7 +21,7 @@ class CourseSchedule(Document):
 		self.validate_date()
 		self.validate_time()
 		self.validate_overlap()
-
+		self.set_week_day()
 	def set_title(self):
 		"""Set document Title"""
 		self.title = (
@@ -28,6 +29,9 @@ class CourseSchedule(Document):
 			+ " by "
 			+ (self.instructor_name if self.instructor_name else self.instructor)
 		)
+
+	def set_week_day(self):
+		self.schedule_weekday = get_weekday(frappe.utils.getdate(self.schedule_date).weekday())
 
 	def validate_course(self):
 		group_based_on, course = frappe.db.get_value(

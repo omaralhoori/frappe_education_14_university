@@ -17,6 +17,7 @@
   "color",
   "section_break_6",
   "schedule_date",
+  "schedule_weekday",
   "room",
   "column_break_9",
   "from_time",
@@ -122,10 +123,16 @@
    "label": "Program",
    "options": "Program",
    "read_only": 1
+  },
+  {
+   "fieldname": "schedule_weekday",
+   "fieldtype": "Data",
+   "label": "Schedule Weekday",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2022-12-13 15:49:43.766325",
+ "modified": "2023-08-05 14:01:48.831470",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Schedule",
@@ -145,7 +152,6 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "",
  "sort_field": "schedule_date",
  "sort_order": "DESC",
  "states": [],
