@@ -101,7 +101,8 @@
    "fieldname": "user",
    "fieldtype": "Link",
    "label": "User ID",
-   "options": "User"
+   "options": "User",
+   "unique": 1
   },
   {
    "fieldname": "column_break_4",
@@ -368,7 +369,7 @@
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-07-22 18:02:37.404408",
+ "modified": "2023-08-05 22:03:42.357465",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

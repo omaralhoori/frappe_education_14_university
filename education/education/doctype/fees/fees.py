@@ -246,9 +246,10 @@ def get_fee_list(
 	doctype, txt, filters, limit_start, limit_page_length=20, order_by="modified"
 ):
 	user = frappe.session.user #(student_email_id= %(user)s or student_mobile_number=%(user)s)
-	student = frappe.db.sql(
-		"select name from `tabStudent` where user=%(user)s", {"user":user}
-	)
+	# student = frappe.db.sql(
+	# 	"select name from `tabStudent` where user=%(user)s", {"user":user}
+	# )
+	student = frappe.db.get_value("Student", {"user": user}, ['name'])
 	limit_stmt = ""
 	if student:
 		if limit_start != 0 and limit_page_length != 0:
