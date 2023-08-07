@@ -36,11 +36,11 @@
                             {%if selected_group and group['group_id'] == selected_group.get("application_group") and selected_group_list|length == 0 %}
                                 {%set temp = selected_group_list.append(group) %}
                             {%endif%}
-                            <tr class="course-group-row">
-                                <td>{{group.student_group_name}}</td>
-                                <td>{{get_weekday(group.course_day)}}</td>
-                                <td>{{group.from_time}}</td>
-                                <td>{{group.to_time}}</td>
+                            <tr group-id="{{group['group_id']}}" class="course-group-row">
+                                <td >{{group.student_group_name}}</td>
+                                <td class="group-day" group-day="{{group.course_day}}">{{get_weekday(group.course_day)}}</td>
+                                <td class="group-from-time" group-from-time="{{group.from_time}}">{{group.from_time}}</td>
+                                <td class="group-to-time" group-to-time="{{group.to_time}}">{{group.to_time}}</td>
                                 <!-- <td>{{group.student_count}}{% if group.max_strength > 0 %}/{{group.max_strength}}{%endif%}</td> -->
                                 <td>
                                 {% if not enrolled or not selected_group %}
@@ -136,7 +136,7 @@
                     {% set groups = get_course_groups(course['course_id']) %}
                     {% if groups|length > 0 %}
                     {% if course['applicant_status'] == 0 or course['enrollment_status'] == 1 %}
-                    <tr table-code="{{pool_name}}">
+                    <tr class="course-row" table-code="{{pool_name}}">
                         <td>
                             {{course['course_code']}}
                             <input class="course-id" type="hidden" value="{{course['course_id']}}" />
@@ -215,7 +215,7 @@
                     {% for pool_name in available_courses %}
                     {% for course in available_courses[pool_name] %}
                     {% if course['applicant_status'] == 1 and course['enrollment_status'] == 0 %}
-                    <tr table-code="{{pool_name}}">
+                    <tr class="course-row" table-code="{{pool_name}}">
                         <td>
                             {{course['course_code']}}
                             <input class="course-id" type="hidden" value="{{course['course_id']}}" />
@@ -308,12 +308,40 @@
 
         return true;
     }
-
+    function getGroupInfo(row){
+        var selectedGroup = row.querySelector(".selected-group-container").getAttribute("group-id"); //courses-tabs
+        var data = row.querySelector(`.course-group-row[group-id='${selectedGroup}']`)
+        var groupDay = data.querySelector('.group-day').getAttribute('group-day');
+        var groupFromTime = data.querySelector('.group-from-time').getAttribute('group-from-time');
+        var groupToTime = data.querySelector('.group-to-time').getAttribute('group-to-time');
+        return {day: groupDay, fromTime: groupFromTime, toTime: groupToTime};
+    }
+    function checkCourseGroupConflict(row){
+        var groupInfo = getGroupInfo(row);
+        var selectedCourses = document.querySelectorAll('#selected-courses-tabs .course-row');
+        for (var course of selectedCourses){
+            var courseInfo = getGroupInfo(course);
+            if (courseInfo.day == groupInfo.day && 
+            ((groupInfo.fromTime >= courseInfo.fromTime && groupInfo.fromTime <= courseInfo.toTime) ||
+                (groupInfo.toTime <= courseInfo.toTime && groupInfo.toTime >= courseInfo.fromTime)
+            )){
+                frappe.show_alert({
+            message: '{{_("There is a conflict between the selected groups")}}',
+            indicator: 'red'
+        }, 5);
+                return false;
+            }
+        }
+        return true;
+    }
     function addBtnClicked(btn) {
         // Delete the selected course from the table
         var row = btn.parentNode.parentNode;
         //var previousTable = row.parentNode.parentNode.classList.value.replaceAll(" ", ".")
         if (!checkCourseGroupSelected(row)){
+            return
+        }
+        if (!checkCourseGroupConflict(row)){
             return
         }
         row.parentNode.removeChild(row);
