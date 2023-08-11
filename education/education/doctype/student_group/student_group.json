@@ -145,7 +145,7 @@
   },
   {
    "fieldname": "virtual_room_link",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Virtual Room Link"
   },
   {
@@ -167,13 +167,13 @@
   },
   {
    "fieldname": "whatsapp_link",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Whatsapp Link"
   }
  ],
  "image_field": "group_image",
  "links": [],
- "modified": "2023-07-12 19:51:29.308576",
+ "modified": "2023-08-11 16:17:21.939195",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Group",
