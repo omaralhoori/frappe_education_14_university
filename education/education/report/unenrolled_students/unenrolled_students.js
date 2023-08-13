@@ -25,5 +25,10 @@ frappe.query_reports["Unenrolled Students"] = {
 			},
 			"default": frappe.defaults.get_default('academic_term')
 		},
+		{
+			"fieldname":"check_from_applicant",
+			"label": __("Check Student Applicant"),
+			"fieldtype": "Check",
+		},
 	]
 };
