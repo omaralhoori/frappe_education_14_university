@@ -448,3 +448,11 @@ def get_weekday(day):
 
 def format_currency(amount):
 	return frappe.utils.fmt_money(amount, currency=frappe.db.get_single_value("Global Defaults", "default_currency"))
+
+
+def get_admission_program_details(student_admission):
+	return frappe.db.get_value("Student Admission Program", {"parent": student_admission}, ['program'])
+
+def is_program_registered(student_admission, program):
+	doc = frappe.get_doc("Student Admission", student_admission)
+	return doc.is_program_registered(program)

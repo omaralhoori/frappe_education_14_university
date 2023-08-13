@@ -1,8 +1,9 @@
 <div class="web-list-item transaction-list-item">
 	{% set today = frappe.utils.getdate(frappe.utils.nowdate()) %}
-	<a href = "{{ doc.route }}" class="no-underline">
 		<div class="row">
 			<div class="col-sm-4 bold">
+				<a href = "{{ doc.route }}" class="no-underline">
+
 				<span class="indicator
 				{% if frappe.utils.getdate(doc.admission_end_date) == today %}
 					red
@@ -14,6 +15,7 @@
 					gray
 				{% endif  %}
 				">{{ _(doc.title) }}</span>
+				</a>
 			</div>
 			<div class="col-sm-2 small">
 				<span class="text-muted">
@@ -23,7 +25,7 @@
 					{{ _(doc.academic_year) }}
 				</div>
 			</div>
-			<div class="col-sm-3 small">
+			<div class="col-sm-2 small">
 				<span class="text-muted">
 					{{_('Starts on')}}
 				</span>
@@ -31,7 +33,7 @@
 					{{ frappe.format_date(doc.admission_start_date) }}
 				</div>
 			</div>
-			<div class="col-sm-3 small">
+			<div class="col-sm-2 small">
 				<span class="text-muted">
 					{{_('Ends on')}}
 				</span>
@@ -39,6 +41,16 @@
 					{{ frappe.format_date(doc.admission_end_date) }}
 				</div>
 			</div>
+			<div class="col-sm-2">
+				<div class=" ">
+					{% set program_details = get_admission_program_details(doc.name) %}
+					{%- if doc.enable_admission_application and program_details and frappe.utils.getdate(doc.admission_start_date) <= today and not is_program_registered(doc.name, program_details) -%}
+								
+							<a class='btn btn-sm btn-primary' href='/student-applicant/new?student_admission={{doc.name}}&program={{program_details}}&academic_year={{doc.academic_year}}'>
+									{{ _("apply_now") }}
+							</a>
+						{% endif %}
+				</div>
+			</div>
 		</div>
-	</a>
 </div>
