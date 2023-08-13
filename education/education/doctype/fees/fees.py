@@ -254,7 +254,6 @@ def get_fee_list(
 	if student:
 		if limit_start != 0 and limit_page_length != 0:
 			limit_stmt = f"limit {limit_start} , {limit_page_length} "
-		print(student)
 		return frappe.db.sql(
 			"""
 			select name, program, due_date, grand_total - outstanding_amount as paid_amount,
