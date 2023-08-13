@@ -135,7 +135,8 @@
                     {% for course in available_courses[pool_name] %}
                     {% set groups = get_course_groups(course['course_id']) %}
                     {% if groups|length > 0 %}
-                    {% if course['applicant_status'] == 0 or course['enrollment_status'] == 1 %}
+                    
+                    {% if (course['applicant_status'] == 0 or course['enrollment_status'] == 1) and not course.get('force_to_select_course') %}
                     <tr class="course-row" table-code="{{pool_name}}">
                         <td>
                             {{course['course_code']}}
@@ -214,7 +215,7 @@
                 <tbody>
                     {% for pool_name in available_courses %}
                     {% for course in available_courses[pool_name] %}
-                    {% if course['applicant_status'] == 1 and course['enrollment_status'] == 0 %}
+                    {% if (course['applicant_status'] == 1 and course['enrollment_status'] == 0) or ( course['enrollment_status'] == 0 and  course.get('force_to_select_course') )%}
                     <tr class="course-row" table-code="{{pool_name}}">
                         <td>
                             {{course['course_code']}}
@@ -247,6 +248,7 @@
                             <button class="btn btn-sm btn-primary d-none add-course-btn"
                                 onclick="addBtnClicked(this)">{{_('Add')}}</button>
                             <button class="btn btn-sm btn-danger remove-course-btn"
+                                force-to-select="{{course.get('force_to_select_course')}}"
                                 onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
                             {{course_group_select_btn(course, groups)}}
                             {% else %}
@@ -317,6 +319,7 @@
         return {day: groupDay, fromTime: groupFromTime, toTime: groupToTime};
     }
     function checkCourseGroupConflict(row){
+        return true
         var groupInfo = getGroupInfo(row);
         var selectedCourses = document.querySelectorAll('#selected-courses-tabs .course-row');
         for (var course of selectedCourses){
@@ -359,6 +362,13 @@
     }
     function removeBtnClicked(btn) {
         // Delete the selected course from the table
+        if (btn.getAttribute('force-to-select') == 1){
+            frappe.show_alert({
+            message: '{{_("This course is compulsory")}}',
+            indicator: 'red'
+        }, 5);
+            return
+        }
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
 

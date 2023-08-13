@@ -8,7 +8,8 @@
  "field_order": [
   "course",
   "compulsory",
-  "pool_of_elective_courses"
+  "pool_of_elective_courses",
+  "force_to_select_course"
  ],
  "fields": [
   {
@@ -33,12 +34,18 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Compulsory"
+  },
+  {
+   "default": "0",
+   "fieldname": "force_to_select_course",
+   "fieldtype": "Check",
+   "label": "Force To Select Course"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-02-16 13:27:15.706635",
+ "modified": "2023-08-13 16:59:23.210611",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Academic Curriculum Course",

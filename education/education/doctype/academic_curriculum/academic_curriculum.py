@@ -78,7 +78,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 
 	return frappe.db.sql("""
 			SELECT 	tcrs.name as course_id,tcrs.course_code, tcrs.course_name, tcrs.course_language, tcrs.total_course_hours,
-		tpoec.pool_name, tpoec.required_course_count, tey.year_name, tacc.compulsory ,
+		tpoec.pool_name, tpoec.required_course_count, tey.year_name, tacc.compulsory , tacc.force_to_select_course,
 		IF (tcrs.name IN (
 				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
 				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s AND cea.program=%(program)s AND cea.application_status!="Rejected"
