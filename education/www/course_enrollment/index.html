@@ -319,7 +319,6 @@
         return {day: groupDay, fromTime: groupFromTime, toTime: groupToTime};
     }
     function checkCourseGroupConflict(row){
-        return true
         var groupInfo = getGroupInfo(row);
         var selectedCourses = document.querySelectorAll('#selected-courses-tabs .course-row');
         for (var course of selectedCourses){
