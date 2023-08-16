@@ -307,7 +307,7 @@ def pay_fee():
 			"cart_currency": frappe.db.get_value('Company', fee_doc.company,'default_currency', cache=True),
 			"cart_amount": float(amount),
 			"payment_token": frappe.form_dict.token,
-			"callback": f"https://rewaq-jo.com/api/method/education.education.doctype.fees.fees.payment_callback",
+			"callback": frappe.db.get_single_value('Fees Payment Settings', 'callback_url'),
 				"customer_details": {
 					"name": frappe.form_dict.card_holder,
 					"email": "jsmith@gmail.com",
@@ -325,7 +325,7 @@ def pay_fee():
 	try:
 	# fee_doc.pay_fee()
 		
-		res = requests.post("https://secure-jordan.paytabs.com/payment/request", headers=header, data=json.dumps(data))
+		res = requests.post(frappe.db.get_single_value('Fees Payment Settings', 'payment_url'), headers=header, data=json.dumps(data))
 		results_json = json.loads(res.content)
 		with open("tresults.txt", "w") as f:
 			f.write(str(results_json))
