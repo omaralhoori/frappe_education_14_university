@@ -28,4 +28,16 @@ frappe.ui.form.on("Import Education Files", {
             }
         })
     },
+    import_grades_file(frm){
+        frappe.call({
+            method: "education.education.doctype.import_education_files.import_education_files.import_grades_file",
+            args: {
+                data_file: frm.doc.grades_file,
+                assessment_plan: frm.doc.assessment_plan,
+            },
+            callback: (res) => {
+                frappe.msgprint('Done')
+            }
+        })
+    },
 });

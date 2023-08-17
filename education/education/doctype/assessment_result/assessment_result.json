@@ -46,21 +46,24 @@
    "options": "Program"
   },
   {
-   "fetch_from": "assessment_plan.course",
+   "fetch_from": "student_group.course",
+   "fetch_if_empty": 1,
    "fieldname": "course",
    "fieldtype": "Link",
    "label": "Course",
    "options": "Course"
   },
   {
-   "fetch_from": "assessment_plan.academic_year",
+   "fetch_from": "student_group.academic_year",
+   "fetch_if_empty": 1,
    "fieldname": "academic_year",
    "fieldtype": "Link",
    "label": "Academic Year",
    "options": "Academic Year"
   },
   {
-   "fetch_from": "assessment_plan.academic_term",
+   "fetch_from": "student_group.academic_term",
+   "fetch_if_empty": 1,
    "fieldname": "academic_term",
    "fieldtype": "Link",
    "label": "Academic Term",
@@ -116,6 +119,7 @@
    "label": "Result"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "details",
    "fieldtype": "Table",
    "label": "Details",
@@ -127,6 +131,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "assessment_plan.maximum_assessment_score",
    "fieldname": "maximum_score",
    "fieldtype": "Float",
@@ -139,6 +144,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_score",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -146,6 +152,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "grade",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -174,7 +181,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-05 17:47:15.336563",
+ "modified": "2023-08-17 14:44:54.889919",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Assessment Result",

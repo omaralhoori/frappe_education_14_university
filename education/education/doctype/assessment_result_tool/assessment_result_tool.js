@@ -21,6 +21,10 @@ frappe.ui.form.on('Assessment Result Tool', {
 
 	assessment_plan: function(frm) {
 		frm.doc.show_submit = false;
+		
+	},
+	student_group: function(frm){
+		frm.doc.show_submit = false;
 		if(frm.doc.assessment_plan) {
 			// if (!frm.doc.student_group)
 			// 	return
@@ -44,7 +48,7 @@ frappe.ui.form.on('Assessment Result Tool', {
 					}
 				}
 			});
-		}
+		}	
 	},
 
 	render_table: function(frm) {

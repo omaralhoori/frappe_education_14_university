@@ -14,6 +14,72 @@ class ImportEducationFiles(Document):
 	pass
 
 @frappe.whitelist()
+def import_grades_file(data_file, assessment_plan):
+	content, extn = read_file(data_file)
+	data = read_content(content, extn)
+	criterias = frappe.db.get_all("Assessment Plan Criteria", {"parent": assessment_plan}, ['assessment_criteria'])
+	required_columns = {
+		'academic_year': 'Academic Year', 
+		'academic_term': 'Academic Term', 
+		'course_id': 'Course id', 
+		'student': 'Student Email',
+		'total': 'Graduation Grade' }
+	for criteria in criterias:
+		required_columns[criteria['assessment_criteria']] = criteria['assessment_criteria']
+	required_columns_indexes = get_required_columns_indexes(data[0], list(required_columns.values()))
+	data = data[1:]
+	errors = []
+	for enrollment_data in data:
+		added = add_grades_data(required_columns, required_columns_indexes, enrollment_data, assessment_plan, criterias)
+		if added.get('error'): errors.append(added.get('msg'))
+		frappe.db.commit()
+	print("Not added enrollments: ")
+	print(errors)
+def add_grades_data(required_columns, required_columns_indexes, enrollment_data, assessment_plan, criterias):
+	academic_term = enrollment_data[required_columns_indexes[required_columns['academic_term']]]
+	academic_year = enrollment_data[required_columns_indexes[required_columns['academic_year']]]
+	student_email = enrollment_data[required_columns_indexes[required_columns['student']]]
+	if not student_email:
+		return {"error": False}
+	student = frappe.db.get_value("Student", {"student_email_id": student_email}, ['name'])
+	if not student:
+		return {'error': True, 'student': student_email, 'msg': 'could not find student'}
+	course_id = enrollment_data[required_columns_indexes[required_columns['course_id']]]
+	criterias_grades = {}
+	for criteria in criterias:
+		criterias_grades[criteria['assessment_criteria']] =  enrollment_data[required_columns_indexes[required_columns[criteria['assessment_criteria']]]] or 0
+
+	student_group = frappe.db.sql("""
+		SELECT grpStd.parent FROM `tabStudent Group Student` as grpStd
+		INNER JOIN `tabStudent Group` as grp ON grp.name=grpStd.parent
+		WHERE grp.academic_term=%(academic_term)s AND grp.course=%(course)s AND grpStd.student=%(student)s
+	""",{"student": student, "academic_term": academic_term, "course": course_id}, as_dict=True)
+	if not student_group or len(student_group) == 0:
+		return {"error": True,  "msg": student_email + ',' + str(course_id) }
+	filters = {
+		"student": student,
+		"student_group": student_group[0]['parent'],
+		'course': str(course_id),
+		'academic_year': academic_year,
+		'academic_term': academic_term,
+		'assessment_plan': assessment_plan
+		}
+	if frappe.db.exists("Assessment Result", filters):
+		return {"error": False}
+	assessment = frappe.get_doc({
+		"doctype": "Assessment Result",
+		**filters
+		# 'grading_scale': 'مقياس الدرجات الافتراضي',
+		# "maximum_score": 100
+	})
+	for c in criterias_grades:
+		grade = assessment.append('details')
+		grade.assessment_criteria = c
+		grade.score = criterias_grades[c]
+	assessment.save(ignore_permissions=True)
+	assessment.submit()
+	return {"error": False}
+@frappe.whitelist()
 def import_certificate_file(data_file):
 	content, extn = read_file(data_file)
 	data = read_content(content, extn)

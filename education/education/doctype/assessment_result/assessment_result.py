@@ -20,6 +20,8 @@ class AssessmentResult(Document):
 		self.validate_maximum_score()
 		self.validate_grade()
 		self.validate_duplicate()
+	def on_update_after_submit(self):
+		self.validate_grade()
 
 	def validate_maximum_score(self):
 		assessment_details = get_assessment_details(self.assessment_plan)
@@ -30,7 +32,8 @@ class AssessmentResult(Document):
 		for d in self.details:
 			d.maximum_score = max_scores.get(d.assessment_criteria)
 			if d.score > d.maximum_score:
-				frappe.throw(_("Score cannot be greater than Maximum Score"))
+				d.score = d.maximum_score
+				#frappe.throw(_("Score cannot be greater than Maximum Score"))
 
 	def validate_grade(self):
 		self.total_score = 0.0
@@ -42,6 +45,7 @@ class AssessmentResult(Document):
 		)
 
 	def validate_duplicate(self):
+		return True
 		assessment_result = frappe.get_list(
 			"Assessment Result",
 			filters={

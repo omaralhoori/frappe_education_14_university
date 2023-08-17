@@ -1,0 +1,99 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-08-17 16:38:50.510571",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "get_student_by",
+  "student_group",
+  "academic_term",
+  "column_break_qsdh",
+  "enrollment_status",
+  "graduation_threshold",
+  "graduation_date",
+  "students_section",
+  "students"
+ ],
+ "fields": [
+  {
+   "fieldname": "get_student_by",
+   "fieldtype": "Select",
+   "label": "Get Student By",
+   "options": "Student Group\nAcademic Term"
+  },
+  {
+   "depends_on": "eval:doc.get_student_by=='Student Group'",
+   "fieldname": "student_group",
+   "fieldtype": "Link",
+   "label": "Student Group",
+   "options": "Student Group"
+  },
+  {
+   "depends_on": "eval:doc.get_student_by=='Academic Term'",
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "label": "Academic Term",
+   "options": "Academic Term"
+  },
+  {
+   "fieldname": "column_break_qsdh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "enrollment_status",
+   "fieldtype": "Select",
+   "label": "Enrollment Status",
+   "options": "Enrolled\nPartially Pulled\nPulled\nGraduated\nFailed"
+  },
+  {
+   "default": "50",
+   "fieldname": "graduation_threshold",
+   "fieldtype": "Float",
+   "label": "Graduation Threshold"
+  },
+  {
+   "default": "Today",
+   "fieldname": "graduation_date",
+   "fieldtype": "Date",
+   "label": "Graduation Date"
+  },
+  {
+   "fieldname": "students_section",
+   "fieldtype": "Section Break",
+   "label": "Students"
+  },
+  {
+   "fieldname": "students",
+   "fieldtype": "Table",
+   "label": "Students",
+   "options": "Course Graduation Tool Student"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-08-17 16:46:46.845260",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Course Graduation Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

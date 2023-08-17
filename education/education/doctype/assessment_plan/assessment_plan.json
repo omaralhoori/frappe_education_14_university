@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "EDU-ASP-.YYYY.-.#####",
+ "autoname": "prompt",
  "creation": "2015-11-12 16:34:34.658092",
  "doctype": "DocType",
  "document_type": "Setup",
@@ -76,8 +76,7 @@
    "in_global_search": 1,
    "in_standard_filter": 1,
    "label": "Course",
-   "options": "Course",
-   "reqd": 1
+   "options": "Course"
   },
   {
    "fetch_from": "student_group.program",
@@ -194,11 +193,11 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-04-05 17:54:32.675381",
+ "modified": "2023-08-16 13:10:41.435517",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Assessment Plan",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {

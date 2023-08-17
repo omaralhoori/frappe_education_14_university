@@ -15,7 +15,12 @@
   "program_certificate_section",
   "program_certificate_file",
   "column_break_4mxk",
-  "import_certificate_file"
+  "import_certificate_file",
+  "grades_section",
+  "grades_file",
+  "column_break_g50t",
+  "assessment_plan",
+  "import_grades_file"
  ],
  "fields": [
   {
@@ -61,13 +66,38 @@
    "fieldname": "import_certificate_file",
    "fieldtype": "Button",
    "label": "Import Certificate File"
+  },
+  {
+   "fieldname": "grades_section",
+   "fieldtype": "Section Break",
+   "label": "Grades"
+  },
+  {
+   "fieldname": "grades_file",
+   "fieldtype": "Attach",
+   "label": "Grades File"
+  },
+  {
+   "fieldname": "column_break_g50t",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "import_grades_file",
+   "fieldtype": "Button",
+   "label": "Import Grades File"
+  },
+  {
+   "fieldname": "assessment_plan",
+   "fieldtype": "Link",
+   "label": "Assessment Plan",
+   "options": "Assessment Plan"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-06-11 08:03:26.621425",
+ "modified": "2023-08-17 14:49:31.611510",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Import Education Files",
