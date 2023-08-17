@@ -38,6 +38,7 @@ frappe.ui.form.on("Course Graduation Tool", {
         })
     },
     graduate_students(frm){
+        frappe.show_progress('Updating..', 70, 100, 'Please wait');
         var students = frm.doc.students.map(e => { return {"course": e.course, "enrollment": e.course_enrollment, "student": e.student};})
         frappe.call({
             "method": "education.education.doctype.course_graduation_tool.course_graduation_tool.graduate_students",
@@ -50,6 +51,7 @@ frappe.ui.form.on("Course Graduation Tool", {
                 "students": students
             },
             callback: (res) =>{
+                frappe.show_progress('Updating..', 100, 100, 'Please wait');
                 frm.doc.students = [];
                 for(var student of res.message){
                     console.log(student)
