@@ -38,6 +38,10 @@
   "native_language",
   "major",
   "educational_level",
+  "column_break_vbow",
+  "program",
+  "academic_year",
+  "academic_term",
   "address_tab",
   "section_break_22",
   "address_line_1",
@@ -366,11 +370,33 @@
    "fieldtype": "Link",
    "label": "Major",
    "options": "Major"
+  },
+  {
+   "fieldname": "column_break_vbow",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Link",
+   "label": "Program",
+   "options": "Program"
+  },
+  {
+   "fieldname": "academic_year",
+   "fieldtype": "Link",
+   "label": "Academic Year",
+   "options": "Academic Year"
+  },
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "label": "Academic Term",
+   "options": "Academic Term"
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-08-10 13:06:19.872744",
+ "modified": "2023-08-18 23:08:05.655897",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

@@ -10,6 +10,7 @@
  "field_order": [
   "academic_year",
   "term_name",
+  "term_abbreviation",
   "term_start_date",
   "term_end_date",
   "enrollment_start_date",
@@ -77,10 +78,15 @@
    "fieldname": "fees_due_date",
    "fieldtype": "Date",
    "label": "Fees Due Date"
+  },
+  {
+   "fieldname": "term_abbreviation",
+   "fieldtype": "Data",
+   "label": "Term Abbreviation"
   }
  ],
  "links": [],
- "modified": "2023-03-22 14:06:37.692524",
+ "modified": "2023-08-18 23:11:51.761030",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Academic Term",

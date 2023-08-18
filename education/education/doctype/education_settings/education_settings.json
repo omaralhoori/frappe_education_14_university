@@ -28,6 +28,7 @@
   "fetch_courses_from_program",
   "allow_adding_and_removing",
   "signup_process_tab",
+  "student_email_address_domain",
   "add_new_students_to_groups",
   "max_group_strength",
   "batch_name",
@@ -209,11 +210,16 @@
    "fieldname": "batch_count",
    "fieldtype": "Int",
    "label": "Batch Count"
+  },
+  {
+   "fieldname": "student_email_address_domain",
+   "fieldtype": "Data",
+   "label": "Student Email Address Domain"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-07-12 19:07:29.344827",
+ "modified": "2023-08-18 23:35:12.219271",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

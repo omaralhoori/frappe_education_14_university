@@ -14,6 +14,20 @@ from frappe.utils.password import update_password
 
 
 class Student(Document):
+	def before_naming(self):
+		if not self.program or not self.academic_year or not self.academic_term:
+			self.program = frappe.db.get_all("Program")[0].get('name')
+			self.academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+			self.academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		program_abbr = frappe.db.get_value("Program", self.program, ['program_abbreviation'])
+		year_abbr = frappe.db.get_value("Academic Year", self.academic_year, ['year_abbreviation'])
+		term_abbr = frappe.db.get_value("Academic Term", self.academic_term, ['term_abbreviation'])
+		if not program_abbr or not year_abbr or not term_abbr:
+			return
+		self.naming_series = '1' + program_abbr + year_abbr + term_abbr + '.####'
+	def after_insert(self):
+		if not self.student_email_id and frappe.db.get_single_value("Education Settings", "student_email_address_domain"):
+			self.student_email_id = self.first_name + self.name + frappe.db.get_single_value("Education Settings", "student_email_address_domain")
 	def validate(self):
 		self.student_name = " ".join(
 			filter(None, [self.first_name, self.middle_name, self.last_name])
