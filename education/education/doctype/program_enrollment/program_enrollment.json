@@ -176,6 +176,7 @@
    "label": "Scholarship"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "has_scholarship",
    "fieldtype": "Check",
@@ -185,7 +186,7 @@
  "image_field": "image",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-06-11 11:49:04.634588",
+ "modified": "2023-08-20 21:58:49.390287",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program Enrollment",
