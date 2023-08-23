@@ -65,6 +65,7 @@ def add_grades_data(required_columns, required_columns_indexes, enrollment_data,
 		'assessment_plan': assessment_plan
 		}
 	if frappe.db.exists("Assessment Result", filters):
+		print("grade exists")
 		return {"error": False}
 	assessment = frappe.get_doc({
 		"doctype": "Assessment Result",
