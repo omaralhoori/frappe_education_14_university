@@ -55,8 +55,8 @@ class CourseEnrollmentApplicant(Document):
 			row.course = course
 			if groups.get(course):
 				row.group = groups.get(course)
-		
-		self.create_added_removed_courses_fees(added_courses, removed_courses)
+		if not self.student_has_scholarship():
+			self.create_added_removed_courses_fees(added_courses, removed_courses)
 
 	def create_added_removed_courses_fees(self, added_courses, removed_courses):
 		added_total_fees, added_hour_rate, added_total_hours, course_receivable_account, course_cost_center, course_income_account = self.calculate_courses_fees(added_courses)
@@ -109,8 +109,12 @@ class CourseEnrollmentApplicant(Document):
 				
 		
 	def after_insert(self):
-		self.create_fees_record()
-
+		if not self.student_has_scholarship():
+			self.create_fees_record()
+	def student_has_scholarship(self):
+		has_scholarship = frappe.db.get_value("Program Enrollment", {"program": self.program, "student": self.student}, ['has_scholarship'])
+		if has_scholarship: return True
+		return False
 	def calculate_courses_fees(self, courses):
 		total_fees = 0
 		total_hours =0
