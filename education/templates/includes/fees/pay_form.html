@@ -151,10 +151,13 @@
         }
     }
     const payBtnOnClick = function(e) {
-        if (Number(e.getAttribute('doc-price')) < Number('{{amount_limit}}')){
-            document.querySelector('.outstanding-container').innerHTML = `${e.getAttribute('doc-price')} <input type="hidden" onchange="checkCartAmount(this)" class="form-control cart-amount" size="20" value="${e.getAttribute('doc-price')}">`
+        const str = e.getAttribute('doc-price');
+        const match = str.match(/(\d+\.\d+)/);
+        const amount = match ? parseFloat(match[1]) : null;
+        if (amount < Number('{{amount_limit}}')){
+            document.querySelector('.outstanding-container').innerHTML = `${amount} <input type="hidden" onchange="checkCartAmount(this)" class="form-control cart-amount" size="20" value="${amount}">`
         }else{
-            document.querySelector('.outstanding-container').innerHTML = `<input type="number" onchange="checkCartAmount(this)" class="form-control cart-amount" size="20" value="${e.getAttribute('doc-price')}">`
+            document.querySelector('.outstanding-container').innerHTML = `<input type="number" onchange="checkCartAmount(this)" class="form-control cart-amount" size="20" value="${amount}">`
         }
         document.querySelector('.doc-name-input').value = e.getAttribute('doc-name')
     }
