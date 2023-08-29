@@ -176,19 +176,34 @@ def get_student_group_students(student_group, include_inactive=0):
 	:param student_group: Student Group.
 	"""
 	if include_inactive:
-		students = frappe.get_all(
-			"Student Group Student",
-			fields=["student", "student_name", "parent as student_group"],
-			filters={"parent": student_group},
-			order_by="student_name",
-		)
+		# students = frappe.get_all(
+		# 	"Student Group Student",
+		# 	fields=["student", "student_name", "parent as student_group"],
+		# 	filters={"parent": student_group},
+		# 	order_by="student_name",
+		# )
+		students =frappe.db.sql("""
+			SELECT grpStd.student, grpStd.student_name, grpStd.parent as student_group, std.student_email_id
+			FROM `tabStudent Group Student` as grpStd
+			INNER JOIN `tabStudent` as std ON std.name=grpStd.student
+			WHERE grpStd.parent=%(student_group)s
+			ORDER BY grpStd.student_name
+		""", {"student_group": student_group},as_dict=True)
 	else:
-		students = frappe.get_all(
-			"Student Group Student",
-			fields=["student", "student_name", "parent as student_group"],
-			filters={"parent": student_group, "active": 1},
-			order_by="student_name",
-		)
+		# students = frappe.get_all(
+		# 	"Student Group Student",
+		# 	fields=["student", "student_name", "parent as student_group"],
+		# 	filters={"parent": student_group, "active": 1},
+		# 	order_by="student_name",
+		# )
+
+		students =frappe.db.sql("""
+			SELECT grpStd.student, grpStd.student_name, grpStd.parent as student_group, std.student_email_id
+			FROM `tabStudent Group Student` as grpStd
+			INNER JOIN `tabStudent` as std ON std.name=grpStd.student
+			WHERE grpStd.parent=%(student_group)s AND active=1
+			ORDER BY grpStd.student_name
+		""", {"student_group": student_group},as_dict=True)
 	students = [frappe._dict(student, **{'student_group':student_group}) for student in students]
 	return students
 
@@ -305,8 +320,6 @@ def get_course_student_groups(program, course, academic_year, academic_term):
 def get_assessment_students(assessment_plan, student_group=None):
 	if student_group:
 		student_list = get_student_group_students(student_group)
-		print("Student Group:",student_group)
-		print(len(student_list))
 	else:
 		program, course, academic_year, academic_term = frappe.db.get_value("Assessment Plan", assessment_plan, ['program','course', 'academic_year', 'academic_term'])
 		if not academic_year: academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")

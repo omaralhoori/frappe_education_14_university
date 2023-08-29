@@ -3,10 +3,10 @@
 		<tr>
 			<th style="width: 90px" rowspan="2">Student</th>
 			<th style="width: 170px" rowspan="2">Student Name</th>
+			<th class="score" style="width: 170px" rowspan="2">Student Email</th>
 			{% for c in criteria %}
 			<th class="score" style="width: 100px">{{ c.assessment_criteria }}</th>
 			{% endfor %}
-			<th class="score" style="width: 170px" rowspan="2">Comments</th>
 			<th class="score" style="width: 100px">Total Marks</th>
 			<!--criteria-->
 		</tr>
@@ -24,6 +24,9 @@
 			data-student="{{s.student}}" data-student-group="{{s.student_group}}">
 			<td>{{ s.student }}</td>
 			<td>{{ s.student_name }}</td>
+			<td>
+				{{s.student_email_id}}
+			</td>
 			{% for c in criteria %}
 			<td>
 				<span data-student="{{s.student}}" data-criteria="{{c.assessment_criteria}}" class="student-result-grade badge" >
@@ -42,13 +45,6 @@
 					{% } %}/>
 			</td>
 			{% endfor %}
-			<td>
-				<input type="text" class="result-comment" data-student="{{s.student}}"
-				{% if(s.assessment_details && s.docstatus && s.docstatus == 1) { %} disabled {% } %}
-				{% if(s.assessment_details) { %}
-					value="{{s.assessment_details.comment}}"
-				{% } %}
-			</td>
 			<td>
 				<span data-student="{{s.student}}" class="total-score-grade badge" style="width:30%; float:left;">
 				{% if(s.assessment_details) { %}
