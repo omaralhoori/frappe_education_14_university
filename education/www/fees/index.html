@@ -12,7 +12,7 @@
 {% block page_content %}
 
 {% set today = frappe.utils.getdate(frappe.utils.nowdate()) %}
-
+<div class="table-responsive">
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -62,7 +62,7 @@
 
 	</tbody>
 </table>
-
+</div>
 {% include "templates/includes/fees/popup_modal.html" %}
 {% include "templates/includes/fees/details_popup_modal.html" %}
 

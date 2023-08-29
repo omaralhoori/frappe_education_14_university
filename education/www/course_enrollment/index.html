@@ -111,7 +111,7 @@
     <div class="tab-pane fade show active" id="courses-tabs" role="tabpanel" aria-labelledby="courses-tab">
 
 
-        <div>
+        <div class="table-responsive">
             {% for pool_name in available_courses%}
             <div class="row">
                 <div class="col-8 h4">{{_(pool_name)}}</div>
@@ -191,7 +191,7 @@
         </div>
     </div>
     <div class="tab-pane fade" id="selected-courses-tabs" role="tabpanel" aria-labelledby="selected-courses-tab">
-        <div>
+        <div class="table-responsive">
             <div class="row">
                 <div class="col-4 h4">{{_('Selected Courses')}}</div>
                 {% if maximum_hours > 0 %}
