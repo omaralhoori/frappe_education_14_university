@@ -345,9 +345,12 @@ def payment_callback():
 		f.write(str(frappe.request.headers) + str(frappe.form_dict))
 	fee_name = frappe.form_dict.get('cart_id')
 	paid_amount = frappe.form_dict.get('tran_total')
-	fee_doc = frappe.get_doc('Fees', fee_name)
-	fee_doc.pay_fee(float(paid_amount))
-	return True
+	if frappe.form_dict.get('payment_result') and frappe.form_dict.get('payment_result').get('response_status') == 'A':
+		fee_doc = frappe.get_doc('Fees', fee_name)
+		fee_doc.pay_fee(float(paid_amount))
+		return True
+	else:
+		return False
 
 @frappe.whitelist()
 def upload_receipt():

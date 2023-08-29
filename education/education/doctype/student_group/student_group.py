@@ -94,6 +94,10 @@ class StudentGroup(Document):
 				roll_no_list.append(d.group_roll_number)
 
 
+def get_course_enrolled_students(academic_year, academic_term, program, course):
+	return frappe.db.get_all("Course Enrollment", {"academic_year": academic_year, "academic_term": academic_term, "program": program, "course": course}, ["student", "student_name"])
+
+
 @frappe.whitelist()
 def get_students(
 	academic_year,
@@ -104,10 +108,13 @@ def get_students(
 	student_category=None,
 	course=None,
 ):
-	enrolled_students = get_program_enrollment(
-		academic_year, academic_term, program, batch, student_category, course
-	)
-
+	if group_based_on == 'Course':
+		enrolled_students = get_course_enrolled_students(academic_year, academic_term, program, course)
+	else:
+		enrolled_students = get_program_enrollment(
+			academic_year, academic_term, program, batch, student_category, course
+		)
+	print(len(enrolled_students))
 	if enrolled_students:
 		student_list = []
 		for s in enrolled_students:
@@ -134,7 +141,7 @@ def get_program_enrollment(
 	condition1 = " "
 	condition2 = " "
 	# if academic_term:
-	# 	condition1 += " and pe.academic_term = %(academic_term)s"
+	# 	condition1 += " and pec.academic_term = %(academic_term)s"
 	# pe.academic_year = %(academic_year)s  
 	if program:
 		condition1 += " and pe.program = %(program)s"
@@ -144,8 +151,11 @@ def get_program_enrollment(
 		condition1 += " and pe.student_category = %(student_category)s"
 	if course:
 		condition1 += " and pe.name = pec.program_enrollment and pec.course = %(course)s"
+		condition1 += " and pec.academic_term = %(academic_term)s"
 		condition2 = ", `tabCourse Enrollment` pec"
-	return frappe.db.sql(
+	print(condition1)
+	print(condition2)
+	results = frappe.db.sql(
 		"""
 		select
 			pe.student, pe.student_name
@@ -169,7 +179,11 @@ def get_program_enrollment(
 		),
 		as_dict=1,
 	)
-
+	for item in results:
+		if item.get('student_name') == 'yassmin ahmed saeed':
+			print(item)
+	print(len(results))
+	return results
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
@@ -181,6 +195,7 @@ def fetch_students(doctype, txt, searchfield, start, page_len, filters):
 			filters.get("program"),
 			filters.get("batch"),
 			filters.get("student_category"),
+			filters.get("course"),
 		)
 		student_group_student = frappe.db.sql_list(
 			"""select student from `tabStudent Group Student` where parent=%s""",

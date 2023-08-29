@@ -178,16 +178,16 @@ def get_student_group_students(student_group, include_inactive=0):
 	if include_inactive:
 		students = frappe.get_all(
 			"Student Group Student",
-			fields=["student", "student_name"],
+			fields=["student", "student_name", "parent as student_group"],
 			filters={"parent": student_group},
-			order_by="group_roll_number",
+			order_by="student_name",
 		)
 	else:
 		students = frappe.get_all(
 			"Student Group Student",
-			fields=["student", "student_name"],
+			fields=["student", "student_name", "parent as student_group"],
 			filters={"parent": student_group, "active": 1},
-			order_by="group_roll_number",
+			order_by="student_name",
 		)
 	students = [frappe._dict(student, **{'student_group':student_group}) for student in students]
 	return students
@@ -305,6 +305,8 @@ def get_course_student_groups(program, course, academic_year, academic_term):
 def get_assessment_students(assessment_plan, student_group=None):
 	if student_group:
 		student_list = get_student_group_students(student_group)
+		print("Student Group:",student_group)
+		print(len(student_list))
 	else:
 		program, course, academic_year, academic_term = frappe.db.get_value("Assessment Plan", assessment_plan, ['program','course', 'academic_year', 'academic_term'])
 		if not academic_year: academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
@@ -314,7 +316,7 @@ def get_assessment_students(assessment_plan, student_group=None):
 		for group in course_groups:
 			student_list.extend(get_student_group_students(group['name']))
 	for i, student in enumerate(student_list):
-		result = get_result(student.student, assessment_plan)
+		result = get_result(student.student, assessment_plan, student.student_group)
 		if result:
 			student_result = {}
 			for d in result.details:
@@ -349,7 +351,7 @@ def get_assessment_details(assessment_plan):
 
 
 @frappe.whitelist()
-def get_result(student, assessment_plan):
+def get_result(student, assessment_plan, student_group):
 	"""Returns Submitted Result of given student for specified Assessment Plan
 
 	:param Student: Student
@@ -360,6 +362,7 @@ def get_result(student, assessment_plan):
 		filters={
 			"student": student,
 			"assessment_plan": assessment_plan,
+			"student_group": student_group,
 			"docstatus": ("!=", 2),
 		},
 	)
@@ -450,7 +453,7 @@ def submit_assessment_results(assessment_plan, student_group=None):
 			student_list.extend(get_student_group_students(group['name']))
 			
 	for i, student in enumerate(student_list):
-		doc = get_result(student.student, assessment_plan)
+		doc = get_result(student.student, assessment_plan, student.student_group)
 		if doc and doc.docstatus == 0:
 			total_result += 1
 			doc.submit()
