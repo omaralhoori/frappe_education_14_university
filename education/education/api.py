@@ -411,7 +411,7 @@ def mark_assessment_result(assessment_plan, scores):
 			}
 		)
 	assessment_result = get_assessment_result_doc(
-		student_score["student"], assessment_plan
+		student_score["student"], assessment_plan, student_score['group'],
 	)
 	assessment_result.update(
 		{
@@ -423,7 +423,6 @@ def mark_assessment_result(assessment_plan, scores):
 			"student_group": student_score.get("group")
 		}
 	)
-	print(student_score.get("group"))
 	assessment_result.save()
 	details = {}
 	for d in assessment_result.details:
@@ -460,12 +459,13 @@ def submit_assessment_results(assessment_plan, student_group=None):
 	return total_result
 
 
-def get_assessment_result_doc(student, assessment_plan):
+def get_assessment_result_doc(student, assessment_plan, student_group):
 	assessment_result = frappe.get_all(
 		"Assessment Result",
 		filters={
 			"student": student,
 			"assessment_plan": assessment_plan,
+			"student_group": student_group,
 			"docstatus": ("!=", 2),
 		},
 	)
