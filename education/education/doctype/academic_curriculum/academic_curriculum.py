@@ -48,7 +48,7 @@ def fetech_program_based_courses(student, enrolled_program):
 				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
 				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s AND cea.program=%(program)s AND cea.application_status!="Rejected"
 				  ), 1, 0) as applicant_status,
-		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s ), 1, 0) as enrollment_status,
+		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s AND enrollment_status not in ('Failed', 'Pulled') ), 1, 0) as enrollment_status,
 		IF ((0 not in (
 			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
 			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s {graduation_stmt}
@@ -83,7 +83,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
 				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s AND cea.program=%(program)s AND cea.application_status!="Rejected"
 				  ), 1, 0) as applicant_status,
-		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s ), 1, 0) as enrollment_status,
+		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s AND enrollment_status not in ('Failed', 'Pulled') ), 1, 0) as enrollment_status,
 		IF ((0 not in (
 			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
 			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s {graduation_stmt}
