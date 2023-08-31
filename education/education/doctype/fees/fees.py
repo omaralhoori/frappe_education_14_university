@@ -168,6 +168,7 @@ class Fees(AccountsController ,DocumentAttach):
 		})
 
 	def make_extra_amount_gl_entries(self, amount, receivable_account, cost_center, income_account):
+		return 
 		if amount == 0: return
 		if amount < 0:
 			return self.make_extra_amount_reverse_gl_entries(abs(amount), receivable_account, cost_center, income_account)
