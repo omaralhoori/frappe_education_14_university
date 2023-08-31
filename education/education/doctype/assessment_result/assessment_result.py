@@ -43,6 +43,8 @@ class AssessmentResult(Document):
 		self.grade = get_grade(
 			self.grading_scale, (self.total_score / self.maximum_score) * 100
 		)
+		self.db_set("total_score", self.total_score)
+		#frappe.db.commit()
 
 	def validate_duplicate(self):
 		return True
