@@ -56,15 +56,14 @@
   {
    "allow_on_submit": 1,
    "fetch_from": "student_group.academic_year",
-   "fetch_if_empty": 1,
    "fieldname": "academic_year",
    "fieldtype": "Link",
    "label": "Academic Year",
    "options": "Academic Year"
   },
   {
+   "allow_on_submit": 1,
    "fetch_from": "student_group.academic_term",
-   "fetch_if_empty": 1,
    "fieldname": "academic_term",
    "fieldtype": "Link",
    "label": "Academic Term",
@@ -182,7 +181,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-30 16:45:11.361563",
+ "modified": "2023-09-01 11:33:23.083919",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Assessment Result",
