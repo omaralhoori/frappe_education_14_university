@@ -29,6 +29,7 @@
   "allow_adding_and_removing",
   "signup_process_tab",
   "student_email_address_domain",
+  "course_enrollment_check_program",
   "add_new_students_to_groups",
   "max_group_strength",
   "batch_name",
@@ -215,11 +216,17 @@
    "fieldname": "student_email_address_domain",
    "fieldtype": "Data",
    "label": "Student Email Address Domain"
+  },
+  {
+   "default": "0",
+   "fieldname": "course_enrollment_check_program",
+   "fieldtype": "Check",
+   "label": "Course Enrollment Check Program"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-08-18 23:35:12.219271",
+ "modified": "2023-09-04 01:17:37.880244",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

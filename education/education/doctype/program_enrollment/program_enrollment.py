@@ -232,3 +232,25 @@ def get_students(doctype, txt, searchfield, start, page_len, filters):
 		% (", ".join(["%s"] * len(students)), searchfield, "%s", "%s", "%s"),
 		tuple(students + ["%%%s%%" % txt, start, page_len]),
 	)
+
+
+def check_student_program_enrolled():
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, ["name", 'student_name'])
+	if not student: return False
+	if frappe.db.get_value("Program Enrollment", {"student": student[0]}, ['name']):
+		return True
+	years = frappe.db.get_all("Educational Year", fields = ["name"], order_by="year_order asc", page_length=1)
+	programs = frappe.db.get_all("Program", fields = ["name"], page_length=1)
+
+	if not years or not programs: return False
+	program_enrollment = frappe.new_doc("Program Enrollment")
+	program_enrollment.student = student[0]
+	program_enrollment.student_name = student[1]
+	program_enrollment.program = programs[0]['name']
+	program_enrollment.academic_year = frappe.db.get_single_value("Education Settings","current_academic_year")
+	program_enrollment.academic_term = frappe.db.get_single_value("Education Settings","current_academic_term")
+	program_enrollment.educational_year= years[0]['name']
+	program_enrollment.save(ignore_permissions=True)
+	program_enrollment.submit()
+	frappe.db.commit()
+	return True

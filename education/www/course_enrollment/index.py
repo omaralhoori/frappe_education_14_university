@@ -1,6 +1,7 @@
 from education.education.doctype.academic_term.academic_term import is_course_enrollment_avilable
 from education.education.doctype.course_enrollment_applicant.course_enrollment_applicant import get_student_comments, has_student_registred_courses
 from education.education.doctype.academic_curriculum.academic_curriculum import get_academic_curriculum_for_student
+from education.education.doctype.program_enrollment.program_enrollment import check_student_program_enrolled
 from education.education.doctype.study_postponement.study_postponement import check_postponed_semester
 import frappe
 from frappe import _
@@ -12,6 +13,8 @@ def get_context(context):
         frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
     context.show_sidebar = True
     context.title = _("Course Enrollment")
+    if frappe.db.get_single_value("Education Settings", 'course_enrollment_check_program'):
+        check_student_program_enrolled()
     context.maximum_hours= frappe.db.get_single_value("Education Settings" ,"maximum_number_of_hours")
     context.minimum_hours= frappe.db.get_single_value("Education Settings" ,"minimum_number_of_hours")
     student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")

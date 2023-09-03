@@ -41,7 +41,9 @@ class Student(Document):
 	def on_update(self):
 		if self.user == frappe.session.user:
 			frappe.db.set_value("User", frappe.session.user ,{"first_login":1})
-		
+		# old_doc = self.get_doc_before_save()
+		# if old_doc.student_mobile_number != self.student_mobile_number:
+		# 	print(self.student_mobile_number)
 	def validate_dates(self):
 		for sibling in self.siblings:
 			if sibling.date_of_birth and getdate(sibling.date_of_birth) > getdate():
