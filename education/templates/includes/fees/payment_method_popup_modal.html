@@ -1,0 +1,67 @@
+<!-- Pay Form Modal -->
+<div class="modal fade" id="paymentMethodModal" tabindex="-1" role="dialog" aria-labelledby="paymentMethodModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-body m-2">
+            
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+  function paymentMethodBtnOnClick(e){
+    document.querySelector("#paymentMethodModal .modal-body").innerHTML = `<div>{{_("Loading..")}}</div>`
+    document.querySelector("#paymentMethodModal .modal-body").innerHTML = `<div>${formatPaymentMethod()}</div>`
+
+  }
+  function formatPaymentMethod(){
+    var html = ""
+    
+    html = `<table class="table table-striped">
+      <tr> 
+        <th>{{_("Payment Method")}}</th>
+      </tr>
+      <tr> 
+        <td align="right">{{_("1. Bank transfer")}}</td>
+      </tr>
+      <tr>
+        <td align="right">{{_("Go to the bank and request a transfer transaction (Safwa Islamic Bank)")}}</td>
+        </tr>
+        <tr>
+          <td align="right">{{_("Company Name")}}</td>
+          </tr>
+          <tr>
+          <td align ="left"> Ikhath for educational consulting </td>
+          </tr>
+          <tr>
+            <td align ="left"> SWIFT : JDIBJOAM </td>
+            </tr>
+            <tr>
+              <td align ="left">IBAN  : JO06JDIB2220003134710013000000</td>
+              </tr>
+              <tr>
+                <td align="right">{{_("Company Headquarters")}}</td>
+                </tr>
+                <tr>
+                  <td align="right">{{_("Jordan Amman")}}</td>
+                  </tr>
+                  <tr>
+                    <td align="right">{{_("2. Zain Cash account (Jordan only) for payment, at 0791038913")}}</td>
+                    </tr>
+                    <tr>
+                      <td align="right">{{_("3. Western transfer via Naser younes Hasan sabra")}}</td>
+                      </tr>
+                      <tr>
+                        <td align="right">{{_("welcome. 🌹")}}</td>
+                        </tr>
+
+
+      ${html}
+    </table>`
+    return html;
+  }
+
+  
+</script>

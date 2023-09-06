@@ -17,23 +17,23 @@
     <div class="row form-group">
         <label class="col-sm-5 col-form-label">{{_('Card Number')}}</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" data-paylib="number" size="20">
+            <input type="text" placeholder="1234 5678 8765 4321" class="form-control" data-paylib="number" size="20" style="direction: ltr;">
         </div>
     </div>
     <div class="row form-group">
-        <label class="col-sm-5 col-form-label">{{_('Expiry Date')}} (MM/YYYY)</label>
-
-        <div class="col-sm-3">
-            <input type="text" class="form-control" data-paylib="expmonth" size="2">
+        <label class="col-5 col-form-label">{{_('Expiry Date')}} </label>
+        
+        <div class="col-3">
+            <input type="text"  placeholder="MM" class="form-control" data-paylib="expmonth" size="2" style="direction: ltr; ">
         </div>
-        <div class="col-sm-4">
-            <input type="text" class="form-control" data-paylib="expyear" size="4">
+        <div class="col-4">
+            <input type="text" placeholder="YY or YYYY" class="form-control" data-paylib="expyear" size="4" style="direction: ltr; ">
         </div>
     </div>
     <div class="row form-group">
         <label class="col-sm-5 col-form-label">{{_('Security Code')}}</label>
         <div class="col-sm-3">
-            <input type="text" class="form-control" data-paylib="cvv" size="4">
+            <input type="text" placeholder="123" class="form-control" data-paylib="cvv" size="4" style="direction: ltr;">
         </div>
     </div>
     <input type="hidden" value="" class="doc-name-input" name="doc-name" />

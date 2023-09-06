@@ -56,6 +56,9 @@
 					data-toggle="modal" data-target="#exampleModal"> {{
 					_('Pay')}}</button>
 				{% endif %}
+				<button  onclick="paymentMethodBtnOnClick(this)" 
+				class="btn btn-info btn-sm" data-toggle="modal" data-target="#paymentMethodModal"
+				> {{ _('Payment Methods')}}</button>
 			</td>
 		</tr>
 		{% endfor %}
@@ -65,5 +68,6 @@
 </div>
 {% include "templates/includes/fees/popup_modal.html" %}
 {% include "templates/includes/fees/details_popup_modal.html" %}
+{% include "templates/includes/fees/payment_method_popup_modal.html" %}
 
 {% endblock %}

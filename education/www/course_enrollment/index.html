@@ -215,7 +215,7 @@
                 <tbody>
                     {% for pool_name in available_courses %}
                     {% for course in available_courses[pool_name] %}
-                    {% if (course['applicant_status'] == 1 and course['enrollment_status'] == 0) or ( course['enrollment_status'] == 0 and  course.get('force_to_select_course') )%}
+                    {% if (course['applicant_status'] == 1 and course['enrollment_status'] == 0) or ( course['enrollment_status'] == 0 and  course.get('force_to_select_course') ) %}
                     <tr class="course-row" table-code="{{pool_name}}">
                         <td>
                             {{course['course_code']}}
@@ -247,9 +247,15 @@
                             {% if enable_add_remove %}
                             <button class="btn btn-sm btn-primary d-none add-course-btn"
                                 onclick="addBtnClicked(this)">{{_('Add')}}</button>
-                            <button class="btn btn-sm btn-danger remove-course-btn"
-                                force-to-select="{{course.get('force_to_select_course')}}"
-                                onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                                {% if  course['applicant_status'] == 1  %}
+                                    <button class="btn btn-sm btn-danger remove-course-btn"
+                                    force-to-select="{{course.get('force_to_select_course')}}"  enrollment-status="{{ course['enrollment_status'] }}" applicant-status="{{ course['applicant_status'] }}"
+                                    onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                                {% else %}
+                                    <button class="btn btn-sm btn-danger remove-course-btn" enrollment-status="{{ course['enrollment_status'] }}" applicant-status="{{ course['applicant_status'] }}"
+                                    force-to-select="0"
+                                    onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                                {%endif%}
                             {{course_group_select_btn(course, groups)}}
                             {% else %}
                             <span class="badge badge-info">{{_('Applied')}}</span>

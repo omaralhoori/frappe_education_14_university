@@ -10,6 +10,7 @@
   "student",
   "student_name",
   "enrollment_date",
+  "student_mobile_no",
   "column_break_4",
   "program",
   "educational_year",
@@ -181,12 +182,19 @@
    "fieldname": "has_scholarship",
    "fieldtype": "Check",
    "label": "Has Scholarship"
+  },
+  {
+   "fetch_from": "student.student_mobile_number",
+   "fieldname": "student_mobile_no",
+   "fieldtype": "Data",
+   "label": "Student Mobile No",
+   "read_only": 1
   }
  ],
  "image_field": "image",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-08-20 21:58:49.390287",
+ "modified": "2023-09-06 10:03:34.548849",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program Enrollment",
