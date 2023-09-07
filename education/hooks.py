@@ -46,6 +46,12 @@ calendars = [
 ]
 
 standard_portal_menu_items = [
+    	{
+		"title": _("Student Information"),
+		"route": "/student_information",
+        "reference_doctype": "Student",
+        "role": "Student",
+	},
 	{"title": _("Fees"), "route": "/fees", "reference_doctype": "Fees", "role": "Student"},
 	{
 		"title": _("Admission"),
@@ -74,10 +80,7 @@ standard_portal_menu_items = [
 		"route": "/academic_calendar",
 		"reference_doctype": "Academic Calendar",
 	},
-	{
-		"title": _("Personal Information"),
-		"route": "/personal_information",
-	},
+
 ]
 
 default_roles = [

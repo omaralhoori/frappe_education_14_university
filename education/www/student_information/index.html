@@ -1,0 +1,164 @@
+{% from "frappe/templates/includes/avatar_macro.html" import avatar %}
+{% extends "templates/web.html" %}
+
+{% block title %}{{ _("Student Information") }}{% endblock %}
+
+{% block page_content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+
+<style>
+  .card-box .iconb {
+    position: absolute;
+    top: auto;
+    bottom: 5px;
+    {% if is_rtl()%}
+    left: 5px;
+    {% else %}
+    right: 5px;
+    {% endif %}
+    z-index: 0;
+    font-size: 72px;
+    color: rgba(0, 0, 0, 0.15);
+}
+</style>
+<!-- Tabs navs -->
+<ul class="nav nav-tabs nav-fill mb-3" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" id="student-tab" data-toggle="tab" data-mdb-toggle="tab" href="#student-tabs" role="tab"
+      aria-controls="student-tabs" aria-selected="true">{{_('Student Information')}}</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" id="courses-tab" data-toggle="tab" data-mdb-toggle="tab" href="#courses-tabs" role="tab"
+      aria-controls="scourses-tabs" aria-selected="false">{{_('Academic Information')}}</a>
+  </li>
+</ul>
+<!-- Tabs navs -->
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="student-tabs" role="tabpanel" aria-labelledby="student-tab">
+
+    <div class="my-account-container">
+      <div class="row d-flex account-info">
+        <div class="col-sm-12 col-lg-3 d-flex align-items-center justify-content-center">
+          <div>
+            <div class="my-account-avatar">
+              {{avatar(current_user.name, css_style="width:128px !important; height:128px !important;")}}
+            </div>
+
+            <div class="my-account-name mt-4">
+              {{student.student_name }}
+            </div>
+          </div>
+        </div>
+        <div class=" col-sm-12 col-lg-9 row p-2 d-flex flex-column">
+          <div class="col row">
+            <div class="col-sm-12 col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Student No')}}</label>
+              <div class="student-data">{{student.name or '-'}}</div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Email')}}</label>
+              <div class="student-data">{{student.student_email_id or '-'}}</div>
+            </div>
+            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Mobile No')}}</label>
+              <div class="student-data">{{student.student_mobile_number or '-'}}</div>
+            </div>
+            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Date of Birth')}}</label>
+              <div class="student-data">{{student.date_of_birth or '-'}}</div>
+            </div>
+            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Nationality')}}</label>
+              <div class="student-data">{% if student.nationality %}{{_(student.nationality) or '-'}} {% else %} - {%
+                endif%}</div>
+            </div>
+
+            {% if program_enrollment %}
+            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Program')}}</label>
+              <div class="student-data">{{_(program_enrollment.program) or '-'}} </div>
+            </div>
+            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Current Level')}}</label>
+              <div class="student-data">{{_(program_enrollment.educational_year) or '-'}} </div>
+            </div>
+            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Enrollment Date')}}</label>
+              <div class="student-data">{{_(program_enrollment.enrollment_date) or '-'}} </div>
+            </div>
+            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+              <label>{{_('Record Status')}}</label>
+              <div class="student-data">{% if student.enabled %} {{_('Enabled')}} {% else %} {{_('Disabled')}} {% endif
+                %}</div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tab-pane fade" id="courses-tabs" role="tabpanel" aria-labelledby="courses-tab">
+    <div class="row">
+      <div class="col-sm-12 col-lg-6">
+        <div class="card-container">
+          <div class="card-box bg-blue">
+              <div class="inner">
+                  <h4> {{_('Registered Courses')}} </h4>
+                  <h4> {{registered_courses[0]['total_courses']}} </h4>
+              </div>
+              <div class="iconb">
+                <i class="fa-solid fa-book" aria-hidden="true"></i>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-lg-6">
+        <div class="card-container">
+          <div class="card-box bg-red">
+              <div class="inner">
+                  <h4> {{_('Continuing Courses')}} </h4>
+                  <h4> {{registered_courses[0]['total_enrolled']}} </h4>
+              </div>
+              <div class="iconb">
+                  <i class="fas fa-school" aria-hidden="true"></i>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-lg-6">
+        <div class="card-container">
+          <div class="card-box bg-green">
+              <div class="inner">
+                  <h4> {{_('Completed Courses')}} </h4>
+                  <h4> {{registered_courses[0]['total_graduated']}} </h4>
+              </div>
+              <div class="iconb">
+                  <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-lg-6">
+        <div class="card-container">
+          <div class="card-box bg-orange">
+              <div class="inner">
+                  <h4> {{_('Pulled Courses')}} </h4>
+                  <h4> {{registered_courses[0]['total_pulled']}} </h4>
+              </div>
+              <div class="iconb">
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+{% endblock %}

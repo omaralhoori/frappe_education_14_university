@@ -16,7 +16,7 @@ def get_student_transcript_data(student):
         select crsEnrl.enrollment_status, crsEnrl.academic_term,  crsEnrl.graduation_grade , crsEnrl.course, crs.course_name, crs.total_course_hours
             FROM `tabCourse Enrollment` as crsEnrl
             INNER JOIN `tabCourse` as crs ON crs.name = crsEnrl.course
-        WHERE crsEnrl.program_enrollment=%(enrolled_program)s AND crsEnrl.enrollment_status NOT IN ("Pulled")
+        WHERE crsEnrl.program_enrollment=%(enrolled_program)s 
         ORDER BY crsEnrl.graduation_date desc
     """, {"enrolled_program": enrolled_program},as_dict=True)
     
@@ -25,8 +25,10 @@ def get_student_transcript_data(student):
     for enrollment in course_enrollments:
         if not terms.get(enrollment['academic_term']):
             terms[enrollment['academic_term']] = []
-        if enrollment['enrollment_status'] not in ['Graduated', 'Failed']:
+        if enrollment['enrollment_status'] not in ['Graduated', 'Failed', 'Pulled']:
             enrollment['enrollment_status'] = ''
+        if enrollment['enrollment_status'] == 'Pulled':
+            enrollment['graduation_grade'] = None
         terms[enrollment['academic_term']].append(enrollment)
         if enrollment['graduation_grade']:
             if not terms_gpa.get(enrollment['academic_term']):
@@ -36,6 +38,8 @@ def get_student_transcript_data(student):
             else:
                 terms_gpa[enrollment['academic_term']]['count'] += float(enrollment['total_course_hours'])
                 terms_gpa[enrollment['academic_term']]['grade'] += (float(enrollment['graduation_grade']) * float(enrollment['total_course_hours']))
+        if enrollment['enrollment_status'] == 'Pulled':
+            enrollment['graduation_grade'] = 'W'
     total_grades = 0
     total_courses = 0
     cgpa = 0
