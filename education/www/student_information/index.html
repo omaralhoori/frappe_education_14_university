@@ -51,42 +51,42 @@
         </div>
         <div class=" col-sm-12 col-lg-9 row p-2 d-flex flex-column">
           <div class="col row">
-            <div class="col-sm-12 col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12 col-md-6 col-lg-4 student-info-item">
               <label>{{_('Student No')}}</label>
               <div class="student-data">{{student.name or '-'}}</div>
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12 col-md-6 col-lg-5 student-info-item">
               <label>{{_('Email')}}</label>
               <div class="student-data">{{student.student_email_id or '-'}}</div>
             </div>
-            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12  col-md-6 col-lg-4 student-info-item">
               <label>{{_('Mobile No')}}</label>
               <div class="student-data">{{student.student_mobile_number or '-'}}</div>
             </div>
-            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12  col-md-6 col-lg-5 student-info-item">
               <label>{{_('Date of Birth')}}</label>
               <div class="student-data">{{student.date_of_birth or '-'}}</div>
             </div>
-            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12  col-md-6 col-lg-4 student-info-item">
               <label>{{_('Nationality')}}</label>
               <div class="student-data">{% if student.nationality %}{{_(student.nationality) or '-'}} {% else %} - {%
                 endif%}</div>
             </div>
 
             {% if program_enrollment %}
-            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12  col-md-6 col-lg-5 student-info-item">
               <label>{{_('Program')}}</label>
               <div class="student-data">{{_(program_enrollment.program) or '-'}} </div>
             </div>
-            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12  col-md-6 col-lg-4 student-info-item">
               <label>{{_('Current Level')}}</label>
               <div class="student-data">{{_(program_enrollment.educational_year) or '-'}} </div>
             </div>
-            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12  col-md-6 col-lg-5 student-info-item">
               <label>{{_('Enrollment Date')}}</label>
               <div class="student-data">{{_(program_enrollment.enrollment_date) or '-'}} </div>
             </div>
-            <div class="col-sm-12  col-md-6 col-lg-3 student-info-item">
+            <div class="col-sm-12  col-md-6 col-lg-4 student-info-item">
               <label>{{_('Record Status')}}</label>
               <div class="student-data">{% if student.enabled %} {{_('Enabled')}} {% else %} {{_('Disabled')}} {% endif
                 %}</div>
