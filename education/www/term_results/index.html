@@ -1,0 +1,57 @@
+{%  extends "templates/web.html" %}
+
+{% block title %}{{ _("Term Results") }}{% endblock %}
+
+{% block page_content %}
+<div class="input-group">
+    <select class="custom-select" onchange="academicTermChange(this)" id="academic_term_select">
+        <option value="" disabled selected>{{_('Academic Term')}}</option>
+      {% for term in avilable_terms %}
+        <option value="{{term.academic_term}}"  {% if selected_term and selected_term == term.academic_term%} selected  {% endif %}> {{_(term.academic_term)}}</option>
+
+      {% endfor %}
+    </select>
+  </div>
+{% if not term_grades %}
+<div class="alert alert-info mt-6">{{_('There are no grades to show.')}}</div>
+
+{% else %}
+<div class="d-flex flex-wrap mt-6">
+    {% set colors = ['burnt_orange', 'dark_green', 'charcoal_grey', 'dark_blue',  'teal', 'magenta'] %}
+    {% set color_index = namespace(value=0) %}
+{% for term in term_grades%}
+    {% for course in term_grades[term]['courses'] %}
+        
+        <div class="m-2 course-result-card">
+            <div class="course-title {{colors[color_index.value ]}}">
+                {{_(course)}}
+            </div>
+            <div class="course-grades">
+                {% for criteria in term_grades[term]['criterias'] %}
+                    {% for grade in term_grades[term]['courses'][course] %}
+                        {% if grade['assessment_criteria'] == criteria['assessment_criteria'] %}
+                            <div class="course-criteria  d-flex justify-content-between">
+                                <span>{{_(grade['assessment_criteria'])}} </span> 
+                                <span class="course-criteria-grade">{{grade['score']}}</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            <div class="course-totals d-flex justify-content-between {{colors[color_index.value ]}}">
+                <span>{{_('Total Score')}}</span>
+                <span>{{term_grades[term]['courses'][course][0]['total_score']}} / {{term_grades[term]['courses'][course][0]['maximum_score']}}</span>
+            </div>
+        </div>
+        {% set color_index.value = (color_index.value + 1) % (colors|length) %}
+    {% endfor %}
+   
+{% endfor %}
+</div>
+{% endif %}
+<script>
+    function academicTermChange(e) {
+        location.href = location.origin + '/term_results' + '?academic_term=' + e.value
+    }
+</script>
+{% endblock %}

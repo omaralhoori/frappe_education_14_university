@@ -1,0 +1,54 @@
+.course-result-card{
+    width: 300px;
+}
+
+.course-result-card .course-title{
+    padding: 20px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+.course-result-card .course-grades{
+
+}
+
+.course-result-card .course-criteria{
+    padding: 10px;
+    margin: 0 10px;
+}
+.course-result-card .course-criteria .course-criteria-grade{
+    padding: 10px;
+    background-color: #343a4086;
+    color: white;
+    font-weight: bold;
+}
+.course-result-card .course-criteria:not(:last-child){
+    border-bottom: 1px solid #ccc;
+}
+
+.course-result-card .course-totals{
+    padding: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.dark_blue{
+    background-color: #007BFF;
+}
+.dark_green{
+    background-color: #28A745;
+}
+.charcoal_grey{
+    background-color: #343A40;
+}
+.burnt_orange{
+    background-color: #FF5722;
+}
+.teal{
+    background-color: #20C997;
+
+}
+.magenta{
+    background-color: #E91E63;
+}

@@ -65,6 +65,11 @@ standard_portal_menu_items = [
 		"role": "Student",
 	},
 	{
+		"title": _("Term Results"),
+		"route": "/term_results",
+		"role": "Student",
+	},
+	{
 		"title": _("Transcript"),
 		"route": "/transcript",
 		"role": "Student",
