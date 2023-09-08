@@ -113,6 +113,7 @@ class CourseEnrollment(Document):
 			self.db_set("enrollment_status", "Pulled")
 		else:
 			self.db_set("enrollment_status", "Partially Pulled")
+			self.db_set("partially_pulled", 1)
 
 def check_activity_exists(enrollment, content_type, content):
 	activity = frappe.get_all(

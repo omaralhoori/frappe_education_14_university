@@ -23,5 +23,6 @@ def get_data(filters):
 	return frappe.db.sql("""
 		SELECT name as student_id, student_name FROM `tabStudent` WHERE name not in (select enrlmnt.student FROM {check_table} as enrlmnt
 		WHERE academic_term=%(academic_term)s AND academic_year=%(academic_year)s)
+		AND name not in (select pstpnt.student FROM `tabStudy Postponement` as pstpnt WHERE academic_term=%(academic_term)s AND status='Approved')
 		AND enabled=1
 	""".format(check_table=check_table),{"academic_year": academic_year, "academic_term": academic_term}, as_dict=True)

@@ -22,6 +22,7 @@ def get_data(filters):
 		CONCAT("<button class='btn btn-sm btn-primary delete-row-btn' onclick=""deleteRow('", name,"')"">Delete</button>") as action
 		  FROM `tabStudent` WHERE 
 			name not in (select enrlmnt.student FROM `tabCourse Enrollment` as enrlmnt)
+			AND name not in (select aplcnt.student FROM `tabCourse Enrollment Applicant` as aplcnt)
 			AND name not in (select pstpnt.student FROM `tabStudy Postponement` as pstpnt)
 	""", as_dict=True)
 

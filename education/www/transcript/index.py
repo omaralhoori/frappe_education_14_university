@@ -13,7 +13,7 @@ def get_student_transcript_data(student):
     enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ['name'])
     if not enrolled_program: return
     course_enrollments =  frappe.db.sql("""
-        select crsEnrl.enrollment_status, crsEnrl.academic_term,  crsEnrl.graduation_grade , crsEnrl.course, crs.course_name, crs.total_course_hours
+        select crsEnrl.enrollment_status,crsEnrl.partially_pulled, crsEnrl.academic_term,  crsEnrl.graduation_grade , crsEnrl.course, crs.course_name, crs.total_course_hours
             FROM `tabCourse Enrollment` as crsEnrl
             INNER JOIN `tabCourse` as crs ON crs.name = crsEnrl.course
         WHERE crsEnrl.program_enrollment=%(enrolled_program)s 
@@ -23,8 +23,12 @@ def get_student_transcript_data(student):
     terms = {}
     terms_gpa = {}
     for enrollment in course_enrollments:
+        old_grade = None
         if not terms.get(enrollment['academic_term']):
             terms[enrollment['academic_term']] = []
+        if enrollment['partially_pulled'] and enrollment['graduation_grade']:
+            old_grade = enrollment['graduation_grade'] 
+            enrollment['graduation_grade'] = float(enrollment['graduation_grade']) * 45 / 100
         if enrollment['enrollment_status'] not in ['Graduated', 'Failed', 'Pulled']:
             enrollment['enrollment_status'] = ''
         if enrollment['enrollment_status'] == 'Pulled':
@@ -40,6 +44,8 @@ def get_student_transcript_data(student):
                 terms_gpa[enrollment['academic_term']]['grade'] += (float(enrollment['graduation_grade']) * float(enrollment['total_course_hours']))
         if enrollment['enrollment_status'] == 'Pulled':
             enrollment['graduation_grade'] = 'W'
+        if old_grade:
+            enrollment['graduation_grade'] = old_grade
     total_grades = 0
     total_courses = 0
     cgpa = 0

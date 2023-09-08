@@ -42,7 +42,22 @@ frappe.ui.form.on("Drop Course", {
         $(frm.fields_dict['student_approved_requests'].wrapper).html(html)
     },
     approve(frm){
-        frm.set_value("status", "Approved");
-        frm.save_or_update();
+        frappe.call({
+            method: "education.education.doctype.drop_course.drop_course.drop_course_approve",
+            args: {
+                student: frm.doc.student,
+                course: frm.doc.course,
+                academic_term: frm.doc.academic_term,
+                drop_request: frm.doc.name
+            },
+            callback: (res) => {
+                if (res.message.is_success){
+                    frm.reload_doc()
+                }else{
+                    frappe.msgprint(res.message.error)
+                }
+            }
+        })
+        
     }
 });

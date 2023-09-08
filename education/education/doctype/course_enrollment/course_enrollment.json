@@ -23,7 +23,8 @@
   "progress_section",
   "current_lesson_type",
   "current_lesson",
-  "progress"
+  "progress",
+  "partially_pulled"
  ],
  "fields": [
   {
@@ -134,10 +135,17 @@
    "fieldtype": "Percent",
    "label": "Progress",
    "precision": "2"
+  },
+  {
+   "default": "0",
+   "fieldname": "partially_pulled",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Partially Pulled"
   }
  ],
  "links": [],
- "modified": "2023-06-04 21:59:32.254291",
+ "modified": "2023-09-08 01:38:52.752462",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment",
