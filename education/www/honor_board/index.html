@@ -1,0 +1,32 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ _("Honor Board") }}{% endblock %}
+
+{% macro honor_card(student_name, gpa ,student_image=None) %}
+<div class="honor-card-container">
+    <div class="image-container">
+        <img src="{% if student_image %} {{student_image}} {%else%}/assets/education/img/user_avatar.jpg{%endif%}"
+        alt="Student Image">
+    </div>
+    <div style="position: relative; z-index: 10;">
+        <div class="banner">{{student_name}}</div>
+    </div>
+    <div class="ribbon down" style="--color: #fd9c2e;">
+        <div class="content">
+            {{'%0.2f' % gpa|float}}
+        </div>
+    </div>
+</div>
+{%endmacro%}
+
+{% block page_content %}
+<div class="honor-background-image"></div>
+<div class="honor-title">
+    <h3>{{_('Honor Board')}}</h3>
+    <h3>{{_(academic_term)}}</h3></div>
+<div class="honor-cards-container">
+    {% for student in students %}
+    {{honor_card(student['student_name'], student['gpa'], student['user_image'])}}
+    {%endfor%}
+</div>
+{% endblock %}

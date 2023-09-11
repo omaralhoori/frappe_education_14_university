@@ -35,7 +35,13 @@
   "batch_name",
   "batch_count",
   "whatsapp_groups_section",
-  "whatsapp_groups"
+  "whatsapp_groups",
+  "course_results_tab",
+  "course_graduation_threshold",
+  "partially_pulled_rate",
+  "honor_board_section",
+  "honor_board_min_gpa",
+  "honor_board_academic_term"
  ],
  "fields": [
   {
@@ -222,11 +228,45 @@
    "fieldname": "course_enrollment_check_program",
    "fieldtype": "Check",
    "label": "Course Enrollment Check Program"
+  },
+  {
+   "fieldname": "course_results_tab",
+   "fieldtype": "Tab Break",
+   "label": "Course Results"
+  },
+  {
+   "default": "50",
+   "fieldname": "course_graduation_threshold",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Course Graduation Threshold",
+   "reqd": 1
+  },
+  {
+   "fieldname": "partially_pulled_rate",
+   "fieldtype": "Float",
+   "label": "Partially Pulled Course Rate"
+  },
+  {
+   "fieldname": "honor_board_section",
+   "fieldtype": "Section Break",
+   "label": "Honor Board"
+  },
+  {
+   "fieldname": "honor_board_min_gpa",
+   "fieldtype": "Float",
+   "label": "Honor Board Min GPA"
+  },
+  {
+   "fieldname": "honor_board_academic_term",
+   "fieldtype": "Link",
+   "label": "Honor Board Academic Term",
+   "options": "Academic Term"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-09-04 01:17:37.880244",
+ "modified": "2023-09-11 02:17:49.749365",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

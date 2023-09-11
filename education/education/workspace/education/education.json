@@ -743,47 +743,6 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/assets/frappe/icons/icons/22.png",
-   "icon_type": "Image",
-   "is_query_report": 0,
-   "label": "Other Reports",
-   "link_count": 3,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "Program Enrollment",
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Student and Guardian Contact Details",
-   "link_count": 0,
-   "link_to": "Student and Guardian Contact Details",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Unenrolled Students",
-   "link_count": 0,
-   "link_to": "Unenrolled Students",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Unregistered Users",
-   "link_count": 0,
-   "link_to": "Unregistered Users",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
    "icon_image": "/assets/frappe/icons/icons/13.png",
    "icon_type": "Image",
    "is_query_report": 0,
@@ -856,9 +815,60 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon_image": "/assets/frappe/icons/icons/22.png",
+   "icon_type": "Image",
+   "is_query_report": 0,
+   "label": "Other Reports",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "Program Enrollment",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Student and Guardian Contact Details",
+   "link_count": 0,
+   "link_to": "Student and Guardian Contact Details",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Unenrolled Students",
+   "link_count": 0,
+   "link_to": "Unenrolled Students",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Unregistered Users",
+   "link_count": 0,
+   "link_to": "Unregistered Users",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "New Student Registrations",
+   "link_count": 0,
+   "link_to": "New Student Registrations",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-08-17 18:08:53.725539",
+ "modified": "2023-09-11 00:09:01.968853",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education",

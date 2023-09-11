@@ -16,6 +16,7 @@
   "educational_year",
   "academic_year",
   "academic_term",
+  "cgpa",
   "image",
   "section_break_vsaj",
   "student_category",
@@ -189,12 +190,20 @@
    "fieldtype": "Data",
    "label": "Student Mobile No",
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "cgpa",
+   "fieldtype": "Float",
+   "label": "CGPA",
+   "read_only": 1
   }
  ],
  "image_field": "image",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-06 10:03:34.548849",
+ "modified": "2023-09-10 10:43:41.836591",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program Enrollment",

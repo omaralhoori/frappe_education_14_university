@@ -22,6 +22,22 @@ class AssessmentResult(Document):
 		self.validate_duplicate()
 	def on_update_after_submit(self):
 		self.validate_grade()
+		self.update_course_enrollment_grade()
+	def on_submit(self):
+		self.update_course_enrollment_grade()
+
+	def update_course_enrollment_grade(self):
+		if enrollment := frappe.db.exists("Course Enrollment", {"course": self.course, "student": self.student,"program": self.program, "academic_term": self.academic_term}):
+			course_enrollment = frappe.get_doc("Course Enrollment", enrollment)
+			if not course_enrollment.graduation_grade or course_enrollment.graduation_grade != self.total_score:
+				course_enrollment.graduation_grade = self.total_score
+				if not course_enrollment.graduation_date:
+					course_enrollment.graduation_date = frappe.utils.datetime.date.today()
+				if self.total_score >= frappe.db.get_single_value("Education Settings", "course_graduation_threshold"):
+					course_enrollment.enrollment_status = "Graduated"
+				else:
+					course_enrollment.enrollment_status = "Failed"
+				course_enrollment.save(ignore_permissions=True)
 
 	def validate_maximum_score(self):
 		assessment_details = get_assessment_details(self.assessment_plan)

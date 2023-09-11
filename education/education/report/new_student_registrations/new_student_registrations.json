@@ -1,0 +1,92 @@
+{
+ "add_total_row": 0,
+ "columns": [
+  {
+   "fieldname": "student",
+   "fieldtype": "Link",
+   "label": "Student ID",
+   "options": "Student",
+   "width": 0
+  },
+  {
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name",
+   "width": 0
+  },
+  {
+   "fieldname": "student_email_id",
+   "fieldtype": "Data",
+   "label": "Email",
+   "width": 0
+  },
+  {
+   "fieldname": "student_mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile No",
+   "width": 0
+  },
+  {
+   "fieldname": "joining_date",
+   "fieldtype": "Date",
+   "label": "Joining Date",
+   "width": 0
+  },
+  {
+   "fieldname": "application_status",
+   "fieldtype": "Data",
+   "label": "Application Status",
+   "width": 0
+  },
+  {
+   "fieldname": "paid",
+   "fieldtype": "Check",
+   "label": "Paid",
+   "width": 0
+  },
+  {
+   "fieldname": "receipt_uploaded",
+   "fieldtype": "Check",
+   "label": "Receipt Uploaded",
+   "width": 0
+  }
+ ],
+ "creation": "2023-09-11 00:00:44.989926",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "label": "Academic Term",
+   "mandatory": 1,
+   "options": "Academic Term",
+   "wildcard_filter": 0
+  },
+  {
+   "fieldname": "joining_after_date",
+   "fieldtype": "Date",
+   "label": "Joining After Date",
+   "mandatory": 1,
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2023-09-11 00:06:56.513659",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "New Student Registrations",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT tbl1.student, tbl2.student_name, tbl2.student_email_id, tbl2.student_mobile_number,\ntbl2.joining_date, tbl1.application_status, tbl1.paid, tbl3.receipt_uploaded  FROM `tabCourse Enrollment Applicant` tbl1\nINNER JOIN `tabStudent` tbl2 ON tbl1.student=tbl2.name\nINNER JOIN `tabFees` tbl3 ON tbl3.against_doctype_name=tbl1.name\nWHERE tbl1.academic_term=%(academic_term)s AND tbl2.joining_date >= %(joining_after_date)s",
+ "ref_doctype": "Course Enrollment Applicant",
+ "report_name": "New Student Registrations",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

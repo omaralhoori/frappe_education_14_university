@@ -1,0 +1,146 @@
+.honor-cards-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+.honor-card-container {
+    position: relative;
+    width: 250px;
+    height: 300px;
+        border: 16px solid #078cbf;
+    box-shadow: 0 0 10px rgb(216 241 9 / 76%);
+    margin: 20px 80px;
+}
+
+.honor-card-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.name-tape {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    text-align: center;
+    font-size: 24px;
+    padding: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border-top: 4px dashed #555;
+}
+.grade-container{
+    padding: 10px;
+    border-radius: 50%;
+    font-weight: bold;
+    background-color: rgba(60, 60, 60, 0.9);
+    color: white;
+    width: 50;
+    height: 50;
+    position: absolute;
+left: 50%;
+bottom: 0;
+transform: translate(-50%, 75%);
+}
+
+
+.banner {
+position: absolute;
+left: 50%;
+bottom: -100px;
+margin: 100px -150px;
+width: 300px;
+height: 50px;
+text-align: center;
+color: #525252;
+background: #e0e316;
+border-radius: 4px;
+line-height: 1.3;
+display: flex;
+justify-content: center;  /* align horizontal */
+align-items: center;
+font-weight: bold;
+box-shadow: 0 0 30px rgba(0,0,0,.15) inset,
+              0 6px 10px rgba(0,0,0,.15);
+}
+
+.banner::before,
+.banner::after {
+content: '';
+position: absolute;
+z-index: -1;
+left: -50px;
+top: 24px;
+display: block;
+width: 75px;
+height: 0px;
+border: 25px solid #9b2;
+border-right: 20px solid #791;
+border-bottom-color: #94b81e;
+border-left-color: transparent;
+transform: rotate(-5deg);
+}
+
+.banner::after {
+left: auto;
+right: -50px;
+border-left: 20px solid #791;
+border-right: 30px solid transparent;
+transform: rotate(5deg);
+}
+
+
+
+.ribbon {
+position: absolute;
+right: var(--right, 10px);
+top: var(--top, -20px);
+filter: drop-shadow(2px 3px 2px rgba(0, 0, 0, 0.5));
+z-index: 10;
+}
+
+.ribbon > .content {
+color: white;
+text-align: center;
+font-weight: bold;
+background: var(--color, #2ca7d8) linear-gradient(45deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.25) 100%);
+padding: 8px 2px 4px;
+clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 100%, 0 100%);
+width: 50px;
+min-height: 80px;
+transition: clip-path 1s, padding 1s, background 1s;
+display: flex;
+justify-content: center;  /* align horizontal */
+align-items: center;
+}
+
+.image-container{
+    height: 100%;
+    width: 100%;
+}
+
+.honor-background-image{
+    background-image: url('/assets/education/img/honor_board_bg.jpg');
+    background-color: #8493ff;
+    width: 100vw;
+    height: 100vw;
+    position: fixed;
+    left: 0;
+    right: 0;
+    margin-top: -80px;
+}
+
+.honor-title{
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.honor-title h3{
+    text-shadow: 0 0 5px #ffffff, 0 0 10px #00ff00, 0 0 15px #ff0000, 0 0 20px #0000ff;
+
+}
