@@ -159,13 +159,35 @@ frappe.ui.form.on("Fees", {
 	},
 
 	approve_receipt: function(frm) {
-		frm.call({
-			"method": "pay_fee",
-			doc:frm.doc,
-			callback: (message) => {
-				frm.reload_doc();
+		let d = new frappe.ui.Dialog({
+			title: __('Enter Amount'),
+			fields: [
+				{
+					label: 'Amount',
+					fieldname: 'amount',
+					fieldtype: 'Float',
+					default: frm.doc.outstanding_amount
+				},
+			],
+			size: 'small', // small, large, extra-large 
+			primary_action_label: __('Approve'),
+			primary_action(values) {
+				frm.call({
+					"method": "pay_fee",
+					doc:frm.doc,
+					args: {
+						"amount": values.amount
+					},
+					callback: (message) => {
+						frm.reload_doc();
+					}
+				})
+				d.hide();
 			}
-		})
+		});
+		
+		d.show();
+		
 	},
 	reject_receipt: function(frm) {
 		frm.call({
