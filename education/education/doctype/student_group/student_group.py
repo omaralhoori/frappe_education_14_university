@@ -263,3 +263,21 @@ def get_course_groups(course):
 		WHERE tsg.course=%(course)s AND tsg.academic_year=%(academic_year)s AND tsg.academic_term=%(academic_term)s {where_stmt}
 		GROUP By tsg.name, crs_scd.course_day, crs_scd.from_time
 	""".format(where_stmt=where_stmt), {"academic_term": current_academic_term, "academic_year": current_academic_year, "course": course}, as_dict=True)
+
+def get_student_course_group(course):
+	current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, ['name'])
+	
+	return frappe.db.sql("""
+		select tsg.name as group_id, tsg.student_group_name,tsg.max_strength, crs_scd.course_day,tsg.virtual_room_link, crs.resource_link,
+		crs_scd.from_time, crs_scd.to_time, crs_scd.instructor FROM `tabStudent Group` tsg
+		INNER JOIN `tabStudent Group Student` tsgs ON tsgs.parent=tsg.name
+		LEFT JOIN
+		(select tcs.student_group, WEEKDAY(tcs.schedule_date) as course_day, tcs.from_time, tcs.to_time, tcs.instructor
+		FROM `tabCourse Schedule` tcs) as crs_scd
+		ON crs_scd.student_group=tsg.name
+		INNER JOIN `tabCourse` as crs ON crs.name = tsg.course
+		WHERE tsg.course=%(course)s AND tsg.academic_year=%(academic_year)s AND tsg.academic_term=%(academic_term)s AND tsgs.student=%(student)s
+		LIMIT 1
+	""", {"academic_term": current_academic_term, "academic_year": current_academic_year, "course": course, "student": student}, as_dict=True)

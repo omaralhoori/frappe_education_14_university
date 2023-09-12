@@ -448,7 +448,9 @@ def get_weekday(day):
 
 def format_currency(amount):
 	return frappe.utils.fmt_money(amount, currency=frappe.db.get_single_value("Global Defaults", "default_currency"))
-
+def format_time(timedelta):
+	if not timedelta: return "00:00"
+	return ":".join(str(timedelta).split(":")[:2])
 
 def get_admission_program_details(student_admission):
 	return frappe.db.get_value("Student Admission Program", {"parent": student_admission}, ['program'])
