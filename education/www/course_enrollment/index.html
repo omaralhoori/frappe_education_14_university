@@ -17,10 +17,10 @@
     {% if groups|length >= 1 %}
         <div class="modal fade" id="{{course.course_id}}-group" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog text-center" style="max-width: 650px" role="document">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-body" style="margin: 0.5rem auto;">
-                        <table>
+                    <div class="modal-body">
+                        <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>{{_("Group Name")}}</th>
@@ -91,7 +91,9 @@
     </button>
 </div>
 {%endfor%}
+<div id="modal-wrapper">
 
+</div>
 <!-- Tabs navs -->
 <ul class="nav nav-tabs nav-fill mb-3" role="tablist">
     <li class="nav-item" role="presentation">
@@ -287,7 +289,9 @@
         });
     function showGroupsModal(e){
         var courseId = e.getAttribute("data-target")
-        $(courseId).modal("show")
+        $("#modal-wrapper").html($(courseId).prop('outerHTML'))
+        // $(courseId).modal("show")
+        $('#modal-wrapper .modal').modal("show")
     }
     function selectCourseGroup(e){
         var courseId = e.getAttribute("course-id")
@@ -296,7 +300,8 @@
         var courseRow = document.querySelector(`.selected-group-container[course-id="${courseId}"]`)
         courseRow.setAttribute("group-id", groupId)
         courseRow.innerHTML = groupName;
-         $(`#${courseId}-group`).modal("hide")
+        //  $(`#${courseId}-group`).modal("hide")
+        $(`#modal-wrapper .modal`).modal("hide")
     }
 
     function checkCourseGroupSelected(row){
