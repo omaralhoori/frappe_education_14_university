@@ -12,6 +12,7 @@
   "hero_image",
   "column_break_3",
   "program_abbreviation",
+  "is_coursepack",
   "section_break_courses",
   "courses",
   "connections_tab"
@@ -65,11 +66,17 @@
    "fieldtype": "Attach Image",
    "hidden": 1,
    "label": "Image"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_coursepack",
+   "fieldtype": "Check",
+   "label": "Is Coursepack"
   }
  ],
  "image_field": "hero_image",
  "links": [],
- "modified": "2023-01-12 18:07:52.130737",
+ "modified": "2023-09-16 19:58:07.202275",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program",

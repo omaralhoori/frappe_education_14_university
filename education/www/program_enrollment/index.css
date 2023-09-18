@@ -1,0 +1,187 @@
+.coursepacks-container{
+    margin-bottom: 60px;
+}
+.coursepacks-card{
+    margin: 5px;
+    padding: 12px;
+    border-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    position: relative;
+    color: white;
+    text-align: center;
+    font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+    height: 100%;
+
+}
+.coursepacks-content{
+    margin-top: -40px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.coursepacks-header{
+    padding: 20px;
+    margin: auto;
+    width: 80%;
+    box-shadow: 5px 5px 20px 0 rgba(0,0,0,0.4);
+    border-radius: 5px;
+    background-color: white;
+    flex: 1;
+}
+.coursepacks-action{
+    flex: 1;
+}
+
+.coursepacks-title{
+
+}
+
+.coursepacks-rate{
+    font-weight: bolder;
+}
+
+.coursepacks-body{
+    margin-top: 25px;
+    flex: 100;
+}
+
+.coursepacks-courses{
+    
+}
+
+.coursepacks-courses ul{
+}
+
+.coursepacks-courses li{
+   margin: 8px auto;
+   
+}
+/*-----------------------ORANGE-------------------------*/
+.orange .coursepacks-header,
+.orange .coursepacks-action button
+{
+    color: rgb(248, 124, 42);
+}
+.orange .coursepacks-card{
+    background-color: rgb(248, 124, 42);
+}
+.orange .coursepacks-header{
+    border-top: 5px solid rgb(248, 124, 42);
+}
+
+.orange .coursepacks-action button:hover,
+.orange .coursepacks-action button:active {
+    background-color: rgb(248, 124, 42);
+}
+/*-----------------------BLUE-------------------------*/
+.blue .coursepacks-header,
+.blue .coursepacks-action button{
+    color: #5985c3;
+}
+.blue .coursepacks-card{
+    background-color: #5985c3;
+}
+.blue .coursepacks-header{
+    border-top: 5px solid #5985c3;
+}
+
+.blue .coursepacks-action button:hover,
+.blue .coursepacks-action button:active {
+    background-color: #5985c3;
+}
+/*-----------------------CYAN-------------------------*/
+.cyan .coursepacks-header,
+.cyan .coursepacks-action button{
+    color: #4fbdc0;
+}
+.cyan .coursepacks-card{
+    background-color: #4fbdc0;
+}
+.cyan .coursepacks-header{
+    border-top: 5px solid #4fbdc0;
+}
+
+.cyan .coursepacks-action button:hover,
+.cyan .coursepacks-action button:active {
+    background-color: #4fbdc0;
+}
+/*-----------------------PINK-------------------------*/
+.pink .coursepacks-header,
+.pink .coursepacks-action button{
+    color: #e73d71;
+}
+.pink .coursepacks-card{
+    background-color: #e73d71;
+}
+.pink .coursepacks-header{
+    border-top: 5px solid #e73d71;
+}
+
+.pink .coursepacks-action button:hover,
+.pink .coursepacks-action button:active {
+    background-color: #e73d71;
+}
+/*-----------------------GREEN-------------------------*/
+.green .coursepacks-header,
+.green .coursepacks-action button{
+    color: #82b74b;
+}
+.green .coursepacks-card{
+    background-color: #82b74b;
+}
+.green .coursepacks-header{
+    border-top: 5px solid #82b74b;
+}
+
+.green .coursepacks-action button:hover,
+.green .coursepacks-action button:active {
+    background-color: #82b74b;
+}
+
+.coursepacks-action button{
+    width: 80%;
+    background: white;
+    border: 2px solid white;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+}
+
+
+.coursepacks-action button:hover,
+.coursepacks-action button:active {
+  color: white;
+}
+
+
+.button-coursepacks-action button:active {
+  opacity: .5;
+}
+
+.program-introducation{
+    padding: 20px;
+    margin: 20px auto;
+    text-align: center;
+}
+.program-introducation .f1{
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: crimson;
+}

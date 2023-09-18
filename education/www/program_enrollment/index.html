@@ -1,0 +1,163 @@
+{% extends "templates/web.html" %}
+
+{% block breadcrumbs %}
+{% include "templates/includes/breadcrumbs.html" %}
+{% endblock %}
+
+{% block title %}
+{{_("Program Enrollment")}}
+{% endblock %}
+
+
+
+{% block page_content %}
+{% set today = frappe.utils.getdate(frappe.utils.nowdate()) %}
+{% if admissions.get('programs') | length == 0 and admissions.get('coursepacks') | length == 0 %}
+<div class="alert alert-info">{{_('There are no available programs to enroll.')}}</div>
+{% endif %}
+{% if admissions.get('programs') | length > 0 %}
+<div class="program-introducation">
+    <div class="f1">{{_('Our Programs')}}</div>
+    <div class="f2">{{_('Enroll in one of our programs')}}</div>
+</div>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <th>{{_('Program')}}</th>
+            <th>{{_('Starts on')}}</th>
+            <th>{{_('Ends on')}}</th>
+            <th>{{_('Application Fee')}}</th>
+            <th>{{_('Hour Rate')}}</th>
+            <th>{{_('Actions')}}</th>
+        </thead>
+
+        <tbody>
+            {% for program in admissions.get('programs') %}
+            <tr>
+                <td>{{_(program.get('program'))}}</td>
+                <td>{{frappe.format_date(program.get('admission_start_date'))}}</td>
+                <td>{{frappe.format_date(program.get('admission_end_date'))}}</td>
+                <td>{{format_currency(program.application_fee) }}</td>
+                <td>{{format_currency(program.hour_rate)}} </td>
+                <td>
+                    {%- if program.enable_admission_application and frappe.utils.getdate(program.admission_start_date) <= today -%}
+								
+                    <button  onclick="enrollProgram(this)" class='btn btn-sm btn-primary' program="{{program.program}}">
+                            {{ _("Enroll") }}
+                    </button>
+                        {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if admissions.get('coursepacks') | length > 0 %}
+<div class="program-introducation">
+    <div class="f1">{{_('Our Coursepacks')}}</div>
+    <div class="f2">{{_('Choose your course packet to start your journey')}}</div>
+</div>
+    <div class="row">
+        {% set colors = ['blue','orange','pink','cyan', 'green'] %}
+        {% for coursepack in admissions.get('coursepacks') %}
+        {% set color_index = (loop.index - 1) % (colors|length)%}
+        <div class="{{colors[color_index]}} coursepacks-container col-sm-12 col-md-6 col-lg-4">
+            <div class="coursepacks-card">
+                <div class="coursepacks-content">
+                    <div class="coursepacks-header">
+                        <div class="coursepacks-title">{{_(coursepack.get('program'))}}</div>
+                        <div class="coursepacks-rate">{{format_currency(coursepack.application_fee) }}</div>
+                    </div>
+                    <div class="coursepacks-body">
+                        <div class="coursepacks-courses">
+                            <ul>
+                                {% for course in coursepack.get('courses') %}
+                                    <li>
+                                        {{course.get('course_name')}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    <div class="coursepacks-action">
+                        <button onclick="enrollCoursepack(this)" coursepack="{{coursepack.get('program')}}">{{_('Enroll')}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+    </div>
+{% endif %}
+<script>
+function enrollCoursepack(e){
+    var coursepack = e.getAttribute('coursepack');
+    var d = new frappe.ui.Dialog({
+            title: '{{_("Confirmation")}}',
+            primary_action_label: '{{_("Yes")}}',
+            primary_action: () => {
+                enrollProgram(coursepack);
+                d.hide();
+            },
+            secondary_action_label: '{{_("No")}}',
+            secondary_action: () => d.hide(),
+        });
+
+        d.$body.append(`<p class="frappe-confirm-message text-center">{{_('Are you sure you want to enroll in this coursepack?')}}<br>{{_('You will not be able to apply for a program')}}</p>`);
+        d.show();
+}
+
+function enrollProgram(e){
+    var program = e.getAttribute('program');
+    var d = new frappe.ui.Dialog({
+            title: '{{_("Confirmation")}}',
+            primary_action_label: '{{_("Yes")}}',
+            primary_action: () => {
+                enrollConfirmed(program);
+                d.hide();
+            },
+            secondary_action_label: '{{_("No")}}',
+            secondary_action: () => d.hide(),
+        });
+
+        d.$body.append(`<p class="frappe-confirm-message text-center">{{_('Are you sure you want to enroll in this program?')}}</p>`);
+        d.show();
+}
+function enrollConfirmed(program){
+    console.log(program)
+    frappe.call({
+        "method": "education.education.doctype.program_enrollment.program_enrollment.enroll_student_in_program",
+            "args": {
+                "program": program
+            },
+            callback: (res) => {
+                if (res.message.msg) {
+                    var msg = {
+                        message: res.message.msg,
+                        title: "{{_('Message')}}",
+                        onhide: () => {
+                            location.reload()
+                        }
+                    };
+                    if (res.message.pay) {
+                        msg.primary_action = {
+                            'label': "{{_('Pay')}}",
+                            action(values) {
+                                location.href = "/fees"
+                            }
+                        };
+                    }
+
+                    frappe.msgprint(msg)
+                } else if (res.message.error) {
+                    frappe.msgprint(res.message.error)
+                }
+
+            }
+        })
+}
+</script>
+{% endblock %}

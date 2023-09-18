@@ -72,3 +72,52 @@ def get_admission_list(
 		[nowdate()],
 		as_dict=1,
 	)
+
+
+def get_program_admission_list():
+	admissions = {
+		"programs": [],
+		"coursepacks": []
+	}
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, ['name', 'is_coursepack_student'])
+	if not student: return admissions
+	where_stmt = ""
+
+	registered_enrollments = frappe.db.sql("""
+		SELECT enrl.program, prog.is_coursepack FROM `tabProgram Enrollment` as enrl 
+		INNER JOIN `tabProgram` as prog ON prog.name = enrl.program
+		WHERE enrl.student=%(student)s
+	""", {"student": student[0]}, as_dict=True)
+	if len(registered_enrollments) > 0:
+		if not student[1]:
+			return admissions
+		where_stmt =f" AND prog.is_coursepack={registered_enrollments[0]['is_coursepack']}"
+		programs = []
+		for enrollment in registered_enrollments:
+			programs.append("'" + enrollment['program'] + "'")
+		programs = ",".join(programs)
+		where_stmt += f" AND prog.name NOT IN ({programs})"
+	program_admission_list = frappe.db.sql(
+		"""SELECT 
+			adm.name, adm.title, adm.academic_year, adm.modified, 
+			adm.admission_start_date, adm.route, adm.enable_admission_application,
+			adm.admission_end_date, admProg.program, admProg.min_age, admProg.max_age,
+			admProg.application_fee, admProg.hour_rate, prog.is_coursepack
+		FROM `tabStudent Admission` as adm 
+		LEFT JOIN `tabStudent Admission Program` as admProg ON admProg.parent=adm.name
+		INNER JOIN `tabProgram` as prog on prog.name=admProg.program
+		WHERE adm.published=1 AND adm.admission_end_date >= %s {where_stmt}
+		ORDER BY adm.admission_end_date asc
+		""".format(where_stmt=where_stmt),
+		[nowdate()],
+		as_dict=1,
+	)
+	
+	for program in program_admission_list:
+		if program.get('is_coursepack'):
+			program['courses'] = frappe.db.get_all("Program Course", {"parent": program.get('program')}, ['course_name'])
+			admissions['coursepacks'].append(program)
+		else:
+			admissions["programs"].append(program)
+
+	return admissions

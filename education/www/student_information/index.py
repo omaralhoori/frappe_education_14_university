@@ -10,7 +10,7 @@ def get_context(context):
     context.student = frappe.get_doc("Student", {"user": frappe.session.user})
     if enrollment := frappe.db.exists("Program Enrollment", {"student": context.student.name}):
         context.program_enrollment = frappe.get_doc("Program Enrollment", enrollment)
-        context.registered_courses = get_registered_courses(context.student.name)
+    context.registered_courses = get_registered_courses(context.student.name)
     context.show_sidebar = True
     context.lang = frappe.lang
 

@@ -66,6 +66,7 @@
   "column_break_31",
   "reason_for_leaving",
   "student_name",
+  "is_coursepack_student",
   "connections_tab"
  ],
  "fields": [
@@ -392,11 +393,18 @@
    "fieldtype": "Link",
    "label": "Academic Term",
    "options": "Academic Term"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_coursepack_student",
+   "fieldtype": "Check",
+   "label": "Is Coursepack Student",
+   "read_only": 1
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-08-18 23:08:05.655897",
+ "modified": "2023-09-16 13:36:21.622628",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

@@ -155,6 +155,7 @@ class CourseEnrollmentApplicant(Document):
 
 	def create_fees_record(self):
 		total_fees, application_fees, hour_rate, total_hours, course_receivable_account, course_cost_center, course_income_account, application_receivable_account, application_cost_center, application_income_account  = self.calculate_total_fees()
+		print(total_fees, application_fees, hour_rate, total_hours, course_receivable_account, course_cost_center, course_income_account, application_receivable_account, application_cost_center, application_income_account)
 		if total_fees > 0 or application_fees > 0:
 			fees_doc = frappe.get_doc({
 				"doctype": "Fees",
@@ -200,7 +201,7 @@ class CourseEnrollmentApplicant(Document):
 			FROM `tabCourse Enrollment Applied Course` AS tceac
 				INNER JOIN `tabCourse` AS tcurs ON tcurs.name=tceac.course
 				WHERE tceac.parent=%(applicant_name)s
-				) as tbl1,
+				) as tbl1 LEFT JOIN
 				(SELECT cmpnt.amount, cmpnt.receivable_account, cmpnt.income_account, cmpnt.cost_center
 					FROM `tabFee Component` as cmpnt
 					INNER JOIN `tabFee Structure` as tfs ON tfs.name=cmpnt.parent
@@ -208,7 +209,8 @@ class CourseEnrollmentApplicant(Document):
 				AND (program=%(program)s or program='' or program is null) 
 				AND (academic_year=%(current_academic_year)s or academic_year='' or academic_year is null) 
 				AND (academic_term=%(current_academic_term)s or academic_term='' or academic_term is null) 
-					ORDER BY program DESC, academic_year DESC, academic_term DESC LIMIT 1) as tbl2,
+					ORDER BY program DESC, academic_year DESC, academic_term DESC LIMIT 1) as tbl2 ON 1=1
+					LEFT JOIN
 				(SELECT cmpnt.amount as application_fee, cmpnt.receivable_account, cmpnt.income_account, cmpnt.cost_center
 					FROM `tabFee Component` as cmpnt
 					INNER JOIN `tabFee Structure` as tfs ON tfs.name=cmpnt.parent
@@ -216,7 +218,7 @@ class CourseEnrollmentApplicant(Document):
 				AND (program=%(program)s or program='' or program is null) 
 				AND (academic_year=%(current_academic_year)s or academic_year='' or academic_year is null) 
 				AND (academic_term=%(current_academic_term)s or academic_term='' or academic_term is null) 
-					ORDER BY program DESC, academic_year DESC, academic_term DESC LIMIT 1) as tbl3
+					ORDER BY program DESC, academic_year DESC, academic_term DESC LIMIT 1) as tbl3 ON 1=1
 		""", {
 			"applicant_name": self.name,
 			"program": self.program,
@@ -224,10 +226,10 @@ class CourseEnrollmentApplicant(Document):
 			"current_academic_term": current_academic_term
 		}, as_dict=True)
 		if results:
-			total_fees = float(results[0]['total_fees'])
-			application_fees = float(results[0]['application_fee'])
-			hour_rate = float(results[0]['hour_rate'])
-			total_hours = float(results[0]['total_courses_hours'])
+			total_fees = float(results[0]['total_fees'] or 0)
+			application_fees = float(results[0]['application_fee'] or 0)
+			hour_rate = float(results[0]['hour_rate'] or 0)
+			total_hours = float(results[0]['total_courses_hours'] or 0)
 			course_receivable_account, course_cost_center, course_income_account = (results[0]['course_receivable_account'],
 									   												results[0]['course_cost_center'],
 																					results[0]['course_income_account'])

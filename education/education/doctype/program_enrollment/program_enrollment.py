@@ -25,6 +25,11 @@ class ProgramEnrollment(Document):
 		self.update_student_joining_date()
 		self.make_fee_records()
 		self.create_course_enrollments()
+		self.update_student_program_type()
+
+	def update_student_program_type(self):
+		if frappe.db.get_value("Program", self.program, ['is_coursepack']):
+			frappe.db.set_value("Student", self.student, 'is_coursepack_student', 1)
 
 	def validate_academic_year(self):
 		start_date, end_date = frappe.db.get_value(
@@ -254,3 +259,80 @@ def check_student_program_enrolled():
 	program_enrollment.submit()
 	frappe.db.commit()
 	return True
+
+@frappe.whitelist()
+def enroll_student_in_program(program):
+	student = frappe.db.get_value("Student", {"user": frappe.session.user}, ["name", 'student_name', 'is_coursepack_student'])
+	if not student: return {"is_success": 0, "error": _('You are not student')}
+	if frappe.db.get_value("Program Enrollment", {"student": student[0], "program": program}, ['name']):
+		return {"is_success": 0, "error": _('You are enrolled in this program before')}
+	years = frappe.db.get_all("Educational Year", fields = ["name"], order_by="year_order asc", page_length=1)
+	is_coursepack = frappe.db.get_value("Program", program, ['is_coursepack'])
+	if student[2] and not is_coursepack:
+		return {"is_success": 0, "error": _('You are not allowed to enroll for this program')}
+	if not years : return {"is_success": 0, "error": _('Unable to find educational year')}
+	
+	program_enrollment = frappe.new_doc("Program Enrollment")
+	program_enrollment.student = student[0]
+	program_enrollment.student_name = student[1]
+	program_enrollment.program = program
+	program_enrollment.academic_year = frappe.db.get_single_value("Education Settings","current_academic_year")
+	program_enrollment.academic_term = frappe.db.get_single_value("Education Settings","current_academic_term")
+	program_enrollment.educational_year= years[0]['name']
+	program_enrollment.save(ignore_permissions=True)
+	program_enrollment.submit()
+	results = {"is_success": 1, "msg": _('You have successfully registered for the program')}
+	if is_coursepack:
+		res = create_coursepack_enrollment_applicant(program_enrollment)
+		if res.get('is_success'): results = res
+
+	frappe.db.commit()
+	return results
+
+def create_coursepack_enrollment_applicant(program_enrollment):
+	enrollment = frappe.db.exists("Course Enrollment Applicant", {"application_status": ["!=", "Rejected"], "student": program_enrollment.student, "program": program_enrollment.program})
+	if enrollment: return {"is_success": 0}
+	# fetch program courses
+	courses = frappe.db.get_all("Program Course", {"parent": program_enrollment.program}, ['course'])
+	courses_list = ["'" + course['course'] + "'" for course in courses]
+	courses_list = ",".join(courses_list)
+	# fetch student group for every course and student gender
+	student_gender = frappe.db.get_value("Student", program_enrollment.student, ['gender'])
+	if student_gender:
+		where_stmt = f"AND (grp.group_gender='{student_gender}' or grp.group_gender is NULL)"
+	
+	student_groups = frappe.db.sql("""
+		SELECT grp.name, grp.course FROM `tabStudent Group` as grp
+		WHERE grp.course in ({courses}) AND grp.program=%(program)s AND grp.academic_term=%(academic_term)s {where_stmt}
+	""".format(courses=courses_list, where_stmt=where_stmt), 
+	{"academic_term": program_enrollment.academic_term, "program": program_enrollment.program},as_dict=True)
+	student_groups = {group['course']: group['name'] for group in student_groups}
+	# create course enrollment applicant for every course in program
+	filters = {
+				"doctype": "Course Enrollment Applicant",
+				"application_date": frappe.utils.nowdate(),
+				"student": program_enrollment.student,
+				"program": program_enrollment.program,
+				"academic_term": program_enrollment.academic_term,
+				"academic_year": program_enrollment.academic_year
+			}
+	enrollment_applicant = frappe.get_doc(filters)
+	for course in courses:
+		course_row = enrollment_applicant.append("courses")
+		course_row.course = course['course']
+		if student_groups.get(course['course']):
+			course_row.group = student_groups.get(course['course'])
+	
+	
+	enrollment_applicant.save(ignore_permissions=True)
+	pay_msg = get_pay_fees_msg(program_enrollment.student)
+	return {"is_success": 1,"msg": _("Courses registered successfully.") + " " + pay_msg, "pay": 1 if pay_msg else 0}
+
+def get_pay_fees_msg(student):
+	fees_msg = ""
+	res = frappe.db.sql("""
+		select sum(outstanding_amount) as amount FROM `tabFees` WHERE student=%(student)s AND outstanding_amount > 0
+	""", {"student": student}, as_dict=True)
+	if res and res[0].get('amount') and  res[0].get('amount') > 0:
+		fees_msg = _("Please pay courses fees {0}here{1}.").format("<a href='/fees'>", "</a>")
+	return fees_msg

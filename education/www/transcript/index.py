@@ -11,7 +11,7 @@ def get_context(context):
 
 def get_student_transcript_data(student):
     enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ['name'])
-    if not enrolled_program: return
+    if not enrolled_program: return [], 0, 0
     course_enrollments =  frappe.db.sql("""
         select crsEnrl.enrollment_status,crsEnrl.partially_pulled, crsEnrl.academic_term,  crsEnrl.graduation_grade , crsEnrl.course, crs.course_name, crs.total_course_hours
             FROM `tabCourse Enrollment` as crsEnrl
