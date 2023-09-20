@@ -4,12 +4,84 @@
 {% include "templates/includes/breadcrumbs.html" %}
 {% endblock %}
 
-{% block header %}
-
-<h3>{{ title }}</h3>
-{% endblock %}
-
 {% block page_content %}
+<style>
+    .card-container{
+        margin: 10px auto;
+    }
+   .card-box {
+    position: relative;
+    color: #fff;
+    padding: 20px 10px 40px;
+    margin: 20px 0px;
+}
+.card-box:hover {
+    text-decoration: none;
+    color: #f1f1f1;
+}
+.card-box:hover .iconb i {
+    font-size: 100px;
+    transition: 1s;
+    -webkit-transition: 1s;
+}
+.card-box .inner {
+    padding: 5px 10px 0 10px;
+}
+.card-box h4 {
+    font-size: 27px;
+    font-weight: bold;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    padding: 0;
+    color: white;
+}
+.card-box strong{
+    font-size: 15px;
+}
+.card-box .iconb {
+    position: absolute;
+    top: auto;
+    bottom: 5px;
+    {% if is_rtl()%}
+    left: 5px;
+    {% else %}
+    right: 5px;
+    {% endif %}
+    z-index: 0;
+    font-size: 72px;
+    color: rgba(0, 0, 0, 0.15);
+}
+.card-box .card-box-footer {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    text-align: center;
+    padding: 3px 0;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-decoration: none;
+}
+.card-box:hover .card-box-footer {
+    background: rgba(0, 0, 0, 0.3);
+}
+.bg-blue {
+    background-color: #30d6ff !important;
+}
+</style>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="card-container">
+    <div class="card-box bg-blue">
+        <div class="inner">
+            <h4> {{_('Your balance')}} </h4>
+            <h4 style="direction: ltr;"> {{frappe.utils.fmt_money(balance)}} </h4>
+        </div>
+        <div class="iconb">
+            <i class="fa fa-dollar" aria-hidden="true"></i>
+        </div>
+    </div>
+</div>
+<h3>{{ title }}</h3>
 
 {% set today = frappe.utils.getdate(frappe.utils.nowdate()) %}
 <div class="table-responsive">

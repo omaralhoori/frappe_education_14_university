@@ -3,6 +3,7 @@
 
 
 import erpnext
+from erpnext.accounts.utils import get_balance_on
 import frappe
 from erpnext.accounts.doctype.payment_request.payment_request import \
     make_payment_request
@@ -84,6 +85,25 @@ class Fees(AccountsController ,DocumentAttach):
 		self.grand_total_in_words = money_in_words(self.grand_total)
 
 	def on_submit(self):
+		student_balance = - (get_balance_on(party_type="Student", party=self.student) or 0)
+		old_student_balance = student_balance
+		if student_balance > 0:
+			fees = frappe.db.get_all("Fees", {"student": self.student, "outstanding_amount": ["<", 0]}, ['name', 'outstanding_amount'])
+			for fee in fees:
+				fee_outstanding = - fee['outstanding_amount']
+				print("fee_outstanding:", fee_outstanding)
+				fee_doc = frappe.get_doc("Fees", fee['name'])
+				for component in fee_doc.components:
+					if component.fees_category == 'Hour Rate':
+						if  fee_outstanding >= student_balance:
+							component.amount = component.amount + student_balance
+							student_balance = 0
+						else:
+							component.amount = component.amount + fee_outstanding
+							student_balance = student_balance - fee_outstanding
+				fee_doc.save(ignore_permissions=True)
+				if student_balance <= 0:
+					break
 
 		self.make_gl_entries()
 
@@ -100,6 +120,11 @@ class Fees(AccountsController ,DocumentAttach):
 			frappe.msgprint(
 				_("Payment request {0} created").format(getlink("Payment Request", pr.name))
 			)
+			
+		old_student_balance = old_student_balance - student_balance
+		if old_student_balance > 0:
+			self.pay_fee(old_student_balance)
+
 	@frappe.whitelist()
 	def pay_fee(self, amount=None):
 		payment_entry = get_payment_entry("Fees", self.name, party_amount=amount or self.outstanding_amount, party_type='Student', payment_type='Receive', ignore_account_permission=True)

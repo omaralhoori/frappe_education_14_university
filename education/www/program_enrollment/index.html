@@ -99,7 +99,7 @@ function enrollCoursepack(e){
             title: '{{_("Confirmation")}}',
             primary_action_label: '{{_("Yes")}}',
             primary_action: () => {
-                enrollProgram(coursepack);
+                enrollConfirmed(coursepack);
                 d.hide();
             },
             secondary_action_label: '{{_("No")}}',

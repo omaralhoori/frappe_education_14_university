@@ -14,6 +14,7 @@
   "academic_term_reqd",
   "user_creation_skip",
   "force_student_to_update_info",
+  "go_to_program_enrollment_page",
   "section_break_7",
   "instructor_created_by",
   "course_enrollment_tab",
@@ -262,11 +263,17 @@
    "fieldtype": "Link",
    "label": "Honor Board Academic Term",
    "options": "Academic Term"
+  },
+  {
+   "default": "0",
+   "fieldname": "go_to_program_enrollment_page",
+   "fieldtype": "Check",
+   "label": "Force Student To Select Program"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-09-11 02:17:49.749365",
+ "modified": "2023-09-19 19:48:06.159113",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

@@ -1,4 +1,5 @@
 from education.education.doctype.fees.fees import get_fee_list
+from erpnext.accounts.utils import get_balance_on
 import frappe
 from frappe import _
 
@@ -13,4 +14,11 @@ def get_context(context):
     context.client_key = frappe.db.get_single_value("Fees Payment Settings", "client_key")
     context.amount_limit = frappe.db.get_single_value('Fees Payment Settings', 'amount_limit')
     context.amount_msg = _('Lowest amount you can pay is :')
+    context.balance = get_student_balance()
     return context
+
+
+def get_student_balance():
+    student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
+    balance = - (get_balance_on(party_type="Student", party=student, in_account_currency=True) or 0)
+    return balance
