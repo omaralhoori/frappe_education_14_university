@@ -280,10 +280,10 @@ def register_student_courses(courses, groups):
 	if  frappe.utils.getdate()  > enrollment_end_date or frappe.utils.getdate() < enrollment_start_date:
 		return {"error": _("Enrollment is not allowed in this date.")}
 	if not frappe.db.get_single_value("Education Settings","allow_adding_and_removing"):
-		if frappe.db.exists("Course Enrollment Applicant", {"application_status": ["!=", "Rejected"],"student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
+		if frappe.db.exists("Course Enrollment Applicant", {"application_status":  "Approved","student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
 			return {"error": _('You have already registered the courses for this semester')}
 	else:
-		enrollment = frappe.db.exists("Course Enrollment Applicant", {"application_status": ["!=", "Rejected"], "student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
+		enrollment = frappe.db.exists("Course Enrollment Applicant", {"application_status":  "Applied", "student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
 		if enrollment:
 			enrollment_applicant = frappe.get_doc("Course Enrollment Applicant", enrollment)
 	#print(enrolled_program, courses, student)
@@ -315,7 +315,7 @@ def register_student_courses(courses, groups):
 def get_pay_fees_msg(student):
 	fees_msg = ""
 	res = frappe.db.sql("""
-		select sum(outstanding_amount) as amount FROM `tabFees` WHERE student=%(student)s AND outstanding_amount > 0
+		select sum(outstanding_amount) as amount FROM `tabFees` WHERE student=%(student)s AND outstanding_amount > 0 and docstatus=1
 	""", {"student": student}, as_dict=True)
 	if res and res[0].get('amount') and  res[0].get('amount') > 0:
 		fees_msg = _("Please pay courses fees {0}here{1}.").format("<a href='/fees'>", "</a>")

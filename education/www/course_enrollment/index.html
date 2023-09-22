@@ -322,7 +322,9 @@
         return true;
     }
     function getGroupInfo(row){
+        console.log(row)
         var selectedGroup = row.querySelector(".selected-group-container").getAttribute("group-id"); //courses-tabs
+        console.log(selectedGroup)
         var data = row.querySelector(`.course-group-row[group-id='${selectedGroup}']`)
         var groupDay = data.querySelector('.group-day').getAttribute('group-day');
         var groupFromTime = data.querySelector('.group-from-time').getAttribute('group-from-time');

@@ -1,0 +1,74 @@
+{
+ "add_total_row": 0,
+ "columns": [
+  {
+   "fieldname": "enrollment_id",
+   "fieldtype": "Link",
+   "label": "Enrollment ID",
+   "options": "Course Enrollment Applicant",
+   "width": 0
+  },
+  {
+   "fieldname": "student",
+   "fieldtype": "Link",
+   "label": "Student ID",
+   "options": "Student",
+   "width": 0
+  },
+  {
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name",
+   "width": 0
+  },
+  {
+   "fieldname": "student_email_id",
+   "fieldtype": "Data",
+   "label": "Email",
+   "width": 0
+  },
+  {
+   "fieldname": "student_mobile_number",
+   "fieldtype": "Data",
+   "label": "Mobile No",
+   "width": 0
+  },
+  {
+   "fieldname": "application_status",
+   "fieldtype": "Data",
+   "label": "Application Status",
+   "width": 0
+  }
+ ],
+ "creation": "2023-09-21 10:24:44.983205",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "label": "Academic Term",
+   "mandatory": 1,
+   "options": "Academic Term",
+   "wildcard_filter": 0
+  }
+ ],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2023-09-22 12:58:54.735064",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Scholarship Student Course Enrollments",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "SELECT tbl1.name as enrollment_id, tbl1.student, tbl2.student_name, tbl2.student_email_id, tbl2.student_mobile_number,\n tbl1.application_status FROM `tabCourse Enrollment Applicant` tbl1\nINNER JOIN `tabStudent` tbl2 ON tbl1.student=tbl2.name\nINNER JOIN `tabProgram Enrollment` tbl3 ON tbl3.program=tbl1.program AND tbl3.student=tbl1.student\nWHERE tbl1.academic_term=%(academic_term)s AND tbl3.has_scholarship=1",
+ "ref_doctype": "Course Enrollment Applicant",
+ "report_name": "Scholarship Student Course Enrollments",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ]
+}

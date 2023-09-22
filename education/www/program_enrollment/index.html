@@ -83,7 +83,10 @@
                         
                     </div>
                     <div class="coursepacks-action">
+                        {%- if coursepack.enable_admission_application and frappe.utils.getdate(coursepack.admission_start_date) <= today -%}
                         <button onclick="enrollCoursepack(this)" coursepack="{{coursepack.get('program')}}">{{_('Enroll')}}</button>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>
@@ -93,6 +96,10 @@
     </div>
 {% endif %}
 <script>
+function disableAllButtons(value){
+    $('button').prop('disabled', value);
+
+}
 function enrollCoursepack(e){
     var coursepack = e.getAttribute('coursepack');
     var d = new frappe.ui.Dialog({
@@ -127,13 +134,14 @@ function enrollProgram(e){
         d.show();
 }
 function enrollConfirmed(program){
-    console.log(program)
+    disableAllButtons(true);
     frappe.call({
         "method": "education.education.doctype.program_enrollment.program_enrollment.enroll_student_in_program",
             "args": {
                 "program": program
             },
             callback: (res) => {
+                disableAllButtons(false);
                 if (res.message.msg) {
                     var msg = {
                         message: res.message.msg,

@@ -26,7 +26,7 @@ def get_context(context):
     if not context.is_course_enrollment_avilable: return context
     
     courses = get_academic_curriculum_for_student(student)
-    context.enable_add_remove = frappe.db.get_single_value("Education Settings","allow_adding_and_removing")
+    context.enable_add_remove = True#frappe.db.get_single_value("Education Settings","allow_adding_and_removing")
     if not context.enable_add_remove:
         context.courses_registered= has_student_registred_courses(student)
     available_courses = {}
