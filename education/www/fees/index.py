@@ -15,6 +15,15 @@ def get_context(context):
     context.amount_limit = frappe.db.get_single_value('Fees Payment Settings', 'amount_limit')
     context.amount_msg = _('Lowest amount you can pay is :')
     context.balance = get_student_balance()
+
+    coursepack_student = frappe.db.get_value("Student", {"user": frappe.session.user}, ['is_coursepack_student'])
+    if coursepack_student:
+        if  not frappe.db.get_single_value("Education Settings", "enable_coursepack_fees"):
+            context.fees_list = []
+    else:
+        if not frappe.db.get_single_value("Education Settings", "enable_program_fees"):
+            context.fees_list = []
+        
     return context
 
 
