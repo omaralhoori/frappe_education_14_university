@@ -28,6 +28,8 @@
   "graduation_for_prerequisites",
   "fetch_courses_from_program",
   "allow_adding_and_removing",
+  "enable_program_fees",
+  "enable_coursepack_fees",
   "signup_process_tab",
   "student_email_address_domain",
   "course_enrollment_check_program",
@@ -269,11 +271,23 @@
    "fieldname": "go_to_program_enrollment_page",
    "fieldtype": "Check",
    "label": "Force Student To Select Program"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_program_fees",
+   "fieldtype": "Check",
+   "label": "Enable Program Fees"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_coursepack_fees",
+   "fieldtype": "Check",
+   "label": "Enable Coursepack Fees"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-09-19 19:48:06.159113",
+ "modified": "2023-09-24 01:41:15.257355",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",
