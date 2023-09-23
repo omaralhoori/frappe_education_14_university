@@ -282,6 +282,9 @@ def register_student_courses(courses, groups):
 	if not frappe.db.get_single_value("Education Settings","allow_adding_and_removing"):
 		if frappe.db.exists("Course Enrollment Applicant", {"application_status":  "Approved","student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term}):
 			return {"error": _('You have already registered the courses for this semester')}
+		enrollment = frappe.db.exists("Course Enrollment Applicant", {"application_status":  "Applied", "student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
+		if enrollment:
+			enrollment_applicant = frappe.get_doc("Course Enrollment Applicant", enrollment)
 	else:
 		enrollment = frappe.db.exists("Course Enrollment Applicant", {"application_status":  "Applied", "student": student, "program": enrolled_program, "academic_year":academic_year, "academic_term": academic_term})
 		if enrollment:
