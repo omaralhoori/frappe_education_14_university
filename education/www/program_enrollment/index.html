@@ -75,7 +75,7 @@
                             <ul>
                                 {% for course in coursepack.get('courses') %}
                                     <li>
-                                        {{course.get('course_name')}}
+                                        {{course.get('course_name')}}, {{_(course.get('schedule_weekday'))}} {{format_time(course.get('from_time'))}} - {{format_time(course.get('to_time'))}}
                                     </li>
                                 {% endfor %}
                             </ul>

@@ -112,10 +112,18 @@ def get_program_admission_list():
 		[nowdate()],
 		as_dict=1,
 	)
-	
+	academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
 	for program in program_admission_list:
 		if program.get('is_coursepack'):
-			program['courses'] = frappe.db.get_all("Program Course", {"parent": program.get('program')}, ['course_name'])
+			program['courses'] = frappe.db.sql("""
+				SELECT crs.course_name, scdul.schedule_weekday, scdul.from_time, scdul.to_time FROM `tabProgram Course` as crs
+				INNER JOIN `tabStudent Group` as grp ON grp.course=crs.course AND grp.program=%(program)s AND grp.academic_term=%(academic_term)s
+				LEFT JOIN `tabCourse Schedule` as scdul ON scdul.student_group=grp.name
+				WHERE crs.parent=%(program)s
+				GROUP BY crs.course
+			""", {"academic_term": academic_term, "program": program.get('program')}, as_dict=True)
+			
+			#frappe.db.get_all("Program Course", {"parent": program.get('program')}, ['course_name'])
 			admissions['coursepacks'].append(program)
 		else:
 			admissions["programs"].append(program)
