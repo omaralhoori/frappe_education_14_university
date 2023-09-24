@@ -1,0 +1,105 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-09-24 13:48:39.298292",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "excel_file",
+  "column_break_kn9x",
+  "section_break_vwg9",
+  "used_column_names",
+  "column_break_pmqw",
+  "message_field_names",
+  "section_break_adxr",
+  "message",
+  "column_break_ax4m",
+  "generate_messages",
+  "section_break_hrpw",
+  "excel_container"
+ ],
+ "fields": [
+  {
+   "fieldname": "excel_file",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Excel File",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_kn9x",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_vwg9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "used_column_names",
+   "fieldtype": "Small Text",
+   "label": "Used Column Names"
+  },
+  {
+   "fieldname": "column_break_pmqw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "message_field_names",
+   "fieldtype": "Small Text",
+   "label": "Message Field Names"
+  },
+  {
+   "fieldname": "section_break_adxr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Small Text",
+   "label": "Message"
+  },
+  {
+   "fieldname": "column_break_ax4m",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "generate_messages",
+   "fieldtype": "Button",
+   "label": "Generate Messages"
+  },
+  {
+   "fieldname": "section_break_hrpw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "excel_container",
+   "fieldtype": "HTML",
+   "label": "Excel Container"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-09-24 13:50:37.379006",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Generate Excel Message Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
