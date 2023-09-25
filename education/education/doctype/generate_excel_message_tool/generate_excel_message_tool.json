@@ -14,8 +14,9 @@
   "column_break_pmqw",
   "message_field_names",
   "section_break_adxr",
-  "message",
+  "base_message",
   "column_break_ax4m",
+  "message",
   "generate_messages",
   "section_break_hrpw",
   "excel_container"
@@ -76,13 +77,18 @@
    "fieldname": "excel_container",
    "fieldtype": "HTML",
    "label": "Excel Container"
+  },
+  {
+   "fieldname": "base_message",
+   "fieldtype": "Small Text",
+   "label": "Base Message"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-09-24 13:50:37.379006",
+ "modified": "2023-09-26 00:08:32.443846",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Generate Excel Message Tool",

@@ -11,20 +11,20 @@ class GenerateExcelMessageTool(Document):
 
 
 @frappe.whitelist()
-def generate_messages(excel_file, used_column_names, message_field_names, message):
+def generate_messages(excel_file, used_column_names, message_field_names, message, base_message):
 	file = pd.read_excel(get_site_name(frappe.local.request.host) + excel_file)
 	columns = used_column_names.split("\n")
 	mapped_columns = message_field_names.split("\n")
-
+	
 	all_data = []
 	for index, row in file.iterrows():
 		row.at['Student Name']
 		student_data = {}
 		for column, mapped_column in zip(columns, mapped_columns):
 			student_data[mapped_column] = row.at[column]
-
-		message = message.format(**student_data)
-		student_data['message'] = message
+		formated_base_msg = base_message.format(**student_data)
+		formated_message = message.format(**student_data)
+		student_data['message'] = formated_base_msg + formated_message
 		all_data.append(student_data)
 	
 	return all_data

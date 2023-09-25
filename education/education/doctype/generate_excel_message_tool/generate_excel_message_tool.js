@@ -12,7 +12,8 @@ frappe.ui.form.on("Generate Excel Message Tool", {
                 "excel_file": frm.doc.excel_file,
                 "used_column_names": frm.doc.used_column_names,
                 "message_field_names": frm.doc.message_field_names,
-                "message": frm.doc.message
+                "message": frm.doc.message,
+                "base_message": frm.doc.base_message,
             },
             callback: (res)=> {
                 frm.events.render_excel_table(frm, res)
