@@ -24,6 +24,7 @@ def generate_messages(excel_file, used_column_names, message_field_names, messag
 			student_data[mapped_column] = row.at[column]
 		formated_base_msg = base_message.format(**student_data)
 		formated_message = message.format(**student_data)
+		formated_message = formated_message.replace("\n", "%0a")
 		student_data['message'] = formated_base_msg + formated_message
 		all_data.append(student_data)
 	

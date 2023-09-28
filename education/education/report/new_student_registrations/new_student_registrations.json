@@ -57,6 +57,14 @@
  "doctype": "Report",
  "filters": [
   {
+   "fieldname": "program",
+   "fieldtype": "Link",
+   "label": "Program",
+   "mandatory": 1,
+   "options": "Program",
+   "wildcard_filter": 0
+  },
+  {
    "fieldname": "academic_term",
    "fieldtype": "Link",
    "label": "Academic Term",
@@ -74,13 +82,13 @@
  ],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2023-09-11 00:06:56.513659",
+ "modified": "2023-09-26 15:29:40.124885",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "New Student Registrations",
  "owner": "Administrator",
  "prepared_report": 0,
- "query": "SELECT tbl1.student, tbl2.student_name, tbl2.student_email_id, tbl2.student_mobile_number,\ntbl2.joining_date, tbl1.application_status, tbl1.paid, tbl3.receipt_uploaded  FROM `tabCourse Enrollment Applicant` tbl1\nINNER JOIN `tabStudent` tbl2 ON tbl1.student=tbl2.name\nINNER JOIN `tabFees` tbl3 ON tbl3.against_doctype_name=tbl1.name\nWHERE tbl1.academic_term=%(academic_term)s AND tbl2.joining_date >= %(joining_after_date)s",
+ "query": "SELECT tbl1.student, tbl2.student_name, tbl2.student_email_id, tbl2.student_mobile_number,\ntbl2.joining_date, tbl1.application_status, tbl1.paid, tbl3.receipt_uploaded  FROM `tabCourse Enrollment Applicant` tbl1\nINNER JOIN `tabStudent` tbl2 ON tbl1.student=tbl2.name\nINNER JOIN `tabFees` tbl3 ON tbl3.against_doctype_name=tbl1.name\nWHERE tbl1.academic_term=%(academic_term)s AND tbl2.joining_date >= %(joining_after_date)s AND tbl1.program=%(program)s",
  "ref_doctype": "Course Enrollment Applicant",
  "report_name": "New Student Registrations",
  "report_type": "Query Report",
