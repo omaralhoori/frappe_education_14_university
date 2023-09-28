@@ -638,36 +638,6 @@
   },
   {
    "hidden": 0,
-   "icon_image": "/assets/frappe/icons/icons/96.png",
-   "icon_type": "Image",
-   "is_query_report": 0,
-   "label": "Student Requests",
-   "link_count": 2,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Drop Course Requests",
-   "link_count": 0,
-   "link_to": "Drop Course",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Study Postponement Requests",
-   "link_count": 0,
-   "link_to": "Study Postponement",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
    "icon_image": "/assets/frappe/icons/icons/129.png",
    "icon_type": "Image",
    "is_query_report": 0,
@@ -876,9 +846,49 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "icon_image": "/assets/frappe/icons/icons/96.png",
+   "icon_type": "Image",
+   "is_query_report": 0,
+   "label": "Student Requests",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Drop Course Requests",
+   "link_count": 0,
+   "link_to": "Drop Course",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Study Postponement Requests",
+   "link_count": 0,
+   "link_to": "Study Postponement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Drop Coursepack Requests",
+   "link_count": 0,
+   "link_to": "Drop Coursepack",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-09-24 14:39:07.016506",
+ "modified": "2023-09-28 17:25:56.914973",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education",

@@ -90,6 +90,7 @@
 		<tr>
 			<th scope="col">#</th>
 			<th scope="col">{{_('Code')}}</th>
+			<th scope="col">{{_('Program')}}</th>
 			<th scope="col">{{_('Status')}}</th>
 			<th scope="col">{{_('Grand Total')}}</th>
 			<th scope="col">{{_('Paid Amount')}}</th>
@@ -102,6 +103,7 @@
 		<tr>
 			<th scope="row">{{loop.index}}</th>
 			<td>{{ doc.name }}</td>
+			<td>{{ doc.program }}</td>
 			<td>
 				{% if doc.outstanding_amount <= 0 %}
 				<strong>{{_('Paid')}}</strong>
