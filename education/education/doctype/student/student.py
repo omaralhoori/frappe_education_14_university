@@ -26,8 +26,13 @@ class Student(Document):
 			return
 		self.naming_series = '1' + program_abbr + year_abbr + term_abbr + '.####'
 	def after_insert(self):
-		if not self.student_email_id and frappe.db.get_single_value("Education Settings", "student_email_address_domain"):
-			self.student_email_id = self.first_name + self.name + frappe.db.get_single_value("Education Settings", "student_email_address_domain")
+		if  frappe.db.get_single_value("Education Settings", "student_email_address_domain"):
+			if self.student_email_id:
+				self.student_secondary_email_address = self.student_email_id
+			self.student_email_id = self.name + frappe.db.get_single_value("Education Settings", "student_email_address_domain")
+			self.db_set("student_email_id", self.student_email_id)
+			self.db_set("student_secondary_email_address", self.student_secondary_email_address)
+			
 	def validate(self):
 		self.student_name = " ".join(
 			filter(None, [self.first_name, self.middle_name, self.last_name])
