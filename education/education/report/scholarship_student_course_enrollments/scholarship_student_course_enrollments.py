@@ -41,6 +41,16 @@ def get_columns():
             'fieldtype': 'Data',
         },
 		 {
+            'fieldname': 'nationality',
+            'label': _('Nationality'),
+            'fieldtype': 'Data',
+        },
+		 {
+            'fieldname': 'date_of_birth',
+            'label': _('Date of Birth'),
+            'fieldtype': 'Data',
+        },
+		 {
             'fieldname': 'application_status',
             'label': _('Application Status'),
             'fieldtype': 'Data',
@@ -56,6 +66,7 @@ def get_columns():
 def get_data(filters):
 	return frappe.db.sql("""
 		SELECT tbl1.name as enrollment_id, tbl1.student, tbl2.student_name, tbl2.student_email_id, tbl2.student_mobile_number,
+					  tbl2.nationality, tbl2.date_of_birth,
 		tbl1.application_status,
 		IF(tbl1.application_status='Applied',CONCAT("<button class='btn btn-sm btn-primary approve-row-btn' onclick=""approveStudent('", tbl1.name,"')"">Approve</button>") , '' )
 		as action

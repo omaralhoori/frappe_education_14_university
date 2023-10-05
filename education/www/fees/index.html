@@ -123,8 +123,9 @@
 			<td>
 				<button doc-name="{{doc.name}}" onclick="detailsBtnOnClick(this)" 
 				class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailModal"
-				> {{ _('Details')}}</button>
-				{% if doc.outstanding_amount > 0 and frappe.utils.getdate(doc.due_date) >= today and doc.receipt_uploaded==0 %}
+				> {{ _('Details')}}</button> 
+                <!-- frappe.utils.getdate(doc.due_date) >= today and -->
+				{% if doc.outstanding_amount > 0  and doc.receipt_uploaded==0 %}
 				<button class="btn btn-success btn-sm pay-btn" onclick="payBtnOnClick(this)" doc-name="{{doc.name}}"
 					doc-price="{{frappe.utils.fmt_money(doc.outstanding_amount, currency=doc.currency)}}"
 					data-toggle="modal" data-target="#exampleModal"> {{

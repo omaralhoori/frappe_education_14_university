@@ -1,0 +1,71 @@
+{
+ "add_total_row": 0,
+ "columns": [
+  {
+   "fieldname": "enrollment_id",
+   "fieldtype": "Link",
+   "label": "Enrollment ID",
+   "options": "Program Enrollment",
+   "width": 0
+  },
+  {
+   "fieldname": "student_id",
+   "fieldtype": "Link",
+   "label": "Student ID",
+   "options": "Student",
+   "width": 0
+  },
+  {
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "label": "Student Name",
+   "width": 0
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "width": 0
+  },
+  {
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Mobile No",
+   "width": 0
+  },
+  {
+   "fieldname": "nationality",
+   "fieldtype": "Data",
+   "label": "Nationality",
+   "width": 0
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Data",
+   "label": "Date of Birth",
+   "width": 0
+  }
+ ],
+ "creation": "2023-10-04 19:13:02.352055",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2023-10-04 19:22:59.738316",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Scholarship Students",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "select tbl1.name as enrollment_id, tbl2.name as student_id, tbl2.student_name, tbl2.student_email_id as email,\ntbl2.student_mobile_number as mobile_no, tbl2.nationality, tbl2.date_of_birth\nFROM `tabProgram Enrollment` as tbl1\nINNER JOIN `tabStudent` as tbl2 ON tbl1.student=tbl2.name\nWHERE tbl1.has_scholarship=1",
+ "ref_doctype": "Program Enrollment",
+ "report_name": "Scholarship Students",
+ "report_type": "Query Report",
+ "roles": [
+  {
+   "role": "Academics User"
+  }
+ ]
+}
