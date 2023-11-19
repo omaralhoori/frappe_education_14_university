@@ -853,7 +853,7 @@
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Student Requests",
-   "link_count": 3,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -886,9 +886,19 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Program Certificate Requests",
+   "link_count": 0,
+   "link_to": "Student Certificate Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-09-28 17:25:56.914973",
+ "modified": "2023-11-19 18:30:38.821554",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education",

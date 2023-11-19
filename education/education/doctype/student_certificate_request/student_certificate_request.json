@@ -1,0 +1,267 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-11-19 16:11:57.737498",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "student_data_section",
+  "student",
+  "column_break_bx8p",
+  "program",
+  "column_break_ty1k",
+  "academic_term",
+  "section_break_wj0t",
+  "first_name_arabic",
+  "first_name_english",
+  "column_break_8tuc",
+  "middle_name_arabic",
+  "middle_name_english",
+  "column_break_id9u",
+  "last_name_arabic",
+  "last_name_english",
+  "section_break_knaq",
+  "mobile_no",
+  "column_break_iq5k",
+  "email",
+  "column_break_vt0y",
+  "nationality",
+  "section_break_gjew",
+  "cgpa",
+  "column_break_my2x",
+  "requested_certificate_langiage",
+  "column_break_a6xf",
+  "educational_level",
+  "section_break_3ip9",
+  "document_image",
+  "paid",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "student_data_section",
+   "fieldtype": "Section Break",
+   "label": "Student Data"
+  },
+  {
+   "fieldname": "student",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Student",
+   "options": "Student",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bx8p",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Program",
+   "options": "Program Enrollment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ty1k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "program.academic_term",
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Academic Term",
+   "options": "Academic Term",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_wj0t",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "student.first_name_arabic",
+   "fetch_if_empty": 1,
+   "fieldname": "first_name_arabic",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "First Name Arabic",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student.first_name",
+   "fetch_if_empty": 1,
+   "fieldname": "first_name_english",
+   "fieldtype": "Data",
+   "label": "First Name English",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_8tuc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student.middle_name_arabic",
+   "fetch_if_empty": 1,
+   "fieldname": "middle_name_arabic",
+   "fieldtype": "Data",
+   "label": "Middle Name Arabic",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student.middle_name",
+   "fetch_if_empty": 1,
+   "fieldname": "middle_name_english",
+   "fieldtype": "Data",
+   "label": "Middle Name English",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_id9u",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student.last_name_arabic",
+   "fetch_if_empty": 1,
+   "fieldname": "last_name_arabic",
+   "fieldtype": "Data",
+   "label": "Last Name Arabic",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "student.last_name",
+   "fetch_if_empty": 1,
+   "fieldname": "last_name_english",
+   "fieldtype": "Data",
+   "label": "Last Name English",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_knaq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "student.student_mobile_number",
+   "fetch_if_empty": 1,
+   "fieldname": "mobile_no",
+   "fieldtype": "Data",
+   "label": "Mobile No With Country Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_iq5k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student.student_email_id",
+   "fetch_if_empty": 1,
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email at the institute",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_vt0y",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student.nationality",
+   "fetch_if_empty": 1,
+   "fieldname": "nationality",
+   "fieldtype": "Link",
+   "label": "Nationality",
+   "options": "Nationality",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_gjew",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fetch_from": "program.cgpa",
+   "fieldname": "cgpa",
+   "fieldtype": "Float",
+   "label": "CGPA",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_my2x",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "requested_certificate_langiage",
+   "fieldtype": "Select",
+   "label": "Requested Certificate Langiage",
+   "options": "Arabic\nEnglish",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_3ip9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "paid",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Paid"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Applied\nApproved\nRejected"
+  },
+  {
+   "fieldname": "document_image",
+   "fieldtype": "Attach Image",
+   "label": "Document Image"
+  },
+  {
+   "fieldname": "column_break_a6xf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "student.educational_level",
+   "fetch_if_empty": 1,
+   "fieldname": "educational_level",
+   "fieldtype": "Link",
+   "label": "Educational Level",
+   "options": "Educational Level",
+   "reqd": 1
+  }
+ ],
+ "image_field": "document_image",
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-19 18:51:19.803083",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Student Certificate Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "student"
+}

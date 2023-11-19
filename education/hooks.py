@@ -85,6 +85,12 @@ standard_portal_menu_items = [
 		"route": "/academic_calendar",
 		"reference_doctype": "Academic Calendar",
 	},
+    {
+		"title": _("Program Certificate Request"),
+		"route": "/program-certificate-request",
+		"reference_doctype": "Student Certificate Request",
+		"role": "Student",
+	},
 
 ]
 
