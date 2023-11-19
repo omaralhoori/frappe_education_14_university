@@ -255,7 +255,7 @@
                                     onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
                                 {% else %}
                                     <button class="btn btn-sm btn-danger remove-course-btn" enrollment-status="{{ course['enrollment_status'] }}" applicant-status="{{ course['applicant_status'] }}"
-                                    force-to-select="0"
+                                    force-to-select="{{course.get('force_to_select_course')}}"
                                     onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
                                 {%endif%}
                             {{course_group_select_btn(course, groups)}}
