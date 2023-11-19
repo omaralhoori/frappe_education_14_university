@@ -398,13 +398,12 @@
    "default": "0",
    "fieldname": "is_coursepack_student",
    "fieldtype": "Check",
-   "label": "Is Coursepack Student",
-   "read_only": 1
+   "label": "Is Coursepack Student"
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2023-09-16 13:36:21.622628",
+ "modified": "2023-10-05 14:46:16.493511",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",

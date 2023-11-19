@@ -32,8 +32,7 @@
    "fieldtype": "Link",
    "label": "Program Enrollment",
    "options": "Program Enrollment",
-   "reqd": 1,
-   "set_only_once": 1
+   "reqd": 1
   },
   {
    "fieldname": "student",
@@ -145,7 +144,7 @@
   }
  ],
  "links": [],
- "modified": "2023-09-08 01:38:52.752462",
+ "modified": "2023-10-05 14:14:44.650075",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment",

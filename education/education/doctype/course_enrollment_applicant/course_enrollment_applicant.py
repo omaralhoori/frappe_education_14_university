@@ -16,7 +16,7 @@ class CourseEnrollmentApplicant(Document):
 	
 	@frappe.whitelist()
 	def enroll_student_in_courses(self):
-		enrolled_program = frappe.db.get_value("Program Enrollment", {"student": self.student}, ["name"])
+		enrolled_program = frappe.db.get_value("Program Enrollment", {"student": self.student, "program": self.program}, ["name"])
 		if not enrolled_program: frappe.throw(_('Student is not registered in any program'), frappe.DoesNotExistError)
 		#print(enrolled_program, courses, student)
 		for course in self.courses:
