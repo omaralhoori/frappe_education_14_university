@@ -97,6 +97,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "total_amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -159,10 +160,11 @@
  "icon": "fa fa-flag",
  "is_submittable": 1,
  "links": [],
- "modified": "2020-06-16 15:34:57.295010",
+ "modified": "2023-10-08 10:35:27.793242",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fee Structure",
+ "naming_rule": "By \"Naming Series\" field",
  "owner": "Administrator",
  "permissions": [
   {
@@ -207,9 +209,9 @@
    "write": 1
   }
  ],
- "restrict_to_domain": "",
  "search_fields": "program, student_category, academic_year",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "program"
 }
