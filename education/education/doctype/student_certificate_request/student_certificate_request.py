@@ -20,34 +20,30 @@ class StudentCertificateRequest(Document):
 		add_program_certifcate_fee(self.student, program, self.name)
 
 def add_program_certifcate_fee(student, program, request_name):
-	fee_strct_doc = None
-	if fee_strct := frappe.db.exists("Fee Structure", {"program": program}):
-		fee_strct_doc= frappe.get_doc("Fee Structure", fee_strct)
-	if not fee_strct_doc: return
-
-	
-	program_cmpnt = None
-	for fee_cmpnt in fee_strct_doc.components:
-		if fee_cmpnt.fees_category == 'Program Certificate':
-			program_cmpnt = fee_cmpnt
-			break
-	
-	if not program_cmpnt: return
-	fees_doc = frappe.get_doc({
-	"doctype": "Fees",
-	"student": student,
-	"against_doctype": "Student Certificate Request",
-	"against_doctype_name": request_name,
-	"program": program,
-	"due_date": frappe.utils.nowdate(),
-	})
-	component = fees_doc.append("components")
-	component.fees_category = 'Program Certificate'
-	component.description = ''
-	component.amount = program_cmpnt.amount
-	component.receivable_account = program_cmpnt.receivable_account
-	component.cost_center = program_cmpnt.cost_center
-	component.income_account = program_cmpnt.income_account
-	fees_doc.calculate_total()
-	fees_doc.save(ignore_permissions=True)
-	fees_doc.submit()
+	settings = frappe.get_single("Fees Payment Settings")
+	# fee_strct_doc = None
+	# if fee_strct := frappe.db.exists("Fee Structure", {"program": program}):
+	# 	fee_strct_doc= frappe.get_doc("Fee Structure", fee_strct)
+	for fee_component in settings.fees_components:
+		if fee_component.component_type == 'Program Certificate':
+			program_cmpnt = frappe.db.get_value("Fee Component", {"parent": fee_component.fee_structure, "fees_category": fee_component.fee_category}, ['amount', 'receivable_account', 'cost_center', 'income_account', 'description'], as_dict=True)
+			
+			if not program_cmpnt: return
+			fees_doc = frappe.get_doc({
+			"doctype": "Fees",
+			"student": student,
+			"against_doctype": "Student Certificate Request",
+			"against_doctype_name": request_name,
+			"program": program,
+			"due_date": frappe.utils.nowdate(),
+			})
+			component = fees_doc.append("components")
+			component.fees_category = fee_component.fee_category
+			component.description = program_cmpnt.description
+			component.amount = program_cmpnt.amount
+			component.receivable_account = program_cmpnt.receivable_account
+			component.cost_center = program_cmpnt.cost_center
+			component.income_account = program_cmpnt.income_account
+			fees_doc.calculate_total()
+			fees_doc.save(ignore_permissions=True)
+			fees_doc.submit()
