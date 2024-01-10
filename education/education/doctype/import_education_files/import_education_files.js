@@ -22,6 +22,7 @@ frappe.ui.form.on("Import Education Files", {
             method: "education.education.doctype.import_education_files.import_education_files.import_certificate_file",
             args: {
                 data_file: frm.doc.program_certificate_file,
+                add_payment: frm.doc.add_payment
             },
             callback: (res) => {
                 frappe.msgprint('Done')

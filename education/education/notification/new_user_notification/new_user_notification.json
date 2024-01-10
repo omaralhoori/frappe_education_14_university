@@ -1,0 +1,27 @@
+{
+ "attach_print": 0,
+ "channel": "System Notification",
+ "creation": "2023-07-29 18:21:27.624779",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "User",
+ "enabled": 1,
+ "event": "New",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "{{doc.full_name}} new user created.",
+ "modified": "2023-12-17 12:02:01.426052",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "New User Notification",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_role": "System Manager"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "{{doc.student_name}} new user created."
+}

@@ -15,6 +15,7 @@
   "program_certificate_section",
   "program_certificate_file",
   "column_break_4mxk",
+  "add_payment",
   "import_certificate_file",
   "grades_section",
   "grades_file",
@@ -91,13 +92,19 @@
    "fieldtype": "Link",
    "label": "Assessment Plan",
    "options": "Assessment Plan"
+  },
+  {
+   "default": "0",
+   "fieldname": "add_payment",
+   "fieldtype": "Check",
+   "label": "Add Payment"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2023-08-17 14:49:31.611510",
+ "modified": "2023-11-29 09:12:56.342931",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Import Education Files",

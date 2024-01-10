@@ -9,6 +9,7 @@ from frappe import _
 from frappe.utils.csvutils import read_csv_content
 from frappe.utils.data import cint
 from frappe.utils.xlsxutils import read_xls_file_from_attached_file, read_xlsx_file_from_attached_file
+import pandas as pd
 
 class ImportEducationFiles(Document):
 	pass
@@ -81,21 +82,41 @@ def add_grades_data(required_columns, required_columns_indexes, enrollment_data,
 	assessment.submit()
 	return {"error": False}
 @frappe.whitelist()
-def import_certificate_file(data_file):
+def import_certificate_file(data_file, add_payment=False):
 	content, extn = read_file(data_file)
 	data = read_content(content, extn)
-	required_columns = {'amount': 'Amount', 'student': 'Student'}
+	required_columns = {'amount': 'Amount', 'student': 'Student', 'paid': 'Paid'}
 	required_columns_indexes = get_required_columns_indexes(data[0], list(required_columns.values()))
 	data = data[1:]
 	errors = []
+	students = []
+	emails = []
 	for enrollment_data in data:
-		added = add_program_certifcate_fee(required_columns, required_columns_indexes, enrollment_data)
-		if added.get('error'): errors.append(added)
-	print("Not added enrollments: ")
-	print(errors)
+		student_column = enrollment_data[required_columns_indexes[required_columns['student']]]
+		student = frappe.db.get_value("Student", {"student_email_id":student_column}, ['name'])
+		students.append(student)
+		emails.append(student_column)
+		# added = add_program_certifcate_fee(required_columns, required_columns_indexes, enrollment_data, add_payment)
+		# if added.get('error'): errors.append(added)
+	data = {
+    'Student': students,
+    'Student Email': emails,
+}
+	df = pd.DataFrame(data)
 
-def add_program_certifcate_fee(required_columns, required_columns_indexes, enrollment_data):
+	# Specify the Excel file name and sheet name
+	excel_file_name = 'students.xlsx'
+	sheet_name = 'Sheet1'
+
+	# Save the DataFrame to Excel
+	df.to_excel(excel_file_name, sheet_name=sheet_name, index=False)
+	# print("Not added enrollments: ")
+	# print(errors)
+
+def add_program_certifcate_fee(required_columns, required_columns_indexes, enrollment_data, add_payment=False):
+	
 	amount = enrollment_data[required_columns_indexes[required_columns['amount']]]
+	paid = enrollment_data[required_columns_indexes[required_columns['paid']]]
 	student_column = enrollment_data[required_columns_indexes[required_columns['student']]]
 	if not student_column: return {"error": True, "student": student_column, 'msg': 'student null'}
 	student = frappe.db.get_value("Student", {"student_email_id":student_column}, ['name'])
@@ -105,22 +126,21 @@ def add_program_certifcate_fee(required_columns, required_columns_indexes, enrol
 	if not program: return {"error": True, "student": student, 'msg': 'program not enrolled'}
 	accounts = get_fees_accounts('Program Certificate', program)
 	if not accounts: return {"error": True, "student": student, 'msg': 'accounts not found'}
-	if check_if_has_fees(student, 'Program Certificate'):
-		return {"error": False, "student": student}
+	# if check_if_has_fees(student, 'Program Certificate'):
+	# 	return {"error": False, "student": student}
 	fees_doc = None
-	fees_new = False
-	if frappe.db.exists("Fees", {"student": student,}):
-		fees_doc = frappe.get_doc("Fees", {"student": student,})
-	else:
-		fees_new = True
-		fees_doc = frappe.get_doc({
-		"doctype": "Fees",
-		"student": student,
-		"against_doctype": "Student",
-		"against_doctype_name": student,
-		"program": program,
-		"due_date": frappe.utils.nowdate(),
-		})
+	# fees_new = False
+	# if frappe.db.exists("Fees", {"student": student,}):
+	# 	fees_doc = frappe.get_doc("Fees", {"student": student,})
+	fees_new = True
+	fees_doc = frappe.get_doc({
+	"doctype": "Fees",
+	"student": student,
+	"against_doctype": "Student",
+	"against_doctype_name": student,
+	"program": program,
+	"due_date": frappe.utils.nowdate(),
+	})
 	if float(amount) > 0:
 		component = fees_doc.append("components")
 		component.fees_category = 'Program Certificate'
@@ -133,6 +153,9 @@ def add_program_certifcate_fee(required_columns, required_columns_indexes, enrol
 	fees_doc.save(ignore_permissions=True)
 	if fees_new:
 		fees_doc.submit()
+	if add_payment:
+		if paid and float(paid) > 0:
+			fees_doc.pay_fee(float(paid))
 	frappe.db.commit()
 	return {"error": False, "student": student}
 
