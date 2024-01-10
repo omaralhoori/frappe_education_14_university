@@ -80,8 +80,7 @@
    "fieldname": "courses",
    "fieldtype": "Table",
    "label": "Courses",
-   "options": "Course Enrollment Applied Course",
-   "read_only": 1
+   "options": "Course Enrollment Applied Course"
   },
   {
    "fieldname": "program",
@@ -137,7 +136,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-02 17:45:55.205317",
+ "modified": "2024-01-10 15:07:27.754142",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",
