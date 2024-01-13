@@ -236,7 +236,7 @@ def create_student_by_user(user, additional_data={}):
 		UPDATE `tabStudent` SET owner=%(user)s
 		WHERE name=%(student)s
 	""", {"user": user.name, "student": student.name})
-	if additional_data:
+	if additional_data and additional_data.get('student_nationality'):
 		frappe.db.sql("""
 			UPDATE `tabUser` SET first_login=1
 			WHERE name=%(user)s
