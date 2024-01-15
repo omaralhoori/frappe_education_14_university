@@ -9,7 +9,8 @@ class StudentCertificateRequest(Document):
 		if not self.student:
 			self.student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
 		if self.student and not self.program:
-			program_data = frappe.db.get_value("Program Enrollment", {"student": self.student}, ["name", "cgpa", "academic_term"])
+			main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+			program_data = frappe.db.get_value("Program Enrollment", {"student": self.student, "program": main_prgram}, ["name", "cgpa", "academic_term"])
 			if program_data:
 				self.program = program_data[0]
 				self.cgpa = program_data[1]

@@ -190,7 +190,8 @@ def create_enrollment(
 	if not student: return {
 		"error": _("You are not student")
 	}
-	program_enrollment = frappe.db.get_value("Program Enrollment", {"student": student}, ["name"])
+	main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+	program_enrollment = frappe.db.get_value("Program Enrollment", {"student": student, "program": main_prgram}, ["name"])
 	if not program_enrollment:
 		return {
 			"error": _("You did not enroll in any program")

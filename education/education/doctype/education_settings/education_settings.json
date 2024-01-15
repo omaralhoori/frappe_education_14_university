@@ -5,6 +5,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "main_program",
   "current_academic_year",
   "current_academic_term",
   "attendance_freeze_date",
@@ -283,11 +284,18 @@
    "fieldname": "enable_coursepack_fees",
    "fieldtype": "Check",
    "label": "Enable Coursepack Fees"
+  },
+  {
+   "fieldname": "main_program",
+   "fieldtype": "Link",
+   "label": "Main Program",
+   "options": "Program",
+   "reqd": 1
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2023-09-24 01:41:15.257355",
+ "modified": "2024-01-15 08:15:42.850127",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",

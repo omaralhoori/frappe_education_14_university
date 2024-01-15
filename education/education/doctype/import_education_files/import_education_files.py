@@ -121,8 +121,8 @@ def add_program_certifcate_fee(required_columns, required_columns_indexes, enrol
 	if not student_column: return {"error": True, "student": student_column, 'msg': 'student null'}
 	student = frappe.db.get_value("Student", {"student_email_id":student_column}, ['name'])
 	if not student: return {"error": True, "student": student_column, 'msg': 'student not found'}
-
-	program = frappe.db.get_value("Program Enrollment", {"student": student}, ['program'])
+	main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+	program = frappe.db.get_value("Program Enrollment", {"student": student, "program": main_prgram}, ['program'])
 	if not program: return {"error": True, "student": student, 'msg': 'program not enrolled'}
 	accounts = get_fees_accounts('Program Certificate', program)
 	if not accounts: return {"error": True, "student": student, 'msg': 'accounts not found'}
@@ -222,7 +222,8 @@ def add_enrollment_data(required_columns, required_columns_indexes, enrollment_d
 	frappe.db.commit()
 	return {"error": False, "student": student, "course": course}
 def check_program_enrolled(student, term_info, academic_term):
-	program_enrollment = frappe.db.get_value("Program Enrollment", {"student": student}, ['name'])
+	main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+	program_enrollment = frappe.db.get_value("Program Enrollment", {"student": student, "program": main_prgram}, ['name'])
 	if program_enrollment: return program_enrollment
 	program_enrollment = frappe.get_doc({
 		"doctype": "Program Enrollment",

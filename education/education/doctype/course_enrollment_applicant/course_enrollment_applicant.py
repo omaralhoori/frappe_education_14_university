@@ -246,7 +246,8 @@ class CourseEnrollmentApplicant(Document):
 def has_student_registred_courses(student):
 	current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year", cache=True)
 	current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term", cache=True)
-	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"], cache=True)
+	main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student, "program": main_prgram}, ["program"], cache=True)
 	return True if frappe.db.exists("Course Enrollment Applicant", {"program": enrolled_program, "academic_year":current_academic_year, "academic_term": current_academic_term}) else False
 	
 
@@ -268,7 +269,8 @@ def dismiss_comment(application_id):
 @frappe.whitelist()
 def register_student_courses(courses, groups):
 	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
-	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student}, ["program"])
+	main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student, "program": main_prgram}, ["program"])
 	if not enrolled_program: 
 		return {"error": _('You are not registered in any program')}
 
