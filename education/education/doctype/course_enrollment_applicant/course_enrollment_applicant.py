@@ -325,3 +325,17 @@ def get_pay_fees_msg(student):
 	if res and res[0].get('amount') and  res[0].get('amount') > 0:
 		fees_msg = _("Please pay courses fees {0}here{1}.").format("<a href='/fees'>", "</a>")
 	return fees_msg
+
+@frappe.whitelist()
+def approve_selected_applicant(applicants):
+	if not 'System Manager' in frappe.get_roles(frappe.session.user):
+		frappe.throw("You do not have enough permissions")
+	if type(applicants) == str:
+		applicants = json.loads(applicants)
+	for applicant in applicants:
+		applicant_doc = frappe.get_doc("Course Enrollment Applicant", applicant)
+		try:
+			applicant_doc.enroll_student_in_courses()
+		except:
+			frappe.msgprint("Unable to approve " + applicant)
+	frappe.db.commit()

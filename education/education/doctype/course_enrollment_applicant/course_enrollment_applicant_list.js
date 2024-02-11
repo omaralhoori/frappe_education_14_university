@@ -17,5 +17,19 @@ frappe.listview_settings['Course Enrollment Applicant'] = {
 		else if (doc.application_status=="Admitted") {
 			return [__("Admitted"), "blue", "application_status,=,Admitted"];
 		}
+	},
+	onload: function(listview){
+		listview.page.add_action_item("Approve Selected",  () => {
+			var selected = listview.get_checked_items().map(item => item.name)
+			frappe.call({
+				method: "education.education.doctype.course_enrollment_applicant.course_enrollment_applicant.approve_selected_applicant",
+				args: {
+					applicants: selected
+				}
+				,callback: () => {
+					listview.refresh();
+				}
+			})
+		})
 	}
 };
