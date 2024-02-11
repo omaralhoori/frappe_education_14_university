@@ -334,6 +334,8 @@ def approve_selected_applicant(applicants):
 		applicants = json.loads(applicants)
 	for applicant in applicants:
 		applicant_doc = frappe.get_doc("Course Enrollment Applicant", applicant)
+		if not applicant_doc.application_status == 'Applied':
+			continue
 		try:
 			applicant_doc.enroll_student_in_courses()
 		except:
