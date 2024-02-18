@@ -16,7 +16,6 @@ def get_context(context):
     if frappe.db.get_single_value("Education Settings", 'course_enrollment_check_program'):
         check_student_program_enrolled()
     context.maximum_hours= frappe.db.get_single_value("Education Settings" ,"maximum_number_of_hours")
-    context.minimum_hours= frappe.db.get_single_value("Education Settings" ,"minimum_number_of_hours")
     student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
     context.is_course_enrollment_avilable = is_course_enrollment_avilable()
     context.comments = get_student_comments()
@@ -24,7 +23,9 @@ def get_context(context):
 
     context.is_course_enrollment_avilable = check_postponed_semester(student)
     if not context.is_course_enrollment_avilable: return context
-    
+    context.new_enrollment = new_student_course_enrollment(student)
+    context.minimum_hours= 2 if not context.new_enrollment else frappe.db.get_single_value("Education Settings" ,"minimum_number_of_hours")
+
     courses = get_academic_curriculum_for_student(student)
     context.enable_add_remove = True#frappe.db.get_single_value("Education Settings","allow_adding_and_removing")
     if not context.enable_add_remove:
@@ -43,3 +44,10 @@ def get_context(context):
     context.available_courses =  available_courses
 
     return context
+
+def new_student_course_enrollment(student):
+    current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+    enrollments = frappe.db.get_all("Course Enrollment Applicant", filters={"student": student, "application_status": "Approved", "academic_term": current_academic_term})
+    if len(enrollments) > 0:
+        return False
+    return True

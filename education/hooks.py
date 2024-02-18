@@ -85,6 +85,12 @@ standard_portal_menu_items = [
 		"route": "/academic_calendar",
 		"reference_doctype": "Academic Calendar",
 	},
+	{
+		"title": _("Withdraw From Course"),
+		"route": "/withdraw-from-course",
+		"reference_doctype": "Course Withdraw Request",
+        "role": "Student",
+	},
     {
 		"title": _("Program Certificate Request"),
 		"route": "/program-certificate-request",

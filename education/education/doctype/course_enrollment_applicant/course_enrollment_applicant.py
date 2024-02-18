@@ -173,7 +173,7 @@ class CourseEnrollmentApplicant(Document):
 				component.receivable_account = course_receivable_account
 				component.cost_center = course_cost_center
 				component.income_account = course_income_account
-			if application_fees > 0:
+			if application_fees > 0 and new_student_course_enrollment(self.student):
 				component = fees_doc.append("components")
 				component.fees_category = 'Application Fee'
 				component.amount = application_fees
@@ -258,6 +258,13 @@ def get_student_comments():
 		SELECT student_comment, name FROM `tabCourse Enrollment Applicant`
 		WHERE student=%(student)s AND student_comment IS NOT NULL AND comment_seen=0 
 	""",{"student": student}, as_dict=True)
+
+def new_student_course_enrollment(student):
+    current_academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+    enrollments = frappe.db.get_all("Course Enrollment Applicant", filters={"student": student, "application_status": "Approved", "academic_term": current_academic_term})
+    if len(enrollments) > 0:
+        return False
+    return True
 
 @frappe.whitelist()
 def dismiss_comment(application_id):

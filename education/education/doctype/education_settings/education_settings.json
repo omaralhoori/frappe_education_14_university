@@ -16,6 +16,7 @@
   "user_creation_skip",
   "force_student_to_update_info",
   "go_to_program_enrollment_page",
+  "enable_withdraw_from_course",
   "section_break_7",
   "instructor_created_by",
   "course_enrollment_tab",
@@ -291,11 +292,17 @@
    "label": "Main Program",
    "options": "Program",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_withdraw_from_course",
+   "fieldtype": "Check",
+   "label": "Enable Withdraw From Course"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2024-01-15 08:15:42.850127",
+ "modified": "2024-02-18 09:13:26.053118",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",
