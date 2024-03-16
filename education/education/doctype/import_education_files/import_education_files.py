@@ -77,7 +77,7 @@ def add_grades_data(required_columns, required_columns_indexes, enrollment_data,
 	for c in criterias_grades:
 		grade = assessment.append('details')
 		grade.assessment_criteria = c
-		grade.score = criterias_grades[c]
+		grade.score = float(criterias_grades[c] or 0)
 	assessment.save(ignore_permissions=True)
 	assessment.submit()
 	return {"error": False}
