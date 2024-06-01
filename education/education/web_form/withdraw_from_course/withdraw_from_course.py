@@ -6,8 +6,8 @@ def get_context(context):
 		student = frappe.db.get_value("Student", {"user": frappe.session.user}, ["name"])
 		if not student: return
 		# enrolled_courses = frappe.db.get_all("Course Enrollment", {"student": student, "enrollment_status": "Enrolled"}, ['course'])
-		context.academic_year = "2023-24"#frappe.db.get_single_value("Education Settings", "current_academic_year")
-		context.academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		context.academic_year = frappe.db.get_single_value("Education Settings", "current_drop_course_year") # "2023-24"#
+		context.academic_term = frappe.db.get_single_value("Education Settings", "current_drop_course_term")
 		enrolled_courses = frappe.db.sql("""
 			SELECT DISTINCT crs.name as value, crs.course_name as label FROM `tabCourse Enrollment` as enrlment
 			INNER JOIN `tabCourse` as crs ON crs.name = enrlment.course

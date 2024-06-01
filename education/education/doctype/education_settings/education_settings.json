@@ -8,6 +8,8 @@
   "main_program",
   "current_academic_year",
   "current_academic_term",
+  "current_drop_course_year",
+  "current_drop_course_term",
   "attendance_freeze_date",
   "column_break_4",
   "validate_batch",
@@ -298,11 +300,25 @@
    "fieldname": "enable_withdraw_from_course",
    "fieldtype": "Check",
    "label": "Enable Withdraw From Course"
+  },
+  {
+   "fieldname": "current_drop_course_year",
+   "fieldtype": "Link",
+   "label": "Current Drop Course Year",
+   "options": "Academic Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "current_drop_course_term",
+   "fieldtype": "Link",
+   "label": "Current Drop Course Term",
+   "options": "Academic Term",
+   "reqd": 1
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2024-02-18 09:13:26.053118",
+ "modified": "2024-05-13 07:51:23.479732",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",
