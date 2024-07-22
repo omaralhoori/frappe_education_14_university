@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-07-19 10:47:55.845908",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "progress_bar",
+  "assessment_plan",
+  "assessment_results_file",
+  "status",
+  "preview_section",
+  "import_preview",
+  "import_log_section",
+  "error_log",
+  "import_errors",
+  "warning_log_section",
+  "warning_log",
+  "import_warnings",
+  "amended_from",
+  "progress"
+ ],
+ "fields": [
+  {
+   "fieldname": "assessment_plan",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Assessment Plan",
+   "options": "Assessment Plan",
+   "reqd": 1
+  },
+  {
+   "description": "These columns should be in the file in addition to Assessment Plan Criteria: \nAcademic Year, Academic Term, Course id, Student Email, Graduation Grade",
+   "fieldname": "assessment_results_file",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Assessment Results File",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Status",
+   "options": "Pending\nSuccess\nPartial Success\nIn Progress\nError",
+   "read_only": 1
+  },
+  {
+   "fieldname": "preview_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Preview"
+  },
+  {
+   "fieldname": "import_preview",
+   "fieldtype": "HTML",
+   "label": "Import Preview"
+  },
+  {
+   "fieldname": "import_log_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Error Logs"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Import Assessment Results",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "progress_bar",
+   "fieldtype": "HTML",
+   "label": "Progress Bar"
+  },
+  {
+   "fieldname": "progress",
+   "fieldtype": "Percent",
+   "hidden": 1,
+   "label": "Progress"
+  },
+  {
+   "fieldname": "warning_log",
+   "fieldtype": "JSON",
+   "hidden": 1,
+   "label": "Warning Log"
+  },
+  {
+   "fieldname": "error_log",
+   "fieldtype": "JSON",
+   "hidden": 1,
+   "label": "Error Log"
+  },
+  {
+   "fieldname": "import_warnings",
+   "fieldtype": "HTML",
+   "label": "Import Warnings"
+  },
+  {
+   "fieldname": "import_errors",
+   "fieldtype": "HTML",
+   "label": "Import Errors"
+  },
+  {
+   "fieldname": "warning_log_section",
+   "fieldtype": "Section Break",
+   "label": "Warning Log"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-22 16:51:55.317394",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Import Assessment Results",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
