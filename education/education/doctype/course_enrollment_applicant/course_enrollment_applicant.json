@@ -52,8 +52,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Application Date",
-   "reqd": 1,
-   "set_only_once": 1
+   "reqd": 1
   },
   {
    "fieldname": "application_status",
@@ -136,7 +135,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-26 10:55:48.948250",
+ "modified": "2024-08-21 16:24:47.968834",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",
