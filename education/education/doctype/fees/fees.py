@@ -132,7 +132,7 @@ class Fees(AccountsController ,DocumentAttach):
 		payment_entry.submit()
 		if self.against_doctype and self.against_doctype_name:
 			try:
-				frappe.db.set_value(self.against_doctype, self.against_doctype_name, {"paid": 1})
+				frappe.db.set_value(self.against_doctype, self.against_doctype_name, {"paid": 1}, update_modified=False)
 			except:
 				pass
 		return True

@@ -138,7 +138,7 @@
                     {% set groups = get_course_groups(course['course_id']) %}
                     {% if groups|length > 0 %}
                     
-                    {% if (course['applicant_status'] == 0 or course['enrollment_status'] == 1) and not course.get('force_to_select_course') %}
+                    {% if (course['applicant_status'] == 0 or course['enrollment_status'] == 1) and (course['enrollment_status'] == 1 or not course.get('force_to_select_course')) and not course['new_applicant'] %}
                     <tr class="course-row" table-code="{{pool_name}}">
                         <td>
                             {{course['course_code']}}
@@ -150,7 +150,7 @@
                         <td>
                             {{_(course['course_language'])}}
                         </td>
-                        <td class="course-hours">
+                        <td class="course-hours" counted="{% if course['enrollment_status']==0 and course['enrollable']==1 %}1{%else%}0{%endif%}">
                             {{course['total_course_hours']}}
                         </td>
                         <td>
@@ -163,7 +163,15 @@
                         </td>
                         <td>
                             {% if course['enrollment_status'] == 1 %}
+                            
                             <span class="badge badge-success">{{_('Enrolled')}}</span>
+                            {% if not course['grade_satisfied'] %}
+                            <button class="btn btn-sm btn-primary add-course-btn"
+                                onclick="addBtnClicked(this)">{{_('Resubmission')}}</button>
+                            <button class="btn btn-sm btn-danger d-none remove-course-btn"
+                                onclick="removeBtnClicked(this)">{{_('Remove')}}</button>
+                            {{course_group_select_btn(course, groups)}}
+                            {%endif%}
                             {% elif course['enrollable'] == 0 %}
                             <span class="badge badge-warning">{{_('Prerequisites Not Met')}}</span>
                             {% else %}
@@ -217,7 +225,7 @@
                 <tbody>
                     {% for pool_name in available_courses %}
                     {% for course in available_courses[pool_name] %}
-                    {% if (course['applicant_status'] == 1 and course['enrollment_status'] == 0) or ( course['enrollment_status'] == 0 and  course.get('force_to_select_course') ) %}
+                    {% if (course['applicant_status'] == 1 and course['enrollment_status'] == 0) or ( course['enrollment_status'] == 0 and  course.get('force_to_select_course') ) or course.get('new_applicant') %}
                     <tr class="course-row" table-code="{{pool_name}}">
                         <td>
                             {{course['course_code']}}
@@ -356,9 +364,9 @@
         if (!checkCourseGroupSelected(row)){
             return
         }
-        if (!checkCourseGroupConflict(row)){
-            return
-        }
+       // if (!checkCourseGroupConflict(row)){
+        //    return
+        //}
         row.parentNode.removeChild(row);
 
         // Add row to the selected courses table
@@ -485,7 +493,9 @@
     function calculateCurrentCoursesTotalHours() {
         var totalHours = calculateSelectedTotalHours();
         for (var courseRow of document.querySelectorAll('.available_courses_table .course-hours')) {
-            totalHours += Number(courseRow.innerText)
+           if (courseRow.getAttribute('counted') == 1){
+                totalHours += Number(courseRow.innerText)
+            }
         }
         return totalHours;
     }
@@ -500,7 +510,7 @@
             frappe.msgprint(`{{_('You have exceeded the maximum number of hours')}}`, `{{_("Submission Failed")}}`);
             return false;
         }
-        if (minimumHours > 0 && minimumHours < currentCoursesTotalHours && minimumHours > totalHours) {
+        if (minimumHours > 0 && ((minimumHours < currentCoursesTotalHours && minimumHours > totalHours) || totalHours < currentCoursesTotalHours)) {
             frappe.msgprint(
                 `{{_("You haven't selected enough hours")}}`,
                 `{{_("Submission Failed")}}`

@@ -13,7 +13,31 @@ class CourseEnrollmentApplicant(Document):
 		old_doc = self.get_doc_before_save()
 		if old_doc and old_doc.student_comment != self.student_comment:
 			self.db_set("comment_seen", 0)
-	
+		if old_doc:
+			for enrollment_row in old_doc.courses:
+				found = False
+				for new_enrollment in self.courses:
+					if new_enrollment.course == enrollment_row.course:
+						found =True
+						break
+				if not found:
+					print("Not found", enrollment_row.course)
+					self.delete_enrollment(enrollment_row=enrollment_row)
+	def delete_enrollment(self, enrollment_row):
+		if enrollment_row.group:
+			student_group = frappe.get_doc("Student Group", enrollment_row.group)
+			for student_row in student_group.students:
+				if student_row.student == self.student:
+					student_group.remove(student_row)
+					student_group.save(ignore_permissions=True)
+					break
+			if course_enrollment:= frappe.db.exists("Course Enrollment", {
+				"program": self.program,
+				"academic_term": self.academic_term,
+				"course":  enrollment_row.course,
+				"student": self.student
+			}):
+				frappe.delete_doc("Course Enrollment", course_enrollment, ignore_permissions=True)
 	@frappe.whitelist()
 	def enroll_student_in_courses(self):
 		enrolled_program = frappe.db.get_value("Program Enrollment", {"student": self.student, "program": self.program}, ["name"])
@@ -41,7 +65,38 @@ class CourseEnrollmentApplicant(Document):
 					student_row.student = self.student
 					student_row.active = 1
 					student_group.save(ignore_permissions=True)
+		#self.db_set("application_status", "Approved")
+		self.db_set("initial_approval", 1)
+		frappe.msgprint(_("Student enrolled successfully"))
+	@frappe.whitelist()
+	def final_enroll_student_in_courses(self):
+		enrolled_program = frappe.db.get_value("Program Enrollment", {"student": self.student, "program": self.program}, ["name"])
+		if not enrolled_program: frappe.throw(_('Student is not registered in any program'), frappe.DoesNotExistError)
+		#print(enrolled_program, courses, student)
+		for course in self.courses:
+			filters = {
+				"student": self.student,
+				"course": course.course,
+				"program_enrollment": enrolled_program,
+				"academic_year": self.academic_year,
+				"academic_term": self.academic_term,
+				"enrollment_status": "Enrolled"
+			}
+			if not frappe.db.exists("Course Enrollment", filters):
+				filters.update({
+					"doctype": "Course Enrollment",
+					"enrollment_date": frappe.utils.nowdate()
+				})
+				frappe.get_doc(filters).save(ignore_permissions=True)
+			if course.group:
+				student_group = frappe.get_doc("Student Group", course.group)
+				if not any(student.student == self.student for student in student_group.students):
+					student_row = student_group.append("students")
+					student_row.student = self.student
+					student_row.active = 1
+					student_group.save(ignore_permissions=True)
 		self.db_set("application_status", "Approved")
+		self.db_set("initial_approval", 1)
 		frappe.msgprint(_("Student enrolled successfully"))
 
 	def register_courses(self, courses, groups):
@@ -317,10 +372,10 @@ def register_student_courses(courses, groups):
 			if groups.get(course):
 				course_row.group = groups.get(course)
 	else:
-		enrollment_applicant.application_date = frappe.utils.nowdate()
+		#enrollment_applicant.application_date = frappe.utils.nowdate()
 		enrollment_applicant.register_courses(courses, groups)
 
-	enrollment_applicant.save(ignore_permissions=True)
+	enrollment_applicant.save(ignore_permissions=True, ignore_version=True)
 	pay_msg = get_pay_fees_msg(student)
 	return {"msg": _("Courses registered successfully.") + " " + pay_msg, "pay": 1 if pay_msg else 0}
 
@@ -348,3 +403,13 @@ def approve_selected_applicant(applicants):
 		except:
 			frappe.msgprint("Unable to approve " + applicant)
 	frappe.db.commit()
+
+
+@frappe.whitelist()
+def get_applicant_fees(enrollment):
+	fees = frappe.db.get_value("Fees", {"against_doctype": "Course Enrollment Applicant", "against_doctype_name": enrollment}, ["name", "outstanding_amount"])
+	if fees:
+		return {
+			"fees_name": fees[0],
+			"outstanding": fees[1]
+		}

@@ -17,6 +17,9 @@
   "academic_term",
   "application_status",
   "paid",
+  "initial_approval",
+  "section_break_njqj",
+  "fees",
   "applied_courses_section",
   "courses",
   "amended_from",
@@ -132,11 +135,27 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Comment Seen"
+  },
+  {
+   "default": "0",
+   "fieldname": "initial_approval",
+   "fieldtype": "Check",
+   "label": "Initial Approval"
+  },
+  {
+   "fieldname": "section_break_njqj",
+   "fieldtype": "Section Break",
+   "label": "Enrollment Fees"
+  },
+  {
+   "fieldname": "fees",
+   "fieldtype": "HTML",
+   "label": "Fees"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-26 10:55:48.948250",
+ "modified": "2024-08-25 15:55:49.686831",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",

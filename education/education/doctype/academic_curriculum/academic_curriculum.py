@@ -84,11 +84,17 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
 				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent WHERE cea.student=%(student)s AND cea.program=%(program)s AND cea.application_status NOT IN ("Rejected", "Approved")
 				  ), 1, 0) as applicant_status,
+		IF (tcrs.name IN (
+				SELECT course FROM `tabCourse Enrollment Applied Course` as ceap 
+				INNER JOIN `tabCourse Enrollment Applicant` as cea on cea.name=ceap.parent 
+					  WHERE cea.student=%(student)s AND cea.program=%(program)s AND cea.application_status NOT IN ("Rejected" , "Approved") AND cea.academic_term=%(academic_term)s
+				  ), 1, 0) as new_applicant,
 		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s AND enrollment_status not in ('Failed', 'Pulled') ), 1, 0) as enrollment_status,
+		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s AND enrollment_status not in ('Failed', 'Pulled') and graduation_grade >=65 ), 1, 0) as grade_satisfied,
 		IF ((0 not in (
 			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
-			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s {graduation_stmt}
-			WHERE tacp.parent=tcrs.name
+			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s and tce.academic_term!=%(academic_term)s {graduation_stmt}
+			WHERE tacp.parent=tcrs.name 
 			)), 1, 0) as enrollable
 			FROM `tabAcademic Curriculum` as tac
 			INNER JOIN `tabAcademic Curriculum Course` as tacc ON tac.name=tacc.parent
@@ -99,7 +105,8 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 	""".format(year_order=educational_year_order, graduation_stmt=graduation_stmt), {
 		"program": enrolled_program,
 		"semester": semester,
-		"student": student
+		"student": student,
+		"academic_term": current_academic_term
 	}, as_dict=True)
 
 
