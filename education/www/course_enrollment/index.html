@@ -510,7 +510,7 @@
             frappe.msgprint(`{{_('You have exceeded the maximum number of hours')}}`, `{{_("Submission Failed")}}`);
             return false;
         }
-        if (minimumHours > 0 && ((minimumHours < currentCoursesTotalHours && minimumHours > totalHours) || totalHours < currentCoursesTotalHours)) {
+        if (minimumHours > 0 && ((minimumHours < currentCoursesTotalHours && minimumHours > totalHours) || (totalHours < currentCoursesTotalHours &&  currentCoursesTotalHours < minimumHours))) {
             frappe.msgprint(
                 `{{_("You haven't selected enough hours")}}`,
                 `{{_("Submission Failed")}}`
