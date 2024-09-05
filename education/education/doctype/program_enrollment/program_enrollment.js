@@ -6,6 +6,13 @@ frappe.ui.form.on('Program Enrollment', {
 	setup: function(frm) {
 		frm.add_fetch('fee_structure', 'total_amount', 'amount');
 	},
+	refresh: function(frm){
+		if(frm.doc.certificate){
+			frm.add_custom_button("Certificate", function(){
+				window.open(frm.doc.certificate, "_blank")
+			})
+		}
+	},
 
 	onload: function(frm) {
 		frm.set_query('academic_term', function() {

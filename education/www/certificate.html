@@ -1,0 +1,32 @@
+{% extends "templates/web.html" %}
+
+{%- block title -%}{{_("Get Certificate")}}{%- endblock -%}
+
+{% block page_content %}
+    <div class="lg-50" style="position: absolute; top: 35%; left: 50%">
+        <div class="">
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+               {{error}}
+                </div>
+        {% endif %}
+            <div class="input-group mb-3">
+            <input type="text" class="form-control" id="student_email" placeholder="Student Email">
+            <div class="input-group-append">
+                <button class="btn btn-success" onclick="searchCertificate()" type="submit">Search</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var certificate = "{{certificate}}";
+        if (certificate) {
+            window.location.href = certificate
+        }
+        function searchCertificate(){
+            var email = document.querySelector("#student_email").value
+            window.location.href = '/certificate?email=' + email;
+        }
+    </script>
+{% endblock %}

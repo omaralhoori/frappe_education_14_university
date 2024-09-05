@@ -1,0 +1,101 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-04 12:01:13.351524",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "program",
+  "certificate_creation_date",
+  "column_break_y7n7",
+  "courses",
+  "status",
+  "students_section",
+  "students",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "program",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Program",
+   "options": "Program",
+   "reqd": 1
+  },
+  {
+   "fieldname": "students_section",
+   "fieldtype": "Section Break",
+   "label": "Students"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Program Graduation Request",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "students",
+   "fieldtype": "Table",
+   "label": "Students",
+   "options": "Program Graduation Request Student"
+  },
+  {
+   "fieldname": "column_break_y7n7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Pending\nOn Progress\nSuccess\nError",
+   "read_only": 1
+  },
+  {
+   "default": "28",
+   "fieldname": "courses",
+   "fieldtype": "Int",
+   "label": "Number of Graduation Courses",
+   "reqd": 1
+  },
+  {
+   "fieldname": "certificate_creation_date",
+   "fieldtype": "Date",
+   "label": "Certificate Creation Date",
+   "reqd": 1
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-09-04 18:30:59.504934",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Program Graduation Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

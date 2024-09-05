@@ -11,6 +11,9 @@
   "student_name",
   "enrollment_date",
   "student_mobile_no",
+  "graduation_date",
+  "certificate",
+  "graduated",
   "column_break_4",
   "program",
   "educational_year",
@@ -198,12 +201,34 @@
    "fieldtype": "Float",
    "label": "CGPA",
    "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "graduation_date",
+   "fieldtype": "Date",
+   "label": "Graduation Date",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "certificate",
+   "fieldtype": "Attach",
+   "label": "Certificate",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "graduated",
+   "fieldtype": "Check",
+   "label": "Graduated",
+   "read_only": 1
   }
  ],
  "image_field": "image",
  "is_submittable": 1,
  "links": [],
- "modified": "2023-09-10 10:43:41.836591",
+ "modified": "2024-09-04 16:43:09.115170",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program Enrollment",
