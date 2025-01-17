@@ -26,8 +26,8 @@ class AcademicCurriculum(Document):
 
 
 def get_academic_curriculum_for_student(student):
-	main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
-	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student, "program": main_prgram}, ["program"], )
+	#main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student, "graduated": 0}, ["program"], )
 	if not enrolled_program: 
 		frappe.msgprint(_('You are not registered in any program'))
 		return []

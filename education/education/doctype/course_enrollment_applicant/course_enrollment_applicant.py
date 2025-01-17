@@ -331,8 +331,8 @@ def dismiss_comment(application_id):
 @frappe.whitelist()
 def register_student_courses(courses, groups):
 	student = frappe.db.get_value("Student", {"user": frappe.session.user}, "name")
-	main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
-	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student, "program": main_prgram}, ["program"])
+	#main_prgram = frappe.db.get_single_value("Education Settings", "main_program")
+	enrolled_program = frappe.db.get_value("Program Enrollment", {"student": student,  "graduated": 0}, ["program"])
 	if not enrolled_program: 
 		return {"error": _('You are not registered in any program')}
 
