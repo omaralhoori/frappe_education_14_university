@@ -68,7 +68,7 @@ def get_data(filters):
 		SELECT tbl1.name as enrollment_id, tbl1.student, tbl2.student_name, tbl2.student_email_id, tbl2.student_mobile_number,
 					  tbl2.nationality, tbl2.date_of_birth,
 		tbl1.application_status,
-		IF(tbl1.application_status='Applied',CONCAT("<button class='btn btn-sm btn-primary approve-row-btn' onclick=""approveStudent('", tbl1.name,"')"">Approve</button>") , '' )
+		IF(tbl1.initial_approval=0,CONCAT("<button class='btn btn-sm btn-primary approve-row-btn' onclick=""approveStudent('", tbl1.name,"')"">Approve</button>") , '' )
 		as action
 		FROM `tabCourse Enrollment Applicant` tbl1
 		INNER JOIN `tabStudent` tbl2 ON tbl1.student=tbl2.name

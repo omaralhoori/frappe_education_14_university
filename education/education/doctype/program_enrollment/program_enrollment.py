@@ -298,6 +298,7 @@ def create_coursepack_enrollment_applicant(program_enrollment):
 	courses_list = ",".join(courses_list)
 	# fetch student group for every course and student gender
 	student_gender = frappe.db.get_value("Student", program_enrollment.student, ['gender'])
+	where_stmt = ""
 	if student_gender:
 		where_stmt = f"AND (grp.group_gender='{student_gender}' or grp.group_gender is NULL)"
 	
