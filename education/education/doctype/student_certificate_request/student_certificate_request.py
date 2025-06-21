@@ -28,7 +28,6 @@ def add_program_certifcate_fee(student, program, request_name):
 	for fee_component in settings.fees_components:
 		if fee_component.component_type == 'Program Certificate':
 			program_cmpnt = frappe.db.get_value("Fee Component", {"parent": fee_component.fee_structure, "fees_category": fee_component.fee_category}, ['amount', 'receivable_account', 'cost_center', 'income_account', 'description'], as_dict=True)
-			
 			if not program_cmpnt: return
 			fees_doc = frappe.get_doc({
 			"doctype": "Fees",
@@ -36,7 +35,7 @@ def add_program_certifcate_fee(student, program, request_name):
 			"against_doctype": "Student Certificate Request",
 			"against_doctype_name": request_name,
 			"program": program,
-			"due_date": frappe.utils.nowdate(),
+			"due_date": frappe.db.get_single_value("Education Settings", "certificate_fees_due_date")#frappe.utils.nowdate(),
 			})
 			component = fees_doc.append("components")
 			component.fees_category = fee_component.fee_category

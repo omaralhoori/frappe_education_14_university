@@ -95,6 +95,7 @@ class CourseEnrollment(Document):
 				"course": self.course,
 				"program_enrollment": self.program_enrollment,
 				"academic_term": self.academic_term,
+				"enrollment_status": "Enrolled",
 				"name": ("!=", self.name),
 			},
 		)

@@ -76,7 +76,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 	if graduation_for_prerequisites:
 		graduation_stmt = "and tce.graduation_date is not null"
 	if not educational_year or not semester: return []
-
+	minimum_score = frappe.db.get_single_value("Education Settings", "minimum_score_to_pass_without_retake")
 	return frappe.db.sql("""
 			SELECT 	tcrs.name as course_id,tcrs.course_code, tcrs.course_name, tcrs.course_language, tcrs.total_course_hours,
 		tpoec.pool_name, tpoec.required_course_count, tey.year_name, tacc.compulsory , tacc.force_to_select_course,
@@ -90,7 +90,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 					  WHERE cea.student=%(student)s AND cea.program=%(program)s AND cea.application_status NOT IN ("Rejected" , "Approved") AND cea.academic_term=%(academic_term)s
 				  ), 1, 0) as new_applicant,
 		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s AND enrollment_status not in ('Failed', 'Pulled') ), 1, 0) as enrollment_status,
-		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s AND enrollment_status not in ('Failed', 'Pulled') and graduation_grade >=65 ), 1, 0) as grade_satisfied,
+		IF (tcrs.name IN (SELECT course FROM `tabCourse Enrollment` WHERE student=%(student)s AND program=%(program)s AND enrollment_status not in ('Failed', 'Pulled') and graduation_grade >={minimum_score} ), 1, 0) as grade_satisfied,
 		IF ((0 not in (
 			select IF(tce.course IS NULL , 0, 1) FROM `tabAcademic Course Prerequisite` tacp 
 			LEFT JOIN `tabCourse Enrollment` as tce on tacp.course=tce.course and tce.student=%(student)s and tce.academic_term!=%(academic_term)s {graduation_stmt}
@@ -102,7 +102,7 @@ def fetech_academic_curriculum_based_courses(student, enrolled_program):
 			LEFT JOIN `tabPool of Elective Courses` tpoec ON tpoec.name=tacc.pool_of_elective_courses
 			INNER JOIN `tabEducational Year` tey ON tac.educational_year=tey.name
 			WHERE tac.program=%(program)s AND tac.educational_semester=%(semester)s AND tey.year_order <= {year_order}
-	""".format(year_order=educational_year_order, graduation_stmt=graduation_stmt), {
+	""".format(year_order=educational_year_order, graduation_stmt=graduation_stmt, minimum_score=minimum_score), {
 		"program": enrolled_program,
 		"semester": semester,
 		"student": student,

@@ -19,6 +19,7 @@
   "force_student_to_update_info",
   "go_to_program_enrollment_page",
   "enable_withdraw_from_course",
+  "certificate_fees_due_date",
   "section_break_7",
   "instructor_created_by",
   "course_enrollment_tab",
@@ -27,6 +28,7 @@
   "fees_due_date_from",
   "fees_due_after_days",
   "fees_due_date",
+  "minimum_score_to_pass_without_retake",
   "column_break_i9kl",
   "pulling_allowed_weeks",
   "graduation_for_prerequisites",
@@ -314,11 +316,21 @@
    "label": "Current Drop Course Term",
    "options": "Academic Term",
    "reqd": 1
+  },
+  {
+   "fieldname": "minimum_score_to_pass_without_retake",
+   "fieldtype": "Float",
+   "label": "Minimum Score to Pass Without Retake"
+  },
+  {
+   "fieldname": "certificate_fees_due_date",
+   "fieldtype": "Date",
+   "label": "Certificate Fees Due Date"
   }
  ],
  "issingle": 1,
  "links": [],
- "modified": "2024-05-13 07:51:23.479732",
+ "modified": "2025-04-09 21:51:30.625408",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Education Settings",
