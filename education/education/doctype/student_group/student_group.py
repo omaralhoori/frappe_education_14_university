@@ -249,7 +249,7 @@ def get_course_groups(course):
 	where_stmt = ""
 	if student_gender:
 		where_stmt = f"AND (tsg.group_gender='{student_gender}' or tsg.group_gender is NULL)"
-	return frappe.db.sql("""
+	groups = frappe.db.sql("""
 		select tsg.name as group_id, tsg.student_group_name,tsg.max_strength, crs_scd.course_day, IFNULL(grp_std.student_count,0) as student_count ,
 		crs_scd.from_time, crs_scd.to_time, crs_scd.instructor FROM `tabStudent Group` tsg
 		LEFT JOIN
@@ -263,6 +263,27 @@ def get_course_groups(course):
 		WHERE tsg.course=%(course)s AND tsg.academic_year=%(academic_year)s AND tsg.academic_term=%(academic_term)s {where_stmt}
 		GROUP By tsg.name, crs_scd.course_day, crs_scd.from_time
 	""".format(where_stmt=where_stmt), {"academic_term": current_academic_term, "academic_year": current_academic_year, "course": course}, as_dict=True)
+	filtered_groups = {}
+	for group in groups:
+		if not filtered_groups.get(group.get('group_id')):
+			filtered_groups[group['group_id']] = {
+				"group_id": group['group_id'],
+				"student_group_name": group['student_group_name'],
+				"max_strength": group['max_strength'],
+				"course_day": [group['course_day']],
+				"student_count": group['student_count'],
+				"from_time": [group['from_time']],
+				"to_time": [group['to_time']],
+				"instructor": group['instructor']
+			}
+		else:
+			filtered_groups[group['group_id']]['course_day'].append(group['course_day'])
+			filtered_groups[group['group_id']]['from_time'].append(group['from_time'])
+			filtered_groups[group['group_id']]['to_time'].append(group['to_time'])
+
+	filtered_groups = [ g for g in filtered_groups.values() ]
+
+	return filtered_groups
 
 def get_student_course_group(course):
 	current_academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")

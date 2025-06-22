@@ -38,10 +38,22 @@
                             {%endif%}
                             <tr group-id="{{group['group_id']}}" class="course-group-row">
                                 <td >{{group.student_group_name}}</td>
-                                <td class="group-day" group-day="{{group.course_day}}">{{get_weekday(group.course_day)}}</td>
-                                <td class="group-from-time" group-from-time="{{group.from_time}}">{{group.from_time}}</td>
-                                <td class="group-to-time" group-to-time="{{group.to_time}}">{{group.to_time}}</td>
+                                <td class="group-day" group-day="{{group.course_day}}">
+                                    {% for course_day in group.course_day %}
+                                    {{get_weekday(course_day)}}<br>
+                                    {% endfor %}
+                                </td>
+                                <td class="group-from-time" group-from-time="{{group.from_time}}">
+                                    {% for from_time in group.from_time %}
+                                    {{from_time}}<br>
+                                    {% endfor %}
+                                </td>
+                                <td class="group-to-time" group-to-time="{{group.to_time}}">
                                 <!-- <td>{{group.student_count}}{% if group.max_strength > 0 %}/{{group.max_strength}}{%endif%}</td> -->
+                                {% for to_time in group.to_time %}
+                                    {{to_time}}<br>
+                                    {% endfor %}
+                                    </td>
                                 <td>
                                 {% if not enrolled or not selected_group %}
                                 <button 
