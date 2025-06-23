@@ -11,7 +11,7 @@ from frappe.utils import getdate, today
 from education.education.utils import (check_content_completion,
                                        check_quiz_completion)
 from frappe.utils.password import update_password
-
+from frappe.model.naming import make_autoname
 
 class Student(Document):
 	def before_naming(self):
@@ -32,6 +32,26 @@ class Student(Document):
 			self.student_email_id = self.name + frappe.db.get_single_value("Education Settings", "student_email_address_domain")
 			self.db_set("student_email_id", self.student_email_id)
 			self.db_set("student_secondary_email_address", self.student_secondary_email_address)
+	
+	def update_name_email_address(self):
+		if not self.program or not self.academic_year or not self.academic_term:
+			self.program = frappe.db.get_all("Program", {"is_coursepack": 0})[0].get('name')
+			self.academic_year = frappe.db.get_single_value("Education Settings", "current_academic_year")
+			self.academic_term = frappe.db.get_single_value("Education Settings", "current_academic_term")
+		program_abbr = frappe.db.get_value("Program", self.program, ['program_abbreviation'])
+		year_abbr = frappe.db.get_value("Academic Year", self.academic_year, ['year_abbreviation'])
+		term_abbr = frappe.db.get_value("Academic Term", self.academic_term, ['term_abbreviation'])
+		if not program_abbr or not year_abbr or not term_abbr:
+			return
+		self.naming_series = '1' + program_abbr + year_abbr + term_abbr + '.####'
+		new_name = make_autoname(self.naming_series)
+		frappe.rename_doc("Student", self.name, new_name)
+		print(self.name,new_name)
+		self.name= new_name
+		
+		if  frappe.db.get_single_value("Education Settings", "student_email_address_domain"):
+			self.student_email_id = self.name + frappe.db.get_single_value("Education Settings", "student_email_address_domain")
+			self.db_set("student_email_id", self.student_email_id)
 			
 	def validate(self):
 		self.student_name = " ".join(
