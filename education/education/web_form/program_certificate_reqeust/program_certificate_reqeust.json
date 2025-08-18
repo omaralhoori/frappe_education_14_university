@@ -22,8 +22,8 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2024-06-26 14:12:40.907176",
- "modified_by": "heba@rewaq-jo.com",
+ "modified": "2025-08-16 14:41:38.754636",
+ "modified_by": "razan@rewaq-jo.com",
  "module": "Education",
  "name": "program-certificate-reqeust",
  "owner": "Administrator",
@@ -34,7 +34,7 @@
  "show_list": 0,
  "show_sidebar": 0,
  "success_url": "/fees",
- "title": "Program Certificate Request",
+ "title": "Applied Science Private University Certificate Request",
  "web_form_fields": [
   {
    "allow_read_on_all_link_options": 0,

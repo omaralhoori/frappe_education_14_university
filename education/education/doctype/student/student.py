@@ -43,6 +43,8 @@ class Student(Document):
 		term_abbr = frappe.db.get_value("Academic Term", self.academic_term, ['term_abbreviation'])
 		if not program_abbr or not year_abbr or not term_abbr:
 			return
+		if not self.name.startswith("EDU"):
+			return
 		self.naming_series = '1' + program_abbr + year_abbr + term_abbr + '.####'
 		new_name = make_autoname(self.naming_series)
 		frappe.rename_doc("Student", self.name, new_name)
