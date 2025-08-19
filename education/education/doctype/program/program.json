@@ -15,6 +15,9 @@
   "is_coursepack",
   "section_break_courses",
   "courses",
+  "certificate_info_section",
+  "certificate_path",
+  "certificate_config",
   "connections_tab"
  ],
  "fields": [
@@ -72,11 +75,26 @@
    "fieldname": "is_coursepack",
    "fieldtype": "Check",
    "label": "Is Coursepack"
+  },
+  {
+   "fieldname": "certificate_info_section",
+   "fieldtype": "Section Break",
+   "label": "Certificate Info"
+  },
+  {
+   "fieldname": "certificate_path",
+   "fieldtype": "Data",
+   "label": "Certificate Path"
+  },
+  {
+   "fieldname": "certificate_config",
+   "fieldtype": "JSON",
+   "label": "Certificate Config"
   }
  ],
  "image_field": "hero_image",
  "links": [],
- "modified": "2023-09-16 19:58:07.202275",
+ "modified": "2025-08-18 23:30:05.565385",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program",

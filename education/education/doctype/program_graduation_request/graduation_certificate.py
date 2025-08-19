@@ -24,20 +24,20 @@ def test_create_certificate():
     output_path = 'test_certificate/output_certificate.pdf'  # Change this to the desired output path
 
     # Define text to be added (example with Arabic name)
-    student_name = "عمر أحمد ياسين الحوري"
-    date = "2024-07-09"
-    period1 = "2024-07-09"
-    period2 = "2024-07-09"
-    rate = "ممتاز"
-    grade = "%95.88"
+    student_name = "مصطفى احمد"
+    date = "2025/08/15"
+    period1 = "2021/07/09"
+    period2 = "2025/08/09"
+    rate = "جيد جدا"
+    grade = "%80.88"
 
     # Define text positions (these need to be adjusted based on your template)
-    name_position = (350, 280)
-    date_position = (275, 50)
-    period1_position = (225, 123)
-    period2_position = (100, 123)
+    name_position = (500, 530)
+    date_position = (510, 95)
+    period1_position = (420, 235)
+    period2_position = (180, 235)
     grade_position = (528, 123)
-    rate_position = (400, 123)
+    rate_position = (840, 235)
 
     create_pdf_certificate(
         template_path=template_path, output_path=output_path, 
@@ -58,8 +58,12 @@ def test_create_certificate():
             "period2": period2,
         })
         )
-    
-def create_program_certificate(program_enrollment, certificate_date):
+import json
+
+def create_program_certificate(program_enrollment, certificate_date, program):
+    certificate_path, certificate_config = frappe.db.get_value("Program", program, ["certificate_path", "certificate_config" ])
+    if not certificate_path or not certificate_config:
+        frappe.throw("Please define certificate information in the selected program.")
     enrollment_data = frappe.db.get_value("Program Enrollment", program_enrollment, ["student", "academic_term", "cgpa"], as_dict=True)
     student_name_arabic = frappe.db.get_value("Student", enrollment_data['student'], ["first_name_arabic", "middle_name_arabic", "last_name_arabic", "student_name"], as_dict=True)
     if not student_name_arabic.first_name_arabic:
@@ -75,17 +79,20 @@ def create_program_certificate(program_enrollment, certificate_date):
         ORDER BY tbl2.term_end_date desc
         LIMIT 1
 """, {"program_enrollment": program_enrollment},as_dict=True)[0]['term_end_date']
-    name_position = (350, 280)
-    date_position = (275, 50)
-    period1_position = (225, 123)
-    period2_position = (100, 123)
-    grade_position = (528, 123)
-    rate_position = (400, 123)
+    certificate_config = json.loads(certificate_config)
+    name_position = certificate_config['name_position']
+    date_position = certificate_config['date_position']
+    period1_position = certificate_config['period1_position']
+    period2_position =certificate_config['period2_position']
+    grade_position = certificate_config['grade_position']
+    rate_position = certificate_config['rate_position']
+    program_position = certificate_config['program_position']
     site_name = cstr(frappe.local.site)
     output = site_name + '/public/files/certificates/' + program_enrollment + ".pdf"
     file_name = "/files/certificates/" + program_enrollment + ".pdf"
+    print(format_certificate_date(term_start))
     create_pdf_certificate(
-        template_path='program_certificate_template.pdf', output_path=output, 
+        template_path=certificate_path, output_path=output, 
         configs=frappe._dict({
             "name_position": name_position,
             "date_position": date_position,
@@ -93,18 +100,35 @@ def create_program_certificate(program_enrollment, certificate_date):
             "rate_position": rate_position,
             "period2_position": period2_position,
             "period1_position": period1_position,
+            "program_position": program_position,
         }),
+        
         data= frappe._dict({
             "student_name": student_name,
-            "date": str(certificate_date),
+            "date": format_certificate_date(certificate_date),
             "grade":"%" +'%.2f' % enrollment_data.cgpa,
             "rate": get_rate(enrollment_data.cgpa),
-            "period1": str(term_start),
-            "period2": str(term_end),
+            "period1": format_certificate_date(term_start),
+            "period2": format_certificate_date(term_end),
+            "program": program
         })
         )
     return file_name
-    
+from datetime import datetime
+
+def format_certificate_date(date_value):
+    date_value = str(date_value)
+    if isinstance(date_value, str):  # check if input is string
+        try:
+            # parse string to datetime object
+            dt = datetime.strptime(date_value, "%Y-%m-%d")
+            # convert back to string with new format
+            return dt.strftime("%Y/%m/%d")
+        except ValueError:
+            return "Invalid date format"
+    else:
+        return "Input is not a string"
+
 def get_rate(cgpa):
     if cgpa >= 90:
         return 'ممتاز'
@@ -119,17 +143,17 @@ def get_rate(cgpa):
 def create_pdf_certificate(template_path, output_path, configs, data):
     name_config = {
         "font": "andalus",
-        "size": 40,
+        "size": 80,
         "color": "#c3923e"
     }
     date_config = {
         "font": "AlHurraTxtreg",
-        "size": 20,
+        "size": 40,
         "color": "#2b2b2b"
     }
     grade_config = {
         "font": "decotypenaskh",
-        "size": 25,
+        "size": 50,
         "color": "#2b2b2b"
     }
     reader = PdfReader(template_path)
@@ -163,13 +187,18 @@ def create_pdf_certificate(template_path, output_path, configs, data):
     x_position = (float(template_width) - float(text_width)) / 2  
     draw_arabic_text(c, data.student_name, (x_position,configs.get("name_position")[1]), name_config["color"])
     c.setFont(date_config['font'], date_config['size'])
-    draw_arabic_text(c, data.date, configs.date_position, date_config['color'])
-    draw_arabic_text(c, data.period1, configs.period1_position, date_config['color'])
-    draw_arabic_text(c, data.period2, configs.period2_position, date_config['color'])
-    draw_arabic_text(c, data.grade, configs.grade_position, date_config['color'])
+    if len(configs.date_position) > 0:
+        draw_arabic_text(c, data.date, configs.date_position, date_config['color'])
+    if len(configs.period1_position) > 0:
+        draw_arabic_text(c, data.period1, configs.period1_position, date_config['color'])
+    if len(configs.period2_position) > 0:
+        draw_arabic_text(c, data.period2, configs.period2_position, date_config['color'])
+    # draw_arabic_text(c, data.grade, configs.grade_position, date_config['color'])
     c.setFont(grade_config['font'], grade_config['size'])
-    
-    draw_arabic_text(c, data.rate, configs.rate_position, date_config["color"])
+    if len(configs.rate_position) > 0:
+        draw_arabic_text(c, data.rate, configs.rate_position, date_config["color"])
+    if len(configs.program_position) > 0:
+        draw_arabic_text(c, data.program, configs.program_position, date_config["color"])
 
     # Save the canvas to the output file
     c.save()

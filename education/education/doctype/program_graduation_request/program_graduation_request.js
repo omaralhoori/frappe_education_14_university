@@ -27,6 +27,7 @@ frappe.ui.form.on("Program Graduation Request", {
                             "student": student.student,
                             "cgpa": student.cgpa,
                             "student_name": student.student_name,
+                            "student_name_arabic": student.student_name_arabic,
                             "graduated_course": student.graduated_courses,
                             "enrollment": student.name
                         })

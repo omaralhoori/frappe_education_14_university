@@ -13,7 +13,7 @@ class ProgramGraduationRequest(Document):
 	def graduate_students(self):
 		for student in self.students:
 			#enrollment = frappe.db.set_value("graduated")
-			certificate_file = create_program_certificate(student.enrollment, self.certificate_creation_date)
+			certificate_file = create_program_certificate(student.enrollment, self.certificate_creation_date, self.program)
 			frappe.db.set_value("Program Enrollment",student.enrollment, {
 				"graduated": 1,
 				"graduation_date": self.certificate_creation_date,
@@ -22,8 +22,9 @@ class ProgramGraduationRequest(Document):
 @frappe.whitelist()
 def get_students(program, courses):
 	students = frappe.db.sql("""
-		select prm.student, crs.graduated_courses,prm.student_name, prm.cgpa, prm.name
+		select prm.student, crs.graduated_courses,std.student_name,CONCAT(std.first_name_arabic, " ", std.middle_name_arabic," ", std.last_name_arabic) as student_name_arabic, ROUND(prm.cgpa, 2) as cgpa, prm.name
 		FROM `tabProgram Enrollment` as prm
+		INNER JOIN `tabStudent` as std on prm.student=std.name
 		INNER JOIN (
 				select program_enrollment, count(DISTINCT course) as graduated_courses
 					FROM `tabCourse Enrollment`
