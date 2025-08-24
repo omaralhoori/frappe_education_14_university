@@ -69,7 +69,7 @@ def create_program_certificate(program_enrollment, certificate_date, program):
     if not student_name_arabic.first_name_arabic:
         student_name = student_name_arabic.student_name
     else:
-        student_name = student_name_arabic.first_name_arabic + " " + student_name_arabic.middle_name_arabic +" " + student_name_arabic.last_name_arabic
+        student_name = (student_name_arabic.first_name_arabic or "") + " " + (student_name_arabic.middle_name_arabic or "") +" " + (student_name_arabic.last_name_arabic or "")
     term_start = frappe.db.get_value("Academic Term", enrollment_data.academic_term, "term_start_date")
     term_end = frappe.db.sql("""
         SELECT tbl2.term_end_date 
