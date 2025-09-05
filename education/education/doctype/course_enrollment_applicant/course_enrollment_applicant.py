@@ -119,20 +119,23 @@ class CourseEnrollmentApplicant(Document):
 		fees_name = frappe.db.exists("Fees", {"student": self.student, "against_doctype": "Course Enrollment Applicant",
 					"against_doctype_name": self.name,"program": self.program})
 		new_amount = added_total_fees - removed_total_fees
+		courses_fees_discount = frappe.db.get_value("Student", self.student, 'courses_fees_discount')
+		total_amount = new_amount - (new_amount * courses_fees_discount / 100)
 		if fees_name:
 			fees_doc = frappe.get_doc("Fees", fees_name)
 			# Unpaid Fees and new added-removed courses are greater than zero or less than zero
 			if fees_doc.outstanding_amount > 0:
 				for cmpnt in fees_doc.components:
 					if cmpnt.fees_category == "Hour Rate":
-						cmpnt.amount += new_amount
+						cmpnt.fee_rate += new_amount
+						cmpnt.discount = courses_fees_discount
 						cmpnt.description = ""
 						fees_doc.grand_total += new_amount
 						fees_doc.save(ignore_permissions=True)
 						if len(added_courses) > 0:
-							fees_doc.make_extra_amount_gl_entries(new_amount, course_receivable_account, course_cost_center, course_income_account)
+							fees_doc.make_extra_amount_gl_entries(total_amount, course_receivable_account, course_cost_center, course_income_account)
 						else:
-							fees_doc.make_extra_amount_gl_entries(new_amount, _course_receivable_account, _course_cost_center, _course_income_account)
+							fees_doc.make_extra_amount_gl_entries(total_amount, _course_receivable_account, _course_cost_center, _course_income_account)
 						return
 			# Paid Fees and added-removed courses are greater than zero	
 			elif new_amount > 0:
@@ -147,7 +150,9 @@ class CourseEnrollmentApplicant(Document):
 				component = fees_doc.append("components")
 				component.fees_category = 'Hour Rate'
 				component.description = _("The total number of registered hours: {0}, hour rate: {1}").format(added_total_hours - removed_total_hours, added_hour_rate)
-				component.amount = new_amount
+				component.fee_rate = new_amount
+				component.discount = courses_fees_discount
+				
 				component.receivable_account = course_receivable_account
 				component.cost_center = course_cost_center
 				component.income_account = course_income_account
@@ -157,10 +162,12 @@ class CourseEnrollmentApplicant(Document):
 				self.paid= 0
 			# Paid Fees and added-removed courses are lower than zero
 			else:
+				removed_fees = removed_total_fees - added_total_fees
+				total_fees = removed_fees - (courses_fees_discount * removed_fees / 100)
 				if len(added_courses) > 0:
-					fees_doc.make_extra_amount_reverse_gl_entries(removed_total_fees - added_total_fees, course_receivable_account, course_cost_center, course_income_account)
+					fees_doc.make_extra_amount_reverse_gl_entries(total_fees, course_receivable_account, course_cost_center, course_income_account)
 				else:
-					fees_doc.make_extra_amount_reverse_gl_entries(removed_total_fees - added_total_fees, _course_receivable_account, _course_cost_center, _course_income_account)
+					fees_doc.make_extra_amount_reverse_gl_entries(total_fees, _course_receivable_account, _course_cost_center, _course_income_account)
 				
 		
 	def after_insert(self):
@@ -211,6 +218,7 @@ class CourseEnrollmentApplicant(Document):
 	def create_fees_record(self):
 		total_fees, application_fees, hour_rate, total_hours, course_receivable_account, course_cost_center, course_income_account, application_receivable_account, application_cost_center, application_income_account  = self.calculate_total_fees()
 		print(total_fees, application_fees, hour_rate, total_hours, course_receivable_account, course_cost_center, course_income_account, application_receivable_account, application_cost_center, application_income_account)
+		courses_discount, application_discount = frappe.db.get_value("Student", self.student, ['courses_fees_discount', 'application_fees_discount'])
 		if total_fees > 0 or application_fees > 0:
 			fees_doc = frappe.get_doc({
 				"doctype": "Fees",
@@ -224,14 +232,16 @@ class CourseEnrollmentApplicant(Document):
 				component = fees_doc.append("components")
 				component.fees_category = 'Hour Rate'
 				component.description = _("The total number of registered hours: {0}, hour rate: {1}").format(total_hours, hour_rate)
-				component.amount = total_fees
+				component.fee_rate = total_fees
+				component.discount = courses_discount
 				component.receivable_account = course_receivable_account
 				component.cost_center = course_cost_center
 				component.income_account = course_income_account
 			if application_fees > 0 and new_student_course_enrollment(self.student):
 				component = fees_doc.append("components")
 				component.fees_category = 'Application Fee'
-				component.amount = application_fees
+				component.fee_rate = application_fees
+				component.discount = application_discount
 				component.receivable_account = application_receivable_account
 				component.cost_center = application_cost_center
 				component.income_account = application_income_account

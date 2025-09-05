@@ -27,6 +27,8 @@ class Fees(AccountsController ,DocumentAttach):
 			self.indicator_title = _("Paid")
 
 	def validate(self):
+		print("updating-----------------")
+		self.set_fees_amount()
 		self.calculate_total()
 		self.set_missing_accounts_and_fields()
 
@@ -49,10 +51,20 @@ class Fees(AccountsController ,DocumentAttach):
 			self.cost_center = accounts_details.cost_center
 		if not self.student_email:
 			self.student_email = self.get_student_emails()
+	def before_update_after_submit(self):
+		self.set_fees_amount()
+		self.calculate_total()
+		
 	def on_update_after_submit(self):
+		
 		self.calculate_total()
 		self.delete_gl_entries()
 		self.make_gl_entries()
+
+	def set_fees_amount(self):
+		for fee in self.components:
+			fee.amount = fee.fee_rate - (fee.fee_rate * fee.discount / 100)
+			
 
 	def get_student_emails(self):
 		student_emails = frappe.db.sql_list(
@@ -85,6 +97,7 @@ class Fees(AccountsController ,DocumentAttach):
 		self.grand_total_in_words = money_in_words(self.grand_total)
 
 	def on_submit(self):
+		self.set_fees_amount()
 		student_balance = - (get_balance_on(party_type="Student", party=self.student) or 0)
 		old_student_balance = student_balance
 		if student_balance > 0:

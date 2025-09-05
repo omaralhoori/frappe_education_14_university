@@ -67,6 +67,10 @@
   "reason_for_leaving",
   "student_name",
   "is_coursepack_student",
+  "fees_tab",
+  "courses_fees_discount",
+  "application_fees_discount",
+  "certificate_fees_discount",
   "connections_tab"
  ],
  "fields": [
@@ -398,11 +402,31 @@
    "fieldname": "is_coursepack_student",
    "fieldtype": "Check",
    "label": "Is Coursepack Student"
+  },
+  {
+   "fieldname": "fees_tab",
+   "fieldtype": "Tab Break",
+   "label": "Fees"
+  },
+  {
+   "fieldname": "courses_fees_discount",
+   "fieldtype": "Percent",
+   "label": "Courses Fees Discount"
+  },
+  {
+   "fieldname": "application_fees_discount",
+   "fieldtype": "Percent",
+   "label": "Application Fees Discount"
+  },
+  {
+   "fieldname": "certificate_fees_discount",
+   "fieldtype": "Percent",
+   "label": "Certificate Fees Discount"
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2025-04-14 17:00:28.846171",
+ "modified": "2025-08-24 19:50:01.060078",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",
