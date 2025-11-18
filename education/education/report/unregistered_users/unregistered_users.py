@@ -17,6 +17,7 @@ def get_cloumns():
 	]
 
 def get_data(filters):
+	filter_program = "AND name not in (select student FROM `tabProgram Enrollment`)" if filters.get('include_program') else ""
 	return frappe.db.sql("""
 		SELECT name as student_id, student_name, 
 		CONCAT("<button class='btn btn-sm btn-primary delete-row-btn' onclick=""deleteRow('", name,"')"">Delete</button>") as action
@@ -24,7 +25,8 @@ def get_data(filters):
 			name not in (select enrlmnt.student FROM `tabCourse Enrollment` as enrlmnt)
 			AND name not in (select aplcnt.student FROM `tabCourse Enrollment Applicant` as aplcnt)
 			AND name not in (select pstpnt.student FROM `tabStudy Postponement` as pstpnt)
-	""", as_dict=True)
+			{filter_program}
+	""".format(filter_program=filter_program), as_dict=True)
 
 
 @frappe.whitelist()
@@ -32,17 +34,33 @@ def delete_user(student):
 	student = frappe.get_doc("Student",student)
 	user = student.user
 	try:
+		if enrollment := frappe.db.exists("Program Enrollment", {"student": student.name}):
+			enrollment_doc = frappe.get_doc("Program Enrollment", enrollment)
+			enrollment_doc.cancel()
+			enrollment_doc.delete()
 		student.delete()
 	except:
 		return False
-	if user:
-		user = frappe.get_doc("User", user)
-		user.delete()
+	try:
+		if user:
+			user = frappe.get_doc("User", user)
+			user.delete()
+	except:
+		return False
 	return True
 
 @frappe.whitelist()
 def delete_all():
+	frappe.enqueue(delete_all_enqueue, queue='long')
+	return True
+
+def delete_all_enqueue():
 	students = get_data({})
+	delete_count = 0
 	for student in students:
 		delete_user(student.get('student_id'))
+		delete_count += 1
+		if delete_count == 10:
+			frappe.db.commit()
+			delete_count = 0
 	return True

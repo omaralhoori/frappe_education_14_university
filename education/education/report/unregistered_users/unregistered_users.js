@@ -4,7 +4,11 @@
 
 frappe.query_reports["Unregistered Users"] = {
 	"filters": [
-
+		{
+			"label": "Include Program",
+			"fieldname": "include_program",
+			"fieldtype": "Check"
+		}
 	],
 	onload: function(report) {
 		report.page.add_inner_button(__("Delete All"), function() {
