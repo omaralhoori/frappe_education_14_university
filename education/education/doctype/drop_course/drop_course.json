@@ -98,7 +98,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-14 16:23:04.298482",
+ "modified": "2025-10-30 20:36:59.921300",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Drop Course",
@@ -121,6 +121,10 @@
    "if_owner": 1,
    "read": 1,
    "role": "Student"
+  },
+  {
+   "read": 1,
+   "role": "Auditor"
   }
  ],
  "sort_field": "modified",

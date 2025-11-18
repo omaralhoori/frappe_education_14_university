@@ -11,7 +11,21 @@ frappe.ui.form.on('Program Enrollment', {
 			frm.add_custom_button("Certificate", function(){
 				window.open(frm.doc.certificate, "_blank")
 			})
+
+			frm.add_custom_button("Regenerate Certificate", function(){
+				frappe.call({
+					"method": "generate_certificate",
+					"doc":frm.doc,
+					"args": {
+						"certificate_date":frm.doc.graduation_date,
+					},
+					callback: (res)=>{
+						frm.reload();
+					}
+				})
+			})
 		}
+		
 	},
 
 	onload: function(frm) {

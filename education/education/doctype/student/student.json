@@ -426,7 +426,7 @@
  ],
  "image_field": "image",
  "links": [],
- "modified": "2025-08-24 19:50:01.060078",
+ "modified": "2025-10-30 20:39:46.509816",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student",
@@ -458,6 +458,10 @@
    "report": 1,
    "role": "Student",
    "share": 1
+  },
+  {
+   "read": 1,
+   "role": "Auditor"
   }
  ],
  "search_fields": "student_email_id",

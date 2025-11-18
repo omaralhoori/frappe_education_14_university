@@ -94,7 +94,7 @@
  ],
  "image_field": "hero_image",
  "links": [],
- "modified": "2025-08-18 23:30:05.565385",
+ "modified": "2025-10-30 20:43:53.601407",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Program",
@@ -154,6 +154,10 @@
    "report": 1,
    "role": "Student",
    "share": 1
+  },
+  {
+   "read": 1,
+   "role": "Auditor"
   }
  ],
  "search_fields": "program_name",

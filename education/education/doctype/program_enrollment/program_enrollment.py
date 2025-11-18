@@ -8,7 +8,7 @@ from frappe.desk.reportview import get_match_cond
 from frappe.model.document import Document
 from frappe.query_builder.functions import Min
 from frappe.utils import comma_and, get_link_to_form, getdate
-
+from education.education.doctype.program_graduation_request.graduation_certificate import create_program_certificate
 
 class ProgramEnrollment(Document):
 	def validate(self):
@@ -20,6 +20,18 @@ class ProgramEnrollment(Document):
 			self.student_name = frappe.db.get_value("Student", self.student, "title")
 		# if not self.courses:
 		# 	self.extend("courses", self.get_courses())
+
+	@frappe.whitelist()
+	def generate_certificate(self, certificate_date=None):
+		certificate_file = create_program_certificate(self.name, certificate_date or frappe.utils.nowdate() , self.program)
+		# frappe.db.set_value("Program Enrollment",student.enrollment, {
+		# 	"graduated": 1,
+		# 	"graduation_date": self.certificate_creation_date,
+		# 	"certificate": certificate_file
+		# 	})
+		self.db_set("graduated", 1)
+		self.db_set("graduation_date", certificate_date or frappe.utils.nowdate())
+		self.db_set("certificate", certificate_file)
 
 	def on_submit(self):
 		self.update_student_joining_date()
@@ -337,3 +349,52 @@ def get_pay_fees_msg(student):
 	if res and res[0].get('amount') and  res[0].get('amount') > 0:
 		fees_msg = _("Please pay courses fees {0}here{1}.").format("<a href='/fees'>", "</a>")
 	return fees_msg
+
+
+def set_doctype_permissions(doctype_name, role_name, perm_level=0, read=1, write=1, create=1, delete=0, submit=0, cancel=0, amend=0, printt=1, email=1, export=1, share=1):
+	"""
+	Sets or updates permissions for a specific DocType and Role.
+	"""
+	try:
+	# Check if a DocPerm already exists for this DocType and Role
+		docperm = frappe.get_list("Custom DocPerm", filters={
+	"parent": doctype_name,
+	"role": role_name,
+	"permlevel": perm_level
+	}, limit=1)
+
+		if docperm:
+			# Update existing DocPerm
+			docperm_doc = frappe.get_doc("Custom DocPerm", docperm[0].name)
+			print("exitss-----")
+			frappe.msgprint(f"Updating existing DocPerm for {doctype_name} with role {role_name} and permlevel {perm_level}")
+		else:
+			# Create new DocPerm
+			docperm_doc = frappe.new_doc("Custom DocPerm")
+			docperm_doc.parent = doctype_name
+			docperm_doc.parentfield = "permissions"
+			docperm_doc.parenttype = "DocType"
+			docperm_doc.role = role_name
+			docperm_doc.permlevel = perm_level
+			frappe.msgprint(f"Creating new DocPerm for {doctype_name} with role {role_name} and permlevel {perm_level}")
+
+			docperm_doc.read = read
+			# docperm_doc.write = write
+			# docperm_doc.create = create
+			# docperm_doc.delete = delete
+			# docperm_doc.submit = submit
+			# docperm_doc.cancel = cancel
+			# docperm_doc.amend = amend
+			# docperm_doc.print = printt
+			# docperm_doc.email = email
+			# docperm_doc.export = export
+			# docperm_doc.share = share
+			docperm_doc.save(ignore_permissions=True) # ignore_permissions is crucial for programmatic changes
+			frappe.db.commit()
+			frappe.msgprint(f"Permissions updated successfully for {doctype_name} and {role_name}.")
+
+	except Exception as e:
+		print("Errror")
+		print(e)
+		frappe.log_error(frappe.get_traceback(), "Error setting DocType permissions")
+		frappe.msgprint(f"Error setting permissions: {e}")
