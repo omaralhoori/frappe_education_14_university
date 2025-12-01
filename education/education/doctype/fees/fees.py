@@ -63,7 +63,8 @@ class Fees(AccountsController ,DocumentAttach):
 
 	def set_fees_amount(self):
 		for fee in self.components:
-			fee.amount = fee.fee_rate - (fee.fee_rate * fee.discount / 100)
+			fee_discount = fee.discount or 0
+			fee.amount = fee.fee_rate - (fee.fee_rate * fee_discount / 100)
 			
 
 	def get_student_emails(self):
