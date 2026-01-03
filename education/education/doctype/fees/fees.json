@@ -387,7 +387,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2023-10-04 13:05:19.106258",
+ "modified": "2025-12-29 04:24:42.718251",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fees",
@@ -439,5 +439,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "student_name"
+ "title_field": "student_name",
+ "track_changes": 1
 }

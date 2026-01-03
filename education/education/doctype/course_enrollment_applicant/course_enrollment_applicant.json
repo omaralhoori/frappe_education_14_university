@@ -155,7 +155,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-25 08:16:33.760275",
+ "modified": "2025-12-29 04:24:59.771514",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",
@@ -177,5 +177,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }

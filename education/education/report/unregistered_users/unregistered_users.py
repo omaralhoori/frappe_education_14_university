@@ -3,7 +3,7 @@
 
 import frappe
 from frappe import _
-
+import json
 def execute(filters=None):
 	columns, data = get_cloumns(), get_data(filters)
 	return columns, data
@@ -49,6 +49,48 @@ def delete_user(student):
 		return False
 	return True
 
+
+@frappe.whitelist()
+def delete_all_students(students):
+	if type(students) == str:
+		students = json.loads(students)
+	for student in students:
+		# delete fees
+		fees = frappe.db.get_all("Fees", {"student": student},)
+		for fee in fees:
+			fee_doc = frappe.get_doc("Fees", fee.name)
+			if fee_doc.docstatus == 1:
+				fee_doc.cancel()
+			fee_doc.delete()
+		# course enrollment applicant
+		enrollment_applicants = frappe.db.get_all("Course Enrollment Applicant", {"student": student})
+		for enrollment in enrollment_applicants:
+			enrollment_doc = frappe.get_doc("Course Enrollment Applicant", enrollment.name)
+			enrollment_doc.delete()
+		# delete cancel program enrollment
+		programs = frappe.db.get_all("Program Enrollment", {"student": student})
+		for prog in programs:
+			program_doc = frappe.get_doc("Program Enrollment", prog.name)
+			if program_doc.docstatus ==1:
+				program_doc.cancel()
+			program_doc.delete()
+
+		# delete dropcourse
+		drops = frappe.db.get_all("Drop Coursepack", {"student": student})
+		for drop in drops:
+			drop_doc =frappe.get_doc("Drop Coursepack", drop.name)
+			drop_doc.delete()
+		# delete student
+		student_doc = frappe.get_doc("Student", student)
+		user_doc = frappe.get_doc("User", student_doc.user)
+		access_logs = frappe.db.get_all("Access Log", {"user": user_doc.name})
+		for log in access_logs:
+			frappe.get_doc("Access Log", log.name).delete()
+			
+		student_doc.delete()
+		user_doc.delete()
+		frappe.db.commit()
+	return {"sucess": True, "students": students}
 @frappe.whitelist()
 def delete_all():
 	frappe.enqueue(delete_all_enqueue, queue='long')
