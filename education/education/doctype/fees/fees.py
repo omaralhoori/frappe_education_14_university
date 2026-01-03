@@ -110,10 +110,10 @@ class Fees(AccountsController ,DocumentAttach):
 				for component in fee_doc.components:
 					if component.fees_category == 'Hour Rate':
 						if  fee_outstanding >= student_balance:
-							component.amount = component.amount + student_balance
+							component.fee_rate = component.fee_rate + student_balance
 							student_balance = 0
 						else:
-							component.amount = component.amount + fee_outstanding
+							component.fee_rate = component.fee_rate + fee_outstanding
 							student_balance = student_balance - fee_outstanding
 				fee_doc.save(ignore_permissions=True)
 				if student_balance <= 0:
