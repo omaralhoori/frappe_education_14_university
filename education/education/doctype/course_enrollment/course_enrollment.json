@@ -76,8 +76,9 @@
    "allow_in_quick_entry": 1,
    "fetch_from": "program_enrollment.program",
    "fieldname": "program",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Program",
+   "options": "Program",
    "read_only": 1
   },
   {
@@ -144,7 +145,7 @@
   }
  ],
  "links": [],
- "modified": "2023-10-05 14:14:44.650075",
+ "modified": "2026-01-10 07:51:23.932746",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment",
