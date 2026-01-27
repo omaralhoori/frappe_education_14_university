@@ -1,6 +1,26 @@
 <form action="" id="upload_form" method="post" enctype="multipart/form-data">
     <div class="mb-3">
-        <label for="formFile" class="form-label">{{_('Receipt')}}</label>
+        <label for="formFile" class="form-label">{{_('Payment Type')}}</label>
+        <select class="form-control" name="payment-type" id="paymentType">
+            <option value="Bank Transfer">{{_('Bank Transfer')}}</option>
+            <option value="Zain Cash">{{_('Zain Cash')}}</option>
+            <option value="Western Transfer">{{_('Western Transfer')}}</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label required">{{_('Payer Name')}}</label>
+        <input class="form-control" name="payer-name" type="text" id="payerName">
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label required">{{_('Amount')}}</label>
+        <input class="form-control" name="amount" type="number" id="amount" >
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label required">{{_('Payment Date')}}</label>
+        <input class="form-control" name="payment-date" type="date" id="paymentDate">
+    </div>
+    <div class="mb-3">
+        <label for="formFile" class="form-label required">{{_('Receipt')}}</label>
         <input class="form-control" name="receipt-file" type="file" id="formFile">
     </div>
      <input type="hidden" value="" class="upload-doc-name" name="doc-name" />
@@ -17,6 +37,16 @@
     $('.upload-button').prop('disabled', true);
     e.preventDefault();   
     var formData = new FormData(this);
+    if (formData.get('payment-type') == '' || formData.get('payer-name') == '' || formData.get('amount') == '' || formData.get('payment-date') == '' || formData.get('receipt-file') == '') {
+        frappe.msgprint({
+            indicator: 'red', 
+            message: "{{_('Please fill all the fields')}}",
+            title: "{{_('Error')}}"
+        })
+        // enable the submit button
+        $('.upload-button').prop('disabled', false);
+        return false;
+    }
     $.ajax({
         url: "{{upload_form_url}}",  
         method: "POST",

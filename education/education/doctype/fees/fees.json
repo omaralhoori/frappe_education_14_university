@@ -54,7 +54,12 @@
   "accounting_dimensions_section",
   "cost_center",
   "dimension_col_break",
-  "receipt_uploaded"
+  "receipt_information_section",
+  "receipt_uploaded",
+  "payment_type",
+  "receipt_payer_name",
+  "receipt_amount",
+  "receipt_payment_date"
  ],
  "fields": [
   {
@@ -383,11 +388,41 @@
    "fieldtype": "Link",
    "label": "Mode of Payment",
    "options": "Mode of Payment"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "payment_type",
+   "fieldtype": "Select",
+   "label": "Payment Type",
+   "options": "\nBank Transfer\nZain Cash\nWestern Transfer\nOnline Payment"
+  },
+  {
+   "fieldname": "receipt_information_section",
+   "fieldtype": "Section Break",
+   "label": "Receipt Information"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "receipt_payer_name",
+   "fieldtype": "Data",
+   "label": "Receipt Payer Name"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "receipt_amount",
+   "fieldtype": "Currency",
+   "label": "Receipt Amount"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "receipt_payment_date",
+   "fieldtype": "Date",
+   "label": "Receipt Payment Date"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-29 04:24:42.718251",
+ "modified": "2026-01-26 22:40:54.251451",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Fees",

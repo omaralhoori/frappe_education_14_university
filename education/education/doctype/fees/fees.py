@@ -395,6 +395,10 @@ def payment_callback():
 @frappe.whitelist()
 def upload_receipt():
 	fee_name = frappe.local.form_dict.get('doc-name')
+	payment_type = frappe.local.form_dict.get('payment-type')
+	payer_name = frappe.local.form_dict.get('payer-name')
+	amount = frappe.local.form_dict.get('amount')
+	payment_date = frappe.local.form_dict.get('payment-date')
 	file = frappe.request.files['receipt-file']
 	if not file or not fee_name: 
 		return {
@@ -404,6 +408,11 @@ def upload_receipt():
 	try:
 		fee_doc = frappe.get_doc("Fees", fee_name)
 		fee_doc.upload_receipt(file_content, file.filename)
+		fee_doc.payment_type = payment_type
+		fee_doc.receipt_payer_name = payer_name
+		fee_doc.receipt_amount = amount
+		fee_doc.receipt_payment_date = payment_date
+		fee_doc.save(ignore_permissions=True)
 	except:
 		return {
 			"error": _('You are not allowed to pay this fee')

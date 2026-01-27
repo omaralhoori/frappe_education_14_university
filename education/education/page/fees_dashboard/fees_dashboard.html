@@ -1,0 +1,161 @@
+<div class="fees-dashboard-container">
+	<!-- Summary Cards -->
+	<div class="dashboard-summary-cards">
+		<div class="summary-card card-total">
+			<div class="card-icon">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M9 11l3 3L22 4"></path>
+					<path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+				</svg>
+			</div>
+			<div class="card-content">
+				<div class="card-label">إجمالي الرسوم</div>
+				<div class="card-value" id="total-fees">0</div>
+			</div>
+		</div>
+		
+		<div class="summary-card card-amount">
+			<div class="card-icon">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<line x1="12" y1="1" x2="12" y2="23"></line>
+					<path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path>
+				</svg>
+			</div>
+			<div class="card-content">
+				<div class="card-label">إجمالي المبلغ</div>
+				<div class="card-value" id="total-amount">0.00</div>
+			</div>
+		</div>
+		
+		<div class="summary-card card-outstanding">
+			<div class="card-icon">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="10"></circle>
+					<line x1="12" y1="8" x2="12" y2="12"></line>
+					<line x1="12" y1="16" x2="12.01" y2="16"></line>
+				</svg>
+			</div>
+			<div class="card-content">
+				<div class="card-label">المبلغ المستحق</div>
+				<div class="card-value" id="total-outstanding">0.00</div>
+			</div>
+		</div>
+		
+		<div class="summary-card card-receipts">
+			<div class="card-icon">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+					<polyline points="14 2 14 8 20 8"></polyline>
+					<line x1="16" y1="13" x2="8" y2="13"></line>
+					<line x1="16" y1="17" x2="8" y2="17"></line>
+					<polyline points="10 9 9 9 8 9"></polyline>
+				</svg>
+			</div>
+			<div class="card-content">
+				<div class="card-label">رسوم مع إيصالات</div>
+				<div class="card-value" id="fees-with-receipts">0</div>
+			</div>
+		</div>
+		
+		<div class="summary-card card-unpaid">
+			<div class="card-icon">
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+					<line x1="12" y1="9" x2="12" y2="13"></line>
+					<line x1="12" y1="17" x2="12.01" y2="17"></line>
+				</svg>
+			</div>
+			<div class="card-content">
+				<div class="card-label">رسوم غير مدفوعة</div>
+				<div class="card-value" id="unpaid-fees">0</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Filters Section -->
+	<div class="filters-section">
+		<div class="filter-row">
+			<div class="filter-group">
+				<label>من تاريخ</label>
+				<input type="date" class="form-control" id="filter-from-date">
+			</div>
+			<div class="filter-group">
+				<label>إلى تاريخ</label>
+				<input type="date" class="form-control" id="filter-to-date">
+			</div>
+			<div class="filter-group">
+				<label>رفع الإيصالات</label>
+				<select class="form-control" id="filter-receipt-uploaded">
+					<option value="">الكل</option>
+					<option value="Yes">تم رفع الإيصال</option>
+					<option value="No">لم يتم رفع الإيصال</option>
+				</select>
+			</div>
+			<div class="filter-group">
+				<label>حالة الدفع</label>
+				<select class="form-control" id="filter-unpaid">
+					<option value="">الكل</option>
+					<option value="Yes">غير مدفوعة فقط</option>
+				</select>
+			</div>
+			<div class="filter-actions">
+				<button class="btn btn-primary btn-sm" id="btn-apply-filters">
+					<span>تطبيق الفلاتر</span>
+				</button>
+				<button class="btn btn-secondary btn-sm" id="btn-clear-filters">
+					<span>مسح الفلاتر</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Table Section -->
+	<div class="table-section">
+		<div class="table-header">
+			<h4>قائمة الرسوم</h4>
+			<div class="table-info" id="table-info"></div>
+		</div>
+		<div class="table-wrapper">
+			<table class="table table-bordered table-hover" id="fees-table">
+				<thead>
+					<tr>
+						<th>رقم الرسوم</th>
+						<th>اسم الطالب</th>
+						<th>رقم الطالب</th>
+						<th>طريقة الدفع</th>
+						<th>المبلغ الكلي</th>
+						<th>مبلغ الإيصال</th>
+						<th>المبلغ المستحق</th>
+						<th>تاريخ الإيصال</th>
+						<th>اسم الدافع</th>
+						<th>الإجراءات</th>
+					</tr>
+				</thead>
+				<tbody id="fees-table-body">
+					<tr>
+						<td colspan="9" class="text-center">
+							<div class="loading-spinner">
+								<span>جاري التحميل...</span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<!-- Pagination -->
+		<div class="pagination-section">
+			<div class="pagination-info">
+				<span id="pagination-info"></span>
+			</div>
+			<div class="pagination-controls">
+				<button class="btn btn-sm btn-default" id="btn-prev" disabled>
+					<span>السابق</span>
+				</button>
+				<button class="btn btn-sm btn-default" id="btn-next" disabled>
+					<span>التالي</span>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

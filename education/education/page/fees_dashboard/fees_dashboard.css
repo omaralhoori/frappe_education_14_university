@@ -1,0 +1,471 @@
+.fees-dashboard-container {
+	padding: 20px;
+	background: #f5f7fa;
+	min-height: 100vh;
+}
+
+/* Summary Cards */
+.dashboard-summary-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 20px;
+	margin-bottom: 30px;
+}
+
+.summary-card {
+	background: white;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.summary-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+	width: 48px;
+	height: 48px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+.card-total .card-icon {
+	background: #e3f2fd;
+	color: #1976d2;
+}
+
+.card-amount .card-icon {
+	background: #e8f5e9;
+	color: #388e3c;
+}
+
+.card-outstanding .card-icon {
+	background: #fff3e0;
+	color: #f57c00;
+}
+
+.card-receipts .card-icon {
+	background: #f3e5f5;
+	color: #7b1fa2;
+}
+
+.card-unpaid .card-icon {
+	background: #ffebee;
+	color: #c62828;
+}
+
+.card-content {
+	flex: 1;
+}
+
+.card-label {
+	font-size: 12px;
+	color: #666;
+	margin-bottom: 5px;
+	font-weight: 500;
+}
+
+.card-value {
+	font-size: 24px;
+	font-weight: 600;
+	color: #333;
+}
+
+/* Filters Section */
+.filters-section {
+	background: white;
+	border-radius: 8px;
+	padding: 20px;
+	margin-bottom: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	align-items: flex-end;
+}
+
+.filter-group {
+	flex: 1;
+	min-width: 150px;
+}
+
+.filter-group label {
+	display: block;
+	margin-bottom: 5px;
+	font-weight: 500;
+	color: #333;
+	font-size: 13px;
+}
+
+.filter-group .form-control {
+	width: 100%;
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 13px;
+}
+
+.filter-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+.filter-actions .btn {
+	padding: 8px 20px;
+	font-size: 13px;
+}
+
+/* Table Section */
+.table-section {
+	background: white;
+	border-radius: 8px;
+	padding: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 15px;
+	padding-bottom: 15px;
+	border-bottom: 2px solid #f0f0f0;
+}
+
+.table-header h4 {
+	margin: 0;
+	color: #333;
+	font-weight: 600;
+}
+
+.table-info {
+	color: #666;
+	font-size: 13px;
+}
+
+.table-wrapper {
+	overflow-x: auto;
+}
+
+#fees-table {
+	width: 100%;
+	margin-bottom: 0;
+}
+
+#fees-table thead {
+	background: #f8f9fa;
+}
+
+#fees-table thead th {
+	padding: 12px;
+	font-weight: 600;
+	color: #333;
+	border-bottom: 2px solid #dee2e6;
+	text-align: right;
+	font-size: 13px;
+	white-space: nowrap;
+}
+
+#fees-table tbody td {
+	padding: 12px;
+	vertical-align: middle;
+	text-align: right;
+	font-size: 13px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+#fees-table tbody tr:hover {
+	background: #f8f9fa;
+}
+
+.loading-spinner {
+	padding: 40px;
+	text-align: center;
+	color: #666;
+}
+
+/* Action Buttons */
+.action-buttons {
+	display: flex;
+	gap: 5px;
+	flex-wrap: wrap;
+}
+
+.action-btn {
+	padding: 4px 10px;
+	font-size: 11px;
+	border-radius: 4px;
+	border: none;
+	cursor: pointer;
+	transition: all 0.2s;
+	white-space: nowrap;
+}
+
+.action-btn:hover {
+	opacity: 0.9;
+	transform: translateY(-1px);
+}
+
+.btn-view {
+	background: #2196f3;
+	color: white;
+}
+
+.btn-view:hover {
+	background: #1976d2;
+}
+
+.btn-accept {
+	background: #4caf50;
+	color: white;
+}
+
+.btn-accept:hover {
+	background: #388e3c;
+}
+
+.btn-reject {
+	background: #f44336;
+	color: white;
+}
+
+.btn-reject:hover {
+	background: #d32f2f;
+}
+
+.btn-details {
+	background: #ff9800;
+	color: white;
+}
+
+.btn-details:hover {
+	background: #f57c00;
+}
+
+/* Pagination */
+.pagination-section {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px solid #f0f0f0;
+}
+
+.pagination-info {
+	color: #666;
+	font-size: 13px;
+}
+
+.pagination-controls {
+	display: flex;
+	gap: 10px;
+}
+
+.pagination-controls .btn {
+	padding: 6px 15px;
+	font-size: 13px;
+}
+
+.pagination-controls .btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+/* Modal Styles */
+.modal-dialog {
+	max-width: 600px;
+}
+
+.modal-header {
+	background: #f8f9fa;
+	border-bottom: 1px solid #dee2e6;
+	padding: 15px 20px;
+}
+
+.modal-title {
+	font-weight: 600;
+	color: #333;
+}
+
+.modal-body {
+	padding: 20px;
+}
+
+.modal-footer {
+	border-top: 1px solid #dee2e6;
+	padding: 15px 20px;
+}
+
+/* Payment Dialog */
+.payment-amount-input {
+	font-size: 18px;
+	font-weight: 600;
+	padding: 12px;
+	border: 2px solid #2196f3;
+	border-radius: 4px;
+	text-align: right;
+}
+
+.payment-info {
+	background: #f8f9fa;
+	padding: 15px;
+	border-radius: 4px;
+	margin-bottom: 15px;
+}
+
+.payment-info-row {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.payment-info-row:last-child {
+	border-bottom: none;
+}
+
+.payment-info-label {
+	color: #666;
+	font-weight: 500;
+}
+
+.payment-info-value {
+	color: #333;
+	font-weight: 600;
+}
+
+/* Fee Details Modal */
+.fee-details-section {
+	margin-bottom: 20px;
+}
+
+.fee-details-section h5 {
+	color: #333;
+	margin-bottom: 10px;
+	font-weight: 600;
+	border-bottom: 2px solid #2196f3;
+	padding-bottom: 5px;
+}
+
+.fee-details-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 15px;
+	margin-bottom: 15px;
+}
+
+.fee-detail-item {
+	display: flex;
+	flex-direction: column;
+}
+
+.fee-detail-label {
+	font-size: 12px;
+	color: #666;
+	margin-bottom: 5px;
+}
+
+.fee-detail-value {
+	font-size: 14px;
+	color: #333;
+	font-weight: 500;
+}
+
+.components-table {
+	width: 100%;
+	margin-top: 10px;
+}
+
+.components-table th,
+.components-table td {
+	padding: 8px;
+	text-align: right;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.components-table th {
+	background: #f8f9fa;
+	font-weight: 600;
+}
+
+/* Receipt Preview */
+.receipt-preview {
+	margin-top: 15px;
+	padding: 15px;
+	background: #f8f9fa;
+	border-radius: 4px;
+}
+
+.receipt-preview img {
+	max-width: 100%;
+	border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.dashboard-summary-cards {
+		grid-template-columns: 1fr;
+	}
+	
+	.filter-row {
+		flex-direction: column;
+	}
+	
+	.filter-group {
+		width: 100%;
+	}
+	
+	.filter-actions {
+		width: 100%;
+		justify-content: stretch;
+	}
+	
+	.filter-actions .btn {
+		flex: 1;
+	}
+	
+	.table-wrapper {
+		overflow-x: scroll;
+	}
+	
+	.pagination-section {
+		flex-direction: column;
+		gap: 15px;
+	}
+	
+	.fee-details-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Empty State */
+.empty-state {
+	text-align: center;
+	padding: 60px 20px;
+	color: #999;
+}
+
+.empty-state-icon {
+	font-size: 48px;
+	margin-bottom: 15px;
+	opacity: 0.5;
+}
+
+.empty-state-message {
+	font-size: 16px;
+}
+
