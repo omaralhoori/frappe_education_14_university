@@ -32,7 +32,7 @@ class CourseEnrollment(Document):
 			return []
 	def on_update(self):
 		old_doc = self.get_doc_before_save()
-		if self.graduation_grade is not None and self.enrollment_status in ['Graduated', "Failed"] and (self.graduation_grade != (old_doc.graduation_grade or 0)):
+		if self.graduation_grade is not None and self.enrollment_status in ['Graduated', "Failed"] and (not old_doc or self.graduation_grade != (old_doc.graduation_grade or 0)):
 			self.update_term_result()
 	
 	def update_all_results(self):
