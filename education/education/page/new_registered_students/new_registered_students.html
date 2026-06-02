@@ -1,0 +1,111 @@
+<div class="nrs-container">
+	<!-- Toolbar: filters + actions -->
+	<div class="nrs-toolbar">
+		<div class="nrs-filters">
+			<div class="nrs-filter-group">
+				<label>{{ _("Search") }}</label>
+				<input type="text" id="nrs-search" class="form-control input-sm"
+					placeholder="{{ _("ID, name or email") }}">
+			</div>
+			<div class="nrs-filter-group">
+				<label>{{ _("Educational Year") }}</label>
+				<input type="text" id="nrs-educational-year" class="form-control input-sm">
+			</div>
+			<div class="nrs-filter-group">
+				<label>{{ _("Program") }}</label>
+				<div id="nrs-program"></div>
+			</div>
+			<div class="nrs-filter-group">
+				<label>{{ _("Joined From") }}</label>
+				<input type="date" id="nrs-from-date" class="form-control input-sm">
+			</div>
+			<div class="nrs-filter-group">
+				<label>{{ _("Joined To") }}</label>
+				<input type="date" id="nrs-to-date" class="form-control input-sm">
+			</div>
+			<div class="nrs-filter-actions">
+				<button class="btn btn-sm btn-default" id="nrs-apply">{{ _("Apply") }}</button>
+				<button class="btn btn-sm btn-default" id="nrs-clear">{{ _("Clear") }}</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Progress bar shown while a background deletion runs -->
+	<div class="nrs-progress-wrap" id="nrs-progress-wrap" style="display:none;">
+		<div class="nrs-progress-header">
+			<span id="nrs-progress-label">{{ _("Deleting students...") }}</span>
+			<span id="nrs-progress-counts" class="text-muted"></span>
+		</div>
+		<div class="progress">
+			<div class="progress-bar progress-bar-striped active" id="nrs-progress-bar"
+				role="progressbar" style="width:0%;">0%</div>
+		</div>
+	</div>
+
+	<!-- Summary + bulk actions -->
+	<div class="nrs-summary-bar">
+		<div class="nrs-count">
+			{{ _("Total matching students") }}:
+			<strong id="nrs-total-count">0</strong>
+		</div>
+		<div class="nrs-bulk-actions">
+			<button class="btn btn-sm btn-default" id="nrs-export">
+				<i class="fa fa-file-excel-o"></i> {{ _("Export to Excel") }}
+			</button>
+			<button class="btn btn-sm btn-danger" id="nrs-delete-all">
+				<i class="fa fa-trash"></i> {{ _("Delete All") }}
+			</button>
+		</div>
+	</div>
+
+	<!-- Students table -->
+	<div class="nrs-table-wrap">
+		<table class="table table-bordered nrs-table">
+			<thead>
+				<tr>
+					<th>{{ _("Student ID") }}</th>
+					<th>{{ _("Student Name") }}</th>
+					<th>{{ _("Full Name") }}</th>
+					<th>{{ _("Email") }}</th>
+					<th>{{ _("Mobile") }}</th>
+					<th>{{ _("Joining Date") }}</th>
+					<th>{{ _("Educational Year") }}</th>
+					<th class="text-center">{{ _("Action") }}</th>
+				</tr>
+			</thead>
+			<tbody id="nrs-table-body">
+				<tr><td colspan="8" class="text-center text-muted">{{ _("Loading...") }}</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- Pagination -->
+	<div class="nrs-pagination">
+		<button class="btn btn-sm btn-default" id="nrs-prev">&laquo; {{ _("Previous") }}</button>
+		<span class="nrs-page-jump">
+			{{ _("Page") }}
+			<input type="number" min="1" id="nrs-page-number" class="form-control input-sm">
+			{{ _("of") }} <span id="nrs-total-pages">1</span>
+		</span>
+		<button class="btn btn-sm btn-default" id="nrs-next">{{ _("Next") }} &raquo;</button>
+		<span id="nrs-page-info" class="text-muted"></span>
+	</div>
+
+	<!-- Failed deletions report -->
+	<div class="nrs-failures" id="nrs-failures" style="display:none;">
+		<h5 class="text-danger">
+			<i class="fa fa-exclamation-triangle"></i>
+			{{ _("Failed Deletions") }} (<span id="nrs-failures-count">0</span>)
+		</h5>
+		<table class="table table-bordered table-condensed">
+			<thead>
+				<tr>
+					<th>{{ _("Student ID") }}</th>
+					<th>{{ _("Student Name") }}</th>
+					<th>{{ _("Error") }}</th>
+				</tr>
+			</thead>
+			<tbody id="nrs-failures-body"></tbody>
+		</table>
+	</div>
+</div>

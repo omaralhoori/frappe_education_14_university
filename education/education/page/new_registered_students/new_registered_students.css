@@ -1,0 +1,136 @@
+.nrs-container {
+	padding: 0 15px 30px;
+}
+
+.nrs-toolbar {
+	margin-bottom: 15px;
+}
+
+.nrs-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	align-items: flex-end;
+}
+
+.nrs-filter-group {
+	display: flex;
+	flex-direction: column;
+	min-width: 160px;
+}
+
+.nrs-filter-group label {
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--text-muted, #8d99a6);
+	margin-bottom: 4px;
+	text-transform: uppercase;
+	letter-spacing: 0.4px;
+}
+
+.nrs-filter-actions {
+	display: flex;
+	gap: 6px;
+}
+
+.nrs-summary-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	padding: 10px 0;
+	border-top: 1px solid var(--border-color, #ebeff2);
+	margin-top: 10px;
+}
+
+.nrs-count {
+	font-size: 14px;
+}
+
+.nrs-count strong {
+	font-size: 16px;
+}
+
+.nrs-bulk-actions {
+	display: flex;
+	gap: 8px;
+}
+
+.nrs-progress-wrap {
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--border-color, #ebeff2);
+	border-radius: 8px;
+	padding: 12px 15px;
+	margin-bottom: 15px;
+}
+
+.nrs-progress-header {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 8px;
+	font-weight: 600;
+}
+
+.nrs-table-wrap {
+	overflow-x: auto;
+}
+
+.nrs-table {
+	font-size: 13px;
+	margin-bottom: 0;
+}
+
+.nrs-table thead th {
+	background: var(--bg-light-gray, #f7fafc);
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.3px;
+	white-space: nowrap;
+}
+
+.nrs-table tbody td {
+	vertical-align: middle;
+}
+
+.nrs-pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+	margin-top: 15px;
+}
+
+.nrs-page-jump {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	color: var(--text-muted, #8d99a6);
+}
+
+.nrs-page-jump input {
+	width: 64px;
+	text-align: center;
+}
+
+/* Keep the program Link control compact like the other filters */
+.nrs-filter-group .control-input-wrapper,
+.nrs-filter-group .frappe-control {
+	margin: 0;
+}
+
+.nrs-failures {
+	margin-top: 25px;
+	border-top: 2px solid var(--red-300, #ff9b8a);
+	padding-top: 15px;
+}
+
+.nrs-failures table {
+	font-size: 12px;
+}
+
+.nrs-failures td:last-child {
+	color: var(--red-600, #c0392b);
+	white-space: pre-wrap;
+}
