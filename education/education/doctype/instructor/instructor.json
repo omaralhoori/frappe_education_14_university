@@ -10,6 +10,7 @@
   "instructor_name",
   "employee",
   "gender",
+  "email",
   "column_break_5",
   "status",
   "naming_series",
@@ -117,6 +118,7 @@
    "read_only": 1
   },
   {
+   "default": "0",
    "fieldname": "is_group",
    "fieldtype": "Check",
    "label": "Is Group"
@@ -132,12 +134,18 @@
    "fieldtype": "Link",
    "label": "Parent Instructor",
    "options": "Instructor"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
   }
  ],
  "image_field": "image",
  "is_tree": 1,
  "links": [],
- "modified": "2023-05-31 22:04:49.377166",
+ "modified": "2026-06-15 19:36:34.592641",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Instructor",

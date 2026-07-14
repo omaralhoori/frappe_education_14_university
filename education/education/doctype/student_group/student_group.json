@@ -29,7 +29,9 @@
   "instructors",
   "messages_section",
   "student_group_message",
-  "group_image"
+  "group_image",
+  "section_break_f8lu",
+  "schedules"
  ],
  "fields": [
   {
@@ -169,11 +171,21 @@
    "fieldname": "whatsapp_link",
    "fieldtype": "Small Text",
    "label": "Whatsapp Link"
+  },
+  {
+   "fieldname": "section_break_f8lu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "schedules",
+   "fieldtype": "Table",
+   "label": "Schedules",
+   "options": "Student Group Schedule"
   }
  ],
  "image_field": "group_image",
  "links": [],
- "modified": "2023-08-11 16:17:21.939195",
+ "modified": "2026-07-12 15:45:56.898134",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Student Group",

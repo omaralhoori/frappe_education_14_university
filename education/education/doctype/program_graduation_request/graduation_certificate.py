@@ -104,7 +104,7 @@ def create_program_certificate(program_enrollment, certificate_date, program):
         }),
         
         data= frappe._dict({
-            "student_name": student_name,
+            "student_name": student_name.replace("الله", "اللـه"),
             "date": format_certificate_date(certificate_date),
             "grade":"%" +'%.2f' % enrollment_data.cgpa,
             "rate": get_rate(enrollment_data.cgpa),
@@ -142,7 +142,7 @@ def get_rate(cgpa):
         return 'ضعيف'
 def create_pdf_certificate(template_path, output_path, configs, data):
     name_config = {
-        "font": "andalus",
+        "font": "Andalus (2)",
         "size": 80,
         "color": "#c3923e"
     }
