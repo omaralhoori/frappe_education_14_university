@@ -1,0 +1,71 @@
+<div class="sd-container">
+	<!-- Filters -->
+	<div class="sd-filters-section">
+		<div class="sd-filter-row">
+			<div class="sd-filter-group">
+				<label>{{ _("Program") }}</label>
+				<div id="sd-program"></div>
+			</div>
+			<div class="sd-filter-actions">
+				<button class="btn btn-sm btn-primary" id="sd-apply">{{ _("Apply") }}</button>
+				<button class="btn btn-sm btn-default" id="sd-clear">{{ _("Clear") }}</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Empty state -->
+	<div class="sd-empty-state" id="sd-empty-state">
+		<div class="sd-empty-icon">
+			<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+				<path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+				<path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+			</svg>
+		</div>
+		<p>{{ _("Select a program to view student analytics") }}</p>
+	</div>
+
+	<!-- Content (hidden until program selected) -->
+	<div id="sd-content" style="display:none;">
+		<!-- Student Analytics -->
+		<section class="sd-section">
+			<div class="sd-section-header">
+				<h4>{{ _("Student Analytics") }}</h4>
+				<span class="sd-badge" id="sd-total-students">0</span>
+			</div>
+			<div class="sd-tabs-wrap">
+				<ul class="nav nav-tabs sd-year-tabs" id="sd-year-tabs" role="tablist"></ul>
+				<div class="tab-content sd-year-tab-content" id="sd-year-tab-content"></div>
+			</div>
+			<div class="sd-no-data" id="sd-analytics-empty" style="display:none;">
+				{{ _("No enrolled students found for this program.") }}
+			</div>
+		</section>
+
+		<!-- Course Registration Stats -->
+		<section class="sd-section">
+			<div class="sd-section-header">
+				<h4>{{ _("New Term Course Registration") }}</h4>
+				<span class="text-muted" id="sd-term-label"></span>
+			</div>
+
+			<div class="sd-summary-cards">
+				<div class="sd-summary-card sd-card-applicants">
+					<div class="sd-card-label">{{ _("Registered Applicants") }}</div>
+					<div class="sd-card-value" id="sd-applicant-count">0</div>
+				</div>
+				<div class="sd-summary-card sd-card-courses">
+					<div class="sd-card-label">{{ _("Courses with Registrations") }}</div>
+					<div class="sd-card-value" id="sd-course-count">0</div>
+				</div>
+			</div>
+
+			<div class="sd-course-chart-wrap">
+				<div class="sd-chart-title">{{ _("Students per Course") }}</div>
+				<div id="sd-course-chart" class="sd-chart-box sd-course-chart"></div>
+				<div class="sd-no-data" id="sd-courses-empty" style="display:none;">
+					{{ _("No course registrations found for the current academic term.") }}
+				</div>
+			</div>
+		</section>
+	</div>
+</div>
