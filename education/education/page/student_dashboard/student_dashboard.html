@@ -6,6 +6,10 @@
 				<label>{{ _("Program") }}</label>
 				<div id="sd-program"></div>
 			</div>
+			<div class="sd-filter-group">
+				<label>{{ _("Academic Term") }}</label>
+				<div id="sd-academic-term"></div>
+			</div>
 			<div class="sd-filter-actions">
 				<button class="btn btn-sm btn-primary" id="sd-apply">{{ _("Apply") }}</button>
 				<button class="btn btn-sm btn-default" id="sd-clear">{{ _("Clear") }}</button>
@@ -26,18 +30,18 @@
 
 	<!-- Content (hidden until program selected) -->
 	<div id="sd-content" style="display:none;">
-		<!-- Student Analytics -->
+		<!-- Student Analytics: first-time registrants -->
 		<section class="sd-section">
 			<div class="sd-section-header">
 				<h4>{{ _("Student Analytics") }}</h4>
 				<span class="sd-badge" id="sd-total-students">0</span>
 			</div>
-			<div class="sd-tabs-wrap">
-				<ul class="nav nav-tabs sd-year-tabs" id="sd-year-tabs" role="tablist"></ul>
-				<div class="tab-content sd-year-tab-content" id="sd-year-tab-content"></div>
-			</div>
+			<p class="sd-section-hint text-muted" id="sd-analytics-hint">
+				{{ _("First-time course registration applicants for the selected academic term") }}
+			</p>
+			<div class="sd-charts-grid" id="sd-analytics-charts"></div>
 			<div class="sd-no-data" id="sd-analytics-empty" style="display:none;">
-				{{ _("No enrolled students found for this program.") }}
+				{{ _("No first-time course enrollment applicants found for this program and academic term.") }}
 			</div>
 		</section>
 
@@ -63,7 +67,7 @@
 				<div class="sd-chart-title">{{ _("Students per Course") }}</div>
 				<div id="sd-course-chart" class="sd-chart-box sd-course-chart"></div>
 				<div class="sd-no-data" id="sd-courses-empty" style="display:none;">
-					{{ _("No course registrations found for the current academic term.") }}
+					{{ _("No course registrations found for the selected academic term.") }}
 				</div>
 			</div>
 		</section>

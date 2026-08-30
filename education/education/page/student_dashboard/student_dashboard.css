@@ -85,6 +85,11 @@
 	color: #2c3e50;
 }
 
+.sd-section-hint {
+	font-size: 12px;
+	margin: -8px 0 16px;
+}
+
 .sd-badge {
 	background: #e3f2fd;
 	color: #1565c0;

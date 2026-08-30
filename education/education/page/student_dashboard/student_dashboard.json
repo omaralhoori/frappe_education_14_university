@@ -4,7 +4,7 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2026-07-28 23:53:54.478870",
+ "modified": "2026-08-28 15:33:24.023626",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "student-dashboard",
@@ -13,6 +13,9 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Academics User"
   }
  ],
  "script": null,

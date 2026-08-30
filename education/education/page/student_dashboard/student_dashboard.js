@@ -55,16 +55,16 @@ class StudentDashboard {
 		this.method = method;
 		this.analytics_charts = [];
 		this.course_charts = [];
-		this.setup_program_filter();
+		this.setup_filters();
 		this.bind_events();
-		this.set_default_program();
+		this.set_defaults_and_load();
 	}
 
 	$(sel) {
 		return this.page.main.find(sel);
 	}
 
-	setup_program_filter() {
+	setup_filters() {
 		this.program_field = frappe.ui.form.make_control({
 			parent: this.$('#sd-program'),
 			df: {
@@ -77,35 +77,72 @@ class StudentDashboard {
 			render_input: true,
 		});
 		this.program_field.refresh();
-		this.program_field.$input.on('change', () => {
+
+		this.academic_term_field = frappe.ui.form.make_control({
+			parent: this.$('#sd-academic-term'),
+			df: {
+				fieldtype: 'Link',
+				fieldname: 'academic_term',
+				options: 'Academic Term',
+				placeholder: __('Select Academic Term'),
+			},
+			render_input: true,
+		});
+		this.academic_term_field.refresh();
+
+		const on_filter_change = () => {
 			if (this._setting_default) return;
 			this.$('#sd-apply').click();
-		});
+		};
+		this.program_field.$input.on('change', on_filter_change);
+		this.academic_term_field.$input.on('change', on_filter_change);
 	}
 
-	set_default_program() {
-		frappe.db.exists('Program', DEFAULT_PROGRAM).then((exists) => {
-			if (!exists) return;
-			this._setting_default = true;
-			this.program_field.set_value(DEFAULT_PROGRAM).then(() => {
-				this._setting_default = false;
-				this.load();
+	set_defaults_and_load() {
+		this._setting_default = true;
+
+		const program_p = frappe.db.exists('Program', DEFAULT_PROGRAM).then((exists) => {
+			if (exists) {
+				return this.program_field.set_value(DEFAULT_PROGRAM);
+			}
+		});
+
+		const term_p = frappe.db
+			.get_single_value('Education Settings', 'current_academic_term')
+			.then((term) => {
+				if (term) {
+					return this.academic_term_field.set_value(term);
+				}
 			});
+
+		Promise.all([program_p, term_p]).then(() => {
+			this._setting_default = false;
+			if (this.get_program()) {
+				this.load();
+			}
 		});
 	}
 
 	bind_events() {
 		this.$('#sd-apply').on('click', () => this.load());
 		this.$('#sd-clear').on('click', () => {
-			if (this.program_field) {
-				this.program_field.set_value('');
-			}
-			this.show_empty();
+			this._setting_default = true;
+			Promise.all([
+				this.program_field.set_value(''),
+				this.academic_term_field.set_value(''),
+			]).then(() => {
+				this._setting_default = false;
+				this.show_empty();
+			});
 		});
 	}
 
 	get_program() {
 		return this.program_field ? this.program_field.get_value() : '';
+	}
+
+	get_academic_term() {
+		return this.academic_term_field ? this.academic_term_field.get_value() : '';
 	}
 
 	show_empty() {
@@ -123,11 +160,16 @@ class StudentDashboard {
 			return;
 		}
 
+		const academic_term = this.get_academic_term();
+
 		this.$('#sd-empty-state').hide();
 		this.$('#sd-content').show();
 
 		frappe.dom.freeze(__('Loading...'));
-		Promise.all([this.load_analytics(program), this.load_course_stats(program)])
+		Promise.all([
+			this.load_analytics(program, academic_term),
+			this.load_course_stats(program, academic_term),
+		])
 			.catch((err) => {
 				console.error(err);
 				frappe.msgprint(__('Failed to load dashboard data.'));
@@ -135,23 +177,23 @@ class StudentDashboard {
 			.finally(() => frappe.dom.unfreeze());
 	}
 
-	load_analytics(program) {
+	load_analytics(program, academic_term) {
 		return frappe
 			.call({
 				method: this.method + '.get_student_analytics',
-				args: { program },
+				args: { program, academic_term: academic_term || undefined },
 			})
 			.then((r) => {
-				const data = r.message || { years: [], total_students: 0 };
+				const data = r.message || { total_students: 0 };
 				this.render_analytics(data);
 			});
 	}
 
-	load_course_stats(program) {
+	load_course_stats(program, academic_term) {
 		return frappe
 			.call({
 				method: this.method + '.get_course_registration_stats',
-				args: { program },
+				args: { program, academic_term: academic_term || undefined },
 			})
 			.then((r) => {
 				this.render_course_stats(r.message || {});
@@ -174,87 +216,29 @@ class StudentDashboard {
 	render_analytics(data) {
 		this.destroy_charts(this.analytics_charts);
 
-		const years = data.years || [];
-		const $tabs = this.$('#sd-year-tabs').empty();
-		const $content = this.$('#sd-year-tab-content').empty();
-
+		const $grid = this.$('#sd-analytics-charts').empty();
 		this.$('#sd-total-students').text(__('Total: {0}', [data.total_students || 0]));
 
-		if (!years.length) {
+		const has_data = (data.total_students || 0) > 0;
+		if (!has_data) {
 			this.$('#sd-analytics-empty').show();
-			this.$('.sd-tabs-wrap').hide();
+			$grid.hide();
 			return;
 		}
 
 		this.$('#sd-analytics-empty').hide();
-		this.$('.sd-tabs-wrap').show();
+		$grid.show();
 
-		years.forEach((year_data, idx) => {
-			const year = year_data.educational_year || __('Unknown');
-			const tab_id = 'sd-year-' + idx;
-			const active = idx === 0 ? 'active' : '';
-
-			// Use button + data attributes — avoid href="#..." which Frappe router treats as a page
-			$tabs.append(
-				`<li class="nav-item">
-					<button type="button" class="nav-link sd-year-tab ${active}"
-						data-year-idx="${idx}" data-tab-id="${tab_id}" role="tab">
-						${frappe.utils.escape_html(year)}
-						<small class="text-muted">(${year_data.total || 0})</small>
-					</button>
-				</li>`
-			);
-
-			const $pane = $(
-				`<div class="tab-pane fade ${active ? 'show active' : ''}" id="${tab_id}"
-					data-year-idx="${idx}" role="tabpanel">
-					<div class="sd-year-total">${__('Students in this year')}: <strong>${year_data.total || 0}</strong></div>
-					<div class="sd-charts-grid"></div>
+		CHART_DEFS.forEach((def) => {
+			const chart_id = 'sd-analytics-' + def.key;
+			$grid.append(
+				`<div class="sd-chart-card">
+					<div class="sd-chart-title">${def.title}</div>
+					<div class="sd-chart-box" id="${chart_id}"></div>
 				</div>`
 			);
-			const $grid = $pane.find('.sd-charts-grid');
-
-			CHART_DEFS.forEach((def) => {
-				const chart_id = `${tab_id}-${def.key}`;
-				$grid.append(
-					`<div class="sd-chart-card">
-						<div class="sd-chart-title">${def.title}</div>
-						<div class="sd-chart-box" id="${chart_id}"></div>
-					</div>`
-				);
-			});
-
-			$content.append($pane);
-		});
-
-		this._analytics_years = years;
-		this.render_year_charts(years[0], 'sd-year-0');
-
-		$tabs.find('.sd-year-tab').on('click', (e) => {
-			e.preventDefault();
-			e.stopPropagation();
-			const $btn = $(e.currentTarget);
-			const year_idx = cint($btn.data('year-idx'));
-			const tab_id = $btn.data('tab-id');
-			if (isNaN(year_idx) || !this._analytics_years[year_idx]) return;
-
-			$tabs.find('.sd-year-tab').removeClass('active');
-			$btn.addClass('active');
-			$content.find('.tab-pane').removeClass('show active');
-			$content.find('#' + tab_id).addClass('show active');
-
-			this.render_year_charts(this._analytics_years[year_idx], tab_id);
-		});
-	}
-
-	render_year_charts(year_data, tab_id) {
-		if (!year_data) return;
-		this.destroy_charts(this.analytics_charts);
-		CHART_DEFS.forEach((def) => {
-			const series = year_data[def.key] || { labels: [], values: [] };
-			const selector = `#${tab_id}-${def.key}`;
-			this.$(selector).empty();
-			this.render_chart(selector, def, series, this.analytics_charts);
+			const series = data[def.key] || { labels: [], values: [] };
+			this.render_chart('#' + chart_id, def, series, this.analytics_charts);
 		});
 	}
 
