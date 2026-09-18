@@ -11,9 +11,11 @@ from erpnext.accounts.general_ledger import make_reverse_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 from frappe import _
 from frappe.model.document_attach import DocumentAttach
-from frappe.utils import money_in_words
+from frappe.utils import flt, money_in_words, nowdate
 from frappe.utils.csvutils import getlink
 from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
+
+CREDIT_APPLICATION_MARKER = "STUDENT-CREDIT-APPLICATION"
 
 
 class Fees(AccountsController ,DocumentAttach):
@@ -99,27 +101,14 @@ class Fees(AccountsController ,DocumentAttach):
 
 	def on_submit(self):
 		self.set_fees_amount()
-		student_balance = - (get_balance_on(party_type="Student", party=self.student) or 0)
-		old_student_balance = student_balance
-		if student_balance > 0:
-			fees = frappe.db.get_all("Fees", {"student": self.student, "outstanding_amount": ["<", 0]}, ['name', 'outstanding_amount'])
-			for fee in fees:
-				fee_outstanding = - fee['outstanding_amount']
-				print("fee_outstanding:", fee_outstanding)
-				fee_doc = frappe.get_doc("Fees", fee['name'])
-				for component in fee_doc.components:
-					if component.fees_category == 'Hour Rate':
-						if  fee_outstanding >= student_balance:
-							component.fee_rate = component.fee_rate + student_balance
-							student_balance = 0
-						else:
-							component.fee_rate = component.fee_rate + fee_outstanding
-							student_balance = student_balance - fee_outstanding
-				fee_doc.save(ignore_permissions=True)
-				if student_balance <= 0:
-					break
-
+		# Capture credit before this invoice is posted, otherwise the new debit
+		# would cancel out the previous balance in get_balance_on().
+		student_credit = -flt(
+			get_balance_on(party_type="Student", party=self.student, company=self.company) or 0
+		)
 		self.make_gl_entries()
+		if student_credit > 0:
+			self.apply_student_credit_balance(student_credit)
 
 		if self.send_payment_request and self.student_email:
 			pr = make_payment_request(
@@ -134,10 +123,169 @@ class Fees(AccountsController ,DocumentAttach):
 			frappe.msgprint(
 				_("Payment request {0} created").format(getlink("Payment Request", pr.name))
 			)
-			
-		old_student_balance = old_student_balance - student_balance
-		if old_student_balance > 0:
-			self.pay_fee(old_student_balance)
+
+	def apply_student_credit_balance(self, student_credit):
+		"""Use previous credit on the new Fees without rewriting closed-year invoices.
+
+		Creates a Journal Entry dated today that:
+		- consumes credit on older Fees (against_voucher = old invoice)
+		- reduces outstanding on this Fees
+		Old Fees documents are left unchanged; only outstanding is updated via GL.
+		"""
+		amount_to_apply = min(flt(student_credit), flt(self.outstanding_amount))
+		if amount_to_apply <= 0:
+			return
+
+		credit_fees = frappe.db.get_all(
+			"Fees",
+			filters={
+				"student": self.student,
+				"docstatus": 1,
+				"outstanding_amount": ["<", 0],
+				"name": ["!=", self.name],
+				"company": self.company,
+			},
+			fields=["name", "outstanding_amount", "receivable_account", "cost_center"],
+			order_by="posting_date asc, creation asc",
+		)
+		if not credit_fees:
+			return
+
+		allocations = []
+		remaining = amount_to_apply
+		for fee in credit_fees:
+			credit = -flt(fee.outstanding_amount)
+			if credit <= 0:
+				continue
+			apply_amount = min(credit, remaining)
+			account = self.get_fees_party_account(fee.name, fee.receivable_account)
+			if not account or apply_amount <= 0:
+				continue
+			allocations.append(
+				frappe._dict(
+					{
+						"fee": fee.name,
+						"amount": apply_amount,
+						"account": account,
+						"cost_center": fee.cost_center or self.cost_center,
+					}
+				)
+			)
+			remaining -= apply_amount
+			if remaining <= 0:
+				break
+
+		if not allocations:
+			return
+
+		self.create_credit_application_journal_entry(allocations)
+		self.outstanding_amount = flt(frappe.db.get_value("Fees", self.name, "outstanding_amount"))
+		if flt(self.outstanding_amount) <= 0 and self.against_doctype and self.against_doctype_name:
+			try:
+				frappe.db.set_value(
+					self.against_doctype,
+					self.against_doctype_name,
+					{"paid": 1},
+					update_modified=False,
+				)
+			except Exception:
+				pass
+
+	def get_fees_party_account(self, fee_name, fallback=None):
+		account = frappe.db.get_value(
+			"GL Entry",
+			{
+				"voucher_type": "Fees",
+				"voucher_no": fee_name,
+				"party_type": "Student",
+				"is_cancelled": 0,
+			},
+			"account",
+		)
+		return account or fallback or self.receivable_account
+
+	def get_credit_application_remark(self):
+		return f"{CREDIT_APPLICATION_MARKER}:{self.name}"
+
+	def create_credit_application_journal_entry(self, allocations):
+		new_account = self.get_fees_party_account(self.name, self.receivable_account)
+		if not new_account:
+			frappe.throw(_("Receivable account is missing for Fees {0}").format(self.name))
+
+		total_applied = sum(flt(row.amount) for row in allocations)
+		cost_center = self.cost_center or frappe.get_cached_value("Company", self.company, "cost_center")
+
+		je = frappe.new_doc("Journal Entry")
+		je.voucher_type = "Journal Entry"
+		je.naming_series = "ACC-JV-.YYYY.-"
+		je.company = self.company
+		je.posting_date = nowdate()
+		je.user_remark = self.get_credit_application_remark()
+		je.bill_no = self.name
+		je.title = _("Student credit applied to {0}").format(self.name)
+
+		for row in allocations:
+			je.append(
+				"accounts",
+				{
+					"account": row.account,
+					"party_type": "Student",
+					"party": self.student,
+					"debit_in_account_currency": row.amount,
+					"credit_in_account_currency": 0,
+					"reference_type": "Fees",
+					"reference_name": row.fee,
+					"cost_center": row.cost_center or cost_center,
+					"user_remark": _("Transfer student credit from {0}").format(row.fee),
+				},
+			)
+
+		je.append(
+			"accounts",
+			{
+				"account": new_account,
+				"party_type": "Student",
+				"party": self.student,
+				"debit_in_account_currency": 0,
+				"credit_in_account_currency": total_applied,
+				"reference_type": "Fees",
+				"reference_name": self.name,
+				"cost_center": cost_center,
+				"user_remark": _("Apply student credit to {0}").format(self.name),
+			},
+		)
+
+		self._submit_journal_entry_as_system(je)
+
+	def _submit_journal_entry_as_system(self, je):
+		"""Students cannot read Account, so JE validate/get_balance_on would fail."""
+		ignore_account_permission = frappe.flags.ignore_account_permission
+		frappe.flags.ignore_account_permission = True
+		try:
+			je.flags.ignore_permissions = True
+			je.insert(ignore_permissions=True)
+			je.submit()
+		finally:
+			frappe.flags.ignore_account_permission = ignore_account_permission
+
+	def cancel_credit_application_journal_entries(self):
+		je_names = frappe.get_all(
+			"Journal Entry",
+			filters={"docstatus": 1, "user_remark": self.get_credit_application_remark()},
+			pluck="name",
+		)
+		ignore_account_permission = frappe.flags.ignore_account_permission
+		frappe.flags.ignore_account_permission = True
+		try:
+			for je_name in je_names:
+				je = frappe.get_doc("Journal Entry", je_name)
+				je.flags.ignore_permissions = True
+				je.cancel()
+		finally:
+			frappe.flags.ignore_account_permission = ignore_account_permission
+
+	def before_cancel(self):
+		self.cancel_credit_application_journal_entries()
 
 	@frappe.whitelist()
 	def pay_fee(self, amount=None):
@@ -155,7 +303,7 @@ class Fees(AccountsController ,DocumentAttach):
 		self.db_set("receipt_uploaded", 0)
 		
 	def on_cancel(self):
-		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry")
+		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry", "Journal Entry")
 		make_reverse_gl_entries(voucher_type=self.doctype, voucher_no=self.name)
 		# frappe.db.set(self, 'status', 'Cancelled')
 
