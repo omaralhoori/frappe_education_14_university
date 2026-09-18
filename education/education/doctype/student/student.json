@@ -30,7 +30,9 @@
   "date_of_birth",
   "blood_group",
   "column_break_3",
+  "mobile_country_code",
   "student_mobile_number",
+  "secondary_mobile_country_code",
   "student_secondary_mobile_number",
   "gender",
   "nationality",
@@ -134,12 +136,26 @@
    "unique": 1
   },
   {
+   "fieldname": "mobile_country_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Mobile Country Code",
+   "options": "Country Code"
+  },
+  {
    "fieldname": "student_mobile_number",
    "fieldtype": "Data",
    "in_global_search": 1,
    "in_standard_filter": 1,
    "label": "Student Mobile Number",
    "unique": 1
+  },
+  {
+   "fieldname": "secondary_mobile_country_code",
+   "fieldtype": "Link",
+   "label": "Secondary Mobile Country Code",
+   "options": "Country Code"
   },
   {
    "default": "Today",

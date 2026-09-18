@@ -16,6 +16,28 @@ frappe.ui.form.on('Student', {
 			};
 		})
 	},
+	student_mobile_number: function(frm) {
+		validate_local_mobile(frm, 'student_mobile_number', 'mobile_country_code', __('Mobile Number'));
+	},
+	mobile_country_code: function(frm) {
+		validate_local_mobile(frm, 'student_mobile_number', 'mobile_country_code', __('Mobile Number'));
+	},
+	student_secondary_mobile_number: function(frm) {
+		validate_local_mobile(
+			frm,
+			'student_secondary_mobile_number',
+			'secondary_mobile_country_code',
+			__('Secondary Mobile Number')
+		);
+	},
+	secondary_mobile_country_code: function(frm) {
+		validate_local_mobile(
+			frm,
+			'student_secondary_mobile_number',
+			'secondary_mobile_country_code',
+			__('Secondary Mobile Number')
+		);
+	},
 	refresh: function(frm) {
 		frm.set_query("user", function (doc) {
 			return {
@@ -41,6 +63,30 @@ frappe.ui.form.on('Student', {
 		// });
 	}
 });
+
+function validate_local_mobile(frm, number_field, code_field, label) {
+	let number = (frm.doc[number_field] || '').toString().trim();
+	const code = frm.doc[code_field];
+	if (!number) return;
+
+	const removed = ['"', "'", '+', ')', '(', ' ', '-', '_', '{', '}', '[', ']'];
+	removed.forEach((ch) => {
+		number = number.split(ch).join('');
+	});
+	if (number.startsWith('00')) number = number.slice(2);
+
+	if (code) {
+		const code_digits = String(code).replace(/\D/g, '');
+		if (code_digits && number.startsWith(code_digits)) {
+			frappe.msgprint(
+				__(
+					'{0} should not include the country code ({1}). Enter the local number only.',
+					[label, code]
+				)
+			);
+		}
+	}
+}
 
 frappe.ui.form.on('Student Guardian', {
 	guardians_add: function(frm){

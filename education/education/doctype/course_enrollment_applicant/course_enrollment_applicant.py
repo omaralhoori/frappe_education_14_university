@@ -9,6 +9,10 @@ from frappe import _
 
 
 class CourseEnrollmentApplicant(Document):
+	def after_insert(self):
+		if not self.student_has_scholarship():
+			self.create_fees_record()
+
 	def on_update(self):
 		old_doc = self.get_doc_before_save()
 		if old_doc and old_doc.student_comment != self.student_comment:
@@ -23,6 +27,66 @@ class CourseEnrollmentApplicant(Document):
 				if not found:
 					print("Not found", enrollment_row.course)
 					self.delete_enrollment(enrollment_row=enrollment_row)
+		self.log_courses_changes(old_doc)
+
+	def log_courses_changes(self, old_doc):
+		"""Record added/removed courses in the document timeline without changing the doc."""
+		old_map = {}
+		if old_doc:
+			old_map = {
+				row.course: row.group
+				for row in (old_doc.courses or [])
+				if row.course
+			}
+		new_map = {
+			row.course: row.group
+			for row in (self.courses or [])
+			if row.course
+		}
+
+		added = sorted(set(new_map) - set(old_map))
+		removed = sorted(set(old_map) - set(new_map))
+		group_changed = sorted(
+			course
+			for course in set(old_map) & set(new_map)
+			if (old_map.get(course) or "") != (new_map.get(course) or "")
+		)
+
+		if not added and not removed and not group_changed:
+			return
+
+		def course_label(course, group=None):
+			course_name = frappe.db.get_value("Course", course, "course_name") or course
+			label = f"{course} ({course_name})" if course_name != course else course
+			if group:
+				label = f"{label} [{group}]"
+			return label
+
+		lines = []
+		user = frappe.session.user
+		when = frappe.utils.now_datetime()
+		lines.append(
+			_("Courses table updated by {0} at {1}").format(
+				frappe.bold(user), frappe.bold(str(when))
+			)
+		)
+
+		if added:
+			labels = [course_label(c, new_map.get(c)) for c in added]
+			lines.append(_("Added") + ": " + ", ".join(labels))
+		if removed:
+			labels = [course_label(c, old_map.get(c)) for c in removed]
+			lines.append(_("Removed") + ": " + ", ".join(labels))
+		if group_changed:
+			details = []
+			for c in group_changed:
+				details.append(
+					f"{course_label(c)}: {old_map.get(c) or '-'} → {new_map.get(c) or '-'}"
+				)
+			lines.append(_("Group changed") + ": " + "; ".join(details))
+
+		# Timeline comment only — does not modify Course Enrollment Applicant fields
+		self.add_comment("Info", text="<br>".join(lines))
 	def delete_enrollment(self, enrollment_row):
 		if enrollment_row.group:
 			student_group = frappe.get_doc("Student Group", enrollment_row.group)
@@ -170,9 +234,6 @@ class CourseEnrollmentApplicant(Document):
 					fees_doc.make_extra_amount_reverse_gl_entries(total_fees, _course_receivable_account, _course_cost_center, _course_income_account)
 				
 		
-	def after_insert(self):
-		if not self.student_has_scholarship():
-			self.create_fees_record()
 	def student_has_scholarship(self):
 		has_scholarship = frappe.db.get_value("Program Enrollment", {"program": self.program, "student": self.student}, ['has_scholarship'])
 		if has_scholarship: return True

@@ -53,7 +53,11 @@
    "select": 1
   }
  ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+ "search_fields": "country_name",
+ "show_title_field_in_link": 1,
+ "sort_field": "country_name",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "country_name",
+ "translated_doctype": 1
 }

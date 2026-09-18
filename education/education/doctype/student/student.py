@@ -60,17 +60,47 @@ class Student(Document):
 			filter(None, [self.first_name, self.middle_name, self.last_name])
 		)
 		self.validate_dates()
+		#self.validate_mobile_numbers()
 		self.validate_user()
 		
 		if self.student_applicant:
 			self.check_unique()
 			self.update_applicant_status()
+
+	def validate_mobile_numbers(self):
+		if self.student_mobile_number:
+			self.student_mobile_number = validate_mobile_with_country_code(
+				self.student_mobile_number,
+				self.mobile_country_code,
+				_("Mobile Number"),
+				required_country_code=True,
+			)
+		if self.student_secondary_mobile_number:
+			self.student_secondary_mobile_number = validate_mobile_with_country_code(
+				self.student_secondary_mobile_number,
+				self.secondary_mobile_country_code,
+				_("Secondary Mobile Number"),
+				required_country_code=bool(self.student_secondary_mobile_number),
+			)
+		elif self.secondary_mobile_country_code:
+			frappe.throw(_("Please enter Secondary Mobile Number or clear Secondary Mobile Country Code"))
 	def on_update(self):
 		if self.user == frappe.session.user:
 			frappe.db.set_value("User", frappe.session.user ,{"first_login":1})
-		# old_doc = self.get_doc_before_save()
-		# if old_doc.student_mobile_number != self.student_mobile_number:
-		# 	print(self.student_mobile_number)
+		self.update_student_name_in_program_enrollment()
+
+	def update_student_name_in_program_enrollment(self):
+		"""Sync student_name to all Program Enrollment records (0 or many)."""
+		if self.has_value_changed("student_name") or self.has_value_changed("first_name") \
+			or self.has_value_changed("middle_name") or self.has_value_changed("last_name"):
+			frappe.db.sql(
+				"""
+				UPDATE `tabProgram Enrollment`
+				SET student_name = %s
+				WHERE student = %s
+				""",
+				(self.student_name, self.name),
+			)
 	def validate_dates(self):
 		for sibling in self.siblings:
 			if sibling.date_of_birth and getdate(sibling.date_of_birth) > getdate():
@@ -98,10 +128,11 @@ class Student(Document):
 		if self.user: return
 		if self.student_mobile_number:
 			self.student_mobile_number = reformat_mobile_number(self.student_mobile_number)
+		full_mobile = self.get_full_mobile_number()
 		if not frappe.get_single("Education Settings").get(
 			"user_creation_skip"
 		) and not frappe.db.exists("User", self.student_email_id
-			     ) and not frappe.db.exists("User", self.student_mobile_number) and  self.student_email_id:
+			     ) and not frappe.db.exists("User", full_mobile or self.student_mobile_number) and  self.student_email_id:
 			student_user = frappe.get_doc(
 				{
 					"doctype": "User",
@@ -109,7 +140,7 @@ class Student(Document):
 					"middle_name": self.middle_name,
 					"last_name": self.last_name,
 					"email": self.student_email_id,
-					"mobile_no": self.student_mobile_number,
+					"mobile_no": full_mobile or self.student_mobile_number,
 					"gender": self.gender,
 					"send_welcome_email": 0,
 					"user_type": "Website User",
@@ -125,7 +156,25 @@ class Student(Document):
 				update_password(user=student_user.name, pwd='12345678')
 			self.user = student_user.name
 			self.owner = student_user.name
-			
+
+	def get_full_mobile_number(self, secondary=False):
+		if secondary:
+			number = self.student_secondary_mobile_number
+			code = self.secondary_mobile_country_code
+		else:
+			number = self.student_mobile_number
+			code = self.mobile_country_code
+		if not number:
+			return None
+		code_digits = _digits_only(code or "")
+		if not code_digits and code:
+			code_digits = _digits_only(
+				frappe.db.get_value("Country Code", code, "country_code") or ""
+			)
+		number = reformat_mobile_number(str(number))
+		if code_digits:
+			return code_digits + number
+		return number
 	def update_student_name_in_linked_doctype(self):
 		linked_doctypes = get_linked_doctypes("Student")
 		for d in linked_doctypes:
@@ -294,4 +343,53 @@ def reformat_mobile_number(mobile_number):
 		mobile_number = mobile_number.replace(char, "")
 	if mobile_number.startswith("00"):
 		mobile_number = mobile_number[2:]
+	return mobile_number
+
+
+def _digits_only(value):
+	return "".join(ch for ch in (value or "") if ch.isdigit())
+
+
+def validate_mobile_with_country_code(mobile_number, country_code, field_label, required_country_code=False):
+	"""Validate local mobile number against selected country code.
+
+	- Number must not include the country code again
+	- Number must contain digits only (after cleanup)
+	"""
+	mobile_number = reformat_mobile_number(str(mobile_number or "").strip())
+	if not mobile_number:
+		return mobile_number
+
+	if required_country_code and not country_code:
+		frappe.throw(_("Please select Country Code for {0}").format(field_label))
+
+	if not mobile_number.isdigit():
+		frappe.throw(_("{0} must contain digits only, without country code").format(field_label))
+
+	if len(mobile_number) < 7 or len(mobile_number) > 15:
+		frappe.throw(_("{0} length must be between 7 and 15 digits").format(field_label))
+
+	if country_code:
+		code_digits = _digits_only(country_code)
+		# Country Code docname may already be +962 / 962
+		if not code_digits:
+			code_digits = _digits_only(
+				frappe.db.get_value("Country Code", country_code, "country_code") or ""
+			)
+
+		if code_digits:
+			if mobile_number.startswith(code_digits):
+				frappe.throw(
+					_(
+						"{0} should not include the country code ({1}). Enter the local number only."
+					).format(field_label, country_code)
+				)
+			# Also reject numbers starting with 00 + code
+			if mobile_number.startswith("00" + code_digits):
+				frappe.throw(
+					_(
+						"{0} should not include the country code ({1}). Enter the local number only."
+					).format(field_label, country_code)
+				)
+
 	return mobile_number

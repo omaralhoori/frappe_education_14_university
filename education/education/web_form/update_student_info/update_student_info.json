@@ -21,8 +21,8 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2025-05-14 23:35:52.019380",
- "modified_by": "heba@rewaq-jo.com",
+ "modified": "2026-09-06 22:41:37.923197",
+ "modified_by": "Administrator",
  "module": "Education",
  "name": "update-student-info",
  "owner": "Administrator",
@@ -32,6 +32,7 @@
  "show_attachments": 0,
  "show_list": 0,
  "show_sidebar": 1,
+ "success_url": "https://rewaq-jo.com/program_enrollment",
  "title": "Update Student Info",
  "web_form_fields": [
   {
@@ -185,6 +186,19 @@
    "show_in_filter": 0
   },
   {
+   "allow_read_on_all_link_options": 1,
+   "fieldname": "mobile_country_code",
+   "fieldtype": "Link",
+   "hidden": 0,
+   "label": "Mobile Country Code",
+   "max_length": 0,
+   "max_value": 0,
+   "options": "Country Code",
+   "read_only": 0,
+   "reqd": 1,
+   "show_in_filter": 0
+  },
+  {
    "allow_read_on_all_link_options": 0,
    "fieldname": "student_mobile_number",
    "fieldtype": "Data",
@@ -194,6 +208,32 @@
    "max_value": 0,
    "read_only": 0,
    "reqd": 1,
+   "show_in_filter": 0
+  },
+  {
+   "allow_read_on_all_link_options": 0,
+   "fieldname": "",
+   "fieldtype": "Column Break",
+   "hidden": 0,
+   "label": "",
+   "max_length": 0,
+   "max_value": 0,
+   "options": "",
+   "read_only": 0,
+   "reqd": 0,
+   "show_in_filter": 0
+  },
+  {
+   "allow_read_on_all_link_options": 1,
+   "fieldname": "secondary_mobile_country_code",
+   "fieldtype": "Link",
+   "hidden": 0,
+   "label": "Secondary Mobile Country Code",
+   "max_length": 0,
+   "max_value": 0,
+   "options": "Country Code",
+   "read_only": 0,
+   "reqd": 0,
    "show_in_filter": 0
   },
   {
