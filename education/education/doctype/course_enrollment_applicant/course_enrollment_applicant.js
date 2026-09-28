@@ -18,6 +18,17 @@ frappe.ui.form.on("Course Enrollment Applicant", {
                 }
             })
         }
+        if (!frm.is_new() && frm.doc.initial_approval) {
+			frm.add_custom_button(__("Post Approval Course Changes"), function() {
+				frappe.route_options = {
+					course_enrollment_applicant: frm.doc.name,
+					student: frm.doc.student,
+					academic_term: frm.doc.academic_term,
+					student_changes_only: 1,
+				};
+				frappe.set_route("query-report", "Post Approval Course Changes");
+			});
+		}
         if (!frm.is_new() && frm.doc.application_status==="Applied") {
 			if(frm.doc.paid || true){
                 frm.add_custom_button(__("Approve"), function() {

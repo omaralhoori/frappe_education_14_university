@@ -1,0 +1,212 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "naming_series:",
+ "creation": "2026-09-29 00:00:00.000000",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "change_on",
+  "action",
+  "changed_by_student",
+  "column_break_meta",
+  "course_enrollment_applicant",
+  "changed_by",
+  "student_section",
+  "student",
+  "student_name",
+  "column_break_student",
+  "program",
+  "academic_year",
+  "academic_term",
+  "course_section",
+  "course",
+  "course_name",
+  "column_break_course",
+  "student_group",
+  "previous_group"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Naming Series",
+   "options": "EDU-CECL-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "change_on",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Change On",
+   "reqd": 1
+  },
+  {
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Action",
+   "options": "Added\nRemoved\nGroup Changed",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "changed_by_student",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Changed By Student"
+  },
+  {
+   "fieldname": "column_break_meta",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "course_enrollment_applicant",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Course Enrollment Applicant",
+   "options": "Course Enrollment Applicant",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "changed_by",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Changed By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "student_section",
+   "fieldtype": "Section Break",
+   "label": "Student"
+  },
+  {
+   "fieldname": "student",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Student",
+   "options": "Student",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fetch_from": "student.student_name",
+   "fieldname": "student_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Student Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_student",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Program",
+   "options": "Program"
+  },
+  {
+   "fieldname": "academic_year",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Academic Year",
+   "options": "Academic Year"
+  },
+  {
+   "fieldname": "academic_term",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Academic Term",
+   "options": "Academic Term"
+  },
+  {
+   "fieldname": "course_section",
+   "fieldtype": "Section Break",
+   "label": "Course"
+  },
+  {
+   "fieldname": "course",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Course",
+   "options": "Course",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "course.course_name",
+   "fieldname": "course_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Course Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_course",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "student_group",
+   "fieldtype": "Link",
+   "label": "Group",
+   "options": "Student Group"
+  },
+  {
+   "fieldname": "previous_group",
+   "fieldtype": "Link",
+   "label": "Previous Group",
+   "options": "Student Group"
+  }
+ ],
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-09-29 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Education",
+ "name": "Course Enrollment Change Log",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Academics User"
+  }
+ ],
+ "sort_field": "change_on",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "student_name",
+ "track_changes": 0
+}

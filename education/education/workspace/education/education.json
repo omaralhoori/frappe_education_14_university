@@ -283,7 +283,7 @@
    "icon_type": "Image",
    "is_query_report": 0,
    "label": "Admission",
-   "link_count": 5,
+   "link_count": 7,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -338,6 +338,26 @@
    "link_count": 0,
    "link_to": "Course Enrollment Applicant",
    "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Course Enrollment Change Log",
+   "link_count": 0,
+   "link_to": "Course Enrollment Change Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Post Approval Course Changes",
+   "link_count": 0,
+   "link_to": "Post Approval Course Changes",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   },

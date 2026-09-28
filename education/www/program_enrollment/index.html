@@ -143,11 +143,16 @@ function enrollConfirmed(program){
             callback: (res) => {
                 disableAllButtons(false);
                 if (res.message.msg) {
+                    var redirectTo = res.message.redirect_to;
                     var msg = {
                         message: res.message.msg,
                         title: "{{_('Message')}}",
                         onhide: () => {
-                            location.reload()
+                            if (redirectTo) {
+                                location.href = redirectTo;
+                            } else {
+                                location.reload()
+                            }
                         }
                     };
                     if (res.message.pay) {
@@ -155,6 +160,13 @@ function enrollConfirmed(program){
                             'label': "{{_('Pay')}}",
                             action(values) {
                                 location.href = "/fees"
+                            }
+                        };
+                    } else if (redirectTo) {
+                        msg.primary_action = {
+                            'label': "{{_('Register Courses')}}",
+                            action(values) {
+                                location.href = redirectTo;
                             }
                         };
                     }

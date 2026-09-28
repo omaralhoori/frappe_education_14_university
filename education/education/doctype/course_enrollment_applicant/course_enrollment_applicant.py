@@ -6,6 +6,7 @@ from education.education.doctype.fees.fees import get_fees_due_date
 import frappe
 from frappe.model.document import Document
 from frappe import _
+from frappe.utils import cint
 
 
 class CourseEnrollmentApplicant(Document):
@@ -27,10 +28,12 @@ class CourseEnrollmentApplicant(Document):
 				if not found:
 					print("Not found", enrollment_row.course)
 					self.delete_enrollment(enrollment_row=enrollment_row)
-		self.log_courses_changes(old_doc)
+		changes = self.get_courses_table_changes(old_doc)
+		self.log_courses_changes(changes)
+		if old_doc and cint(old_doc.initial_approval):
+			self.log_post_approval_course_changes(changes)
 
-	def log_courses_changes(self, old_doc):
-		"""Record added/removed courses in the document timeline without changing the doc."""
+	def get_courses_table_changes(self, old_doc):
 		old_map = {}
 		if old_doc:
 			old_map = {
@@ -43,14 +46,25 @@ class CourseEnrollmentApplicant(Document):
 			for row in (self.courses or [])
 			if row.course
 		}
+		return {
+			"old_map": old_map,
+			"new_map": new_map,
+			"added": sorted(set(new_map) - set(old_map)),
+			"removed": sorted(set(old_map) - set(new_map)),
+			"group_changed": sorted(
+				course
+				for course in set(old_map) & set(new_map)
+				if (old_map.get(course) or "") != (new_map.get(course) or "")
+			),
+		}
 
-		added = sorted(set(new_map) - set(old_map))
-		removed = sorted(set(old_map) - set(new_map))
-		group_changed = sorted(
-			course
-			for course in set(old_map) & set(new_map)
-			if (old_map.get(course) or "") != (new_map.get(course) or "")
-		)
+	def log_courses_changes(self, changes):
+		"""Record added/removed courses in the document timeline without changing the doc."""
+		old_map = changes.get("old_map") or {}
+		new_map = changes.get("new_map") or {}
+		added = changes.get("added") or []
+		removed = changes.get("removed") or []
+		group_changed = changes.get("group_changed") or []
 
 		if not added and not removed and not group_changed:
 			return
@@ -87,6 +101,79 @@ class CourseEnrollmentApplicant(Document):
 
 		# Timeline comment only — does not modify Course Enrollment Applicant fields
 		self.add_comment("Info", text="<br>".join(lines))
+
+	def log_post_approval_course_changes(self, changes):
+		"""Persist add/remove/group changes after initial approval in a dedicated log."""
+		added = changes.get("added") or []
+		removed = changes.get("removed") or []
+		group_changed = changes.get("group_changed") or []
+		if not added and not removed and not group_changed:
+			return
+
+		old_map = changes.get("old_map") or {}
+		new_map = changes.get("new_map") or {}
+		student_user = frappe.db.get_value("Student", self.student, "user")
+		changed_by_student = cint(frappe.session.user == student_user)
+		changed_by = frappe.session.user
+		change_on = frappe.utils.now_datetime()
+		course_names = {}
+
+		def course_name(course):
+			if course not in course_names:
+				course_names[course] = frappe.db.get_value("Course", course, "course_name") or course
+			return course_names[course]
+
+		entries = []
+		for course in added:
+			entries.append(
+				{
+					"action": "Added",
+					"course": course,
+					"student_group": new_map.get(course),
+					"previous_group": None,
+				}
+			)
+		for course in removed:
+			entries.append(
+				{
+					"action": "Removed",
+					"course": course,
+					"student_group": old_map.get(course),
+					"previous_group": None,
+				}
+			)
+		for course in group_changed:
+			entries.append(
+				{
+					"action": "Group Changed",
+					"course": course,
+					"student_group": new_map.get(course),
+					"previous_group": old_map.get(course),
+				}
+			)
+
+		for entry in entries:
+			frappe.get_doc(
+				{
+					"doctype": "Course Enrollment Change Log",
+					"naming_series": "EDU-CECL-.YYYY.-",
+					"course_enrollment_applicant": self.name,
+					"student": self.student,
+					"student_name": self.get("student_name")
+					or frappe.db.get_value("Student", self.student, "student_name"),
+					"program": self.program,
+					"academic_year": self.academic_year,
+					"academic_term": self.academic_term,
+					"action": entry["action"],
+					"course": entry["course"],
+					"course_name": course_name(entry["course"]),
+					"student_group": entry["student_group"],
+					"previous_group": entry["previous_group"],
+					"changed_by": changed_by,
+					"changed_by_student": changed_by_student,
+					"change_on": change_on,
+				}
+			).insert(ignore_permissions=True)
 	def delete_enrollment(self, enrollment_row):
 		if enrollment_row.group:
 			student_group = frappe.get_doc("Student Group", enrollment_row.group)

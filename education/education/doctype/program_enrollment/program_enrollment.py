@@ -297,6 +297,8 @@ def enroll_student_in_program(program):
 	if is_coursepack:
 		res = create_coursepack_enrollment_applicant(program_enrollment)
 		if res.get('is_success'): results = res
+	else:
+		results["redirect_to"] = "/course-enrollment"
 
 	frappe.db.commit()
 	return results

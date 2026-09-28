@@ -154,8 +154,14 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-12-29 04:24:59.771514",
+ "links": [
+  {
+   "group": "Logs",
+   "link_doctype": "Course Enrollment Change Log",
+   "link_fieldname": "course_enrollment_applicant"
+  }
+ ],
+ "modified": "2026-09-29 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Education",
  "name": "Course Enrollment Applicant",
