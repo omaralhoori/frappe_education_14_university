@@ -1,4 +1,6 @@
 frappe.ready(function () {
+	const limits = {};
+
 	function digitsOnly(value) {
 		return String(value || '').replace(/\D/g, '');
 	}
@@ -15,62 +17,114 @@ frappe.ready(function () {
 		return mobile;
 	}
 
-	function validateMobilePair(numberField, codeField, label, required) {
+	function lengthError(label, code, maxLength) {
+		return `لقد أدخلت ${label} بشكل غير صحيح. الحد المسموح به لرمز الدولة ${code} هو ${maxLength} أرقام. يرجى تصحيح الرقم.`;
+	}
+
+	function loadLimit(codeField, callback) {
+		const code = frappe.web_form.get_value(codeField);
+		if (!code) {
+			callback && callback();
+			return;
+		}
+		if (Object.prototype.hasOwnProperty.call(limits, code)) {
+			callback && callback();
+			return;
+		}
+		frappe.call({
+			method: 'education.education.doctype.country_code.country_code.get_country_mobile_limit',
+			args: { country_code: code },
+			callback: (r) => {
+				limits[code] = cint((r.message && r.message.max_mobile_length) || 0);
+				callback && callback();
+			},
+		});
+	}
+
+	function checkMobileLength(numberField, codeField, label, required) {
 		const number = cleanMobile(frappe.web_form.get_value(numberField));
 		const code = frappe.web_form.get_value(codeField);
 
 		if (!number) {
 			if (required) {
-				frappe.throw(__('Please enter {0}', [label]));
+				return `الرجاء إدخال ${label}`;
 			}
-			if (code) {
-				frappe.throw(
-					__('Please enter {0} or clear the country code', [label])
-				);
-			}
-			return;
+			return null;
 		}
 
-		if (!code) {
-			frappe.throw(__('Please select Country Code for {0}', [label]));
+		if (code && !Object.prototype.hasOwnProperty.call(limits, code)) {
+			loadLimit(codeField);
 		}
 
-		if (!/^\d+$/.test(number)) {
-			frappe.throw(
-				__('{0} must contain digits only, without country code', [label])
-			);
-		}
-
-		if (number.length < 7 || number.length > 15) {
-			frappe.throw(__('{0} length must be between 7 and 15 digits', [label]));
+		const maxLength = code ? cint(limits[code]) : 0;
+		if (maxLength && number.length > maxLength) {
+			return lengthError(label, code, maxLength);
 		}
 
 		const codeDigits = digitsOnly(code);
 		if (codeDigits && number.startsWith(codeDigits)) {
-			frappe.throw(
-				__(
-					'{0} should not include the country code ({1}). Enter the local number only.',
-					[label, code]
-				)
-			);
+			return `${label} يجب ألا يتضمن رمز الدولة (${code}). أدخل الرقم المحلي فقط.`;
 		}
 
-		frappe.web_form.set_value(numberField, number);
+		return null;
 	}
 
-	// frappe.web_form.validate = () => {
-	// 	validateMobilePair(
-	// 		'student_mobile_number',
-	// 		'mobile_country_code',
-	// 		__('Mobile Number'),
-	// 		true
-	// 	);
-	// 	validateMobilePair(
-	// 		'student_secondary_mobile_number',
-	// 		'secondary_mobile_country_code',
-	// 		__('Secondary Mobile Number'),
-	// 		false
-	// 	);
-	// 	return true;
-	// };
+	function warnMobile(numberField, codeField, label, required) {
+		const message = checkMobileLength(numberField, codeField, label, required);
+		if (message) {
+			frappe.msgprint({
+				title: 'رقم الجوال غير صحيح',
+				message: message,
+				indicator: 'red',
+			});
+		}
+	}
+
+	function bindMobile(numberField, codeField, label) {
+		const warn = () => warnMobile(numberField, codeField, label, false);
+		frappe.web_form.on(codeField, () => loadLimit(codeField, warn));
+		frappe.web_form.on(numberField, warn);
+		loadLimit(codeField);
+	}
+
+	bindMobile('student_mobile_number', 'mobile_country_code', 'رقم الجوال');
+	bindMobile(
+		'student_secondary_mobile_number',
+		'secondary_mobile_country_code',
+		'رقم الجوال الثانوي'
+	);
+
+	frappe.web_form.validate = () => {
+		const primary = checkMobileLength(
+			'student_mobile_number',
+			'mobile_country_code',
+			'رقم الجوال',
+			true
+		);
+		if (primary) {
+			frappe.msgprint({
+				title: 'رقم الجوال غير صحيح',
+				message: primary,
+				indicator: 'red',
+			});
+			return false;
+		}
+
+		const secondary = checkMobileLength(
+			'student_secondary_mobile_number',
+			'secondary_mobile_country_code',
+			'رقم الجوال الثانوي',
+			false
+		);
+		if (secondary) {
+			frappe.msgprint({
+				title: 'رقم الجوال غير صحيح',
+				message: secondary,
+				indicator: 'red',
+			});
+			return false;
+		}
+
+		return true;
+	};
 });

@@ -91,6 +91,92 @@ COUNTRY_CODES = [
 	("+993", "تركمانستان"),
 ]
 
+# Maximum local digits, without the country code.
+# Includes one leading 0 where that is the usual national format.
+MOBILE_MAX_LENGTH = {
+	"+962": 10,
+	"+966": 10,
+	"+971": 10,
+	"+974": 8,
+	"+965": 8,
+	"+973": 8,
+	"+968": 8,
+	"+970": 10,
+	"+972": 10,
+	"+20": 11,
+	"+963": 10,
+	"+961": 8,
+	"+964": 11,
+	"+967": 9,
+	"+218": 10,
+	"+216": 8,
+	"+213": 10,
+	"+212": 10,
+	"+222": 8,
+	"+249": 10,
+	"+211": 9,
+	"+253": 8,
+	"+252": 9,
+	"+269": 7,
+	"+1": 10,
+	"+44": 11,
+	"+33": 10,
+	"+49": 12,
+	"+39": 11,
+	"+34": 9,
+	"+31": 10,
+	"+32": 10,
+	"+41": 10,
+	"+43": 13,
+	"+46": 10,
+	"+47": 8,
+	"+45": 8,
+	"+358": 12,
+	"+353": 10,
+	"+351": 9,
+	"+30": 10,
+	"+90": 11,
+	"+7": 10,
+	"+380": 10,
+	"+48": 9,
+	"+36": 9,
+	"+40": 10,
+	"+420": 9,
+	"+86": 11,
+	"+81": 11,
+	"+82": 11,
+	"+91": 10,
+	"+92": 11,
+	"+880": 11,
+	"+62": 13,
+	"+60": 11,
+	"+65": 8,
+	"+66": 9,
+	"+84": 10,
+	"+63": 10,
+	"+61": 10,
+	"+64": 10,
+	"+55": 11,
+	"+54": 11,
+	"+52": 10,
+	"+57": 10,
+	"+56": 9,
+	"+27": 10,
+	"+234": 11,
+	"+254": 10,
+	"+251": 9,
+	"+233": 9,
+	"+98": 10,
+	"+93": 9,
+	"+994": 9,
+	"+374": 8,
+	"+995": 9,
+	"+998": 9,
+	"+996": 9,
+	"+992": 9,
+	"+993": 8,
+}
+
 
 def execute():
 	seed_country_codes()
@@ -100,10 +186,18 @@ def seed_country_codes():
 	created = 0
 	updated = 0
 	for code, name in COUNTRY_CODES:
+		max_length = MOBILE_MAX_LENGTH.get(code) or 0
 		if frappe.db.exists("Country Code", code):
-			current = frappe.db.get_value("Country Code", code, "country_name")
-			if current != name:
-				frappe.db.set_value("Country Code", code, "country_name", name, update_modified=False)
+			current_name, current_max = frappe.db.get_value(
+				"Country Code", code, ["country_name", "max_mobile_length"]
+			)
+			updates = {}
+			if current_name != name:
+				updates["country_name"] = name
+			if max_length and not current_max:
+				updates["max_mobile_length"] = max_length
+			if updates:
+				frappe.db.set_value("Country Code", code, updates, update_modified=False)
 				updated += 1
 			continue
 
@@ -112,6 +206,7 @@ def seed_country_codes():
 				"doctype": "Country Code",
 				"country_code": code,
 				"country_name": name,
+				"max_mobile_length": max_length,
 			}
 		)
 		doc.insert(ignore_permissions=True)

@@ -434,3 +434,9 @@ Student Changes Only,تغييرات الطالب فقط
 Group Changed,تغيير المجموعة
 Enrollment Applicant,طلب التسجيل
 Register Courses,تسجيل المقررات
+You entered {0} incorrectly. The maximum allowed length for country code {1} is {2} digits. Please correct the number.,لقد أدخلت {0} بشكل غير صحيح. الحد المسموح به لرمز الدولة {1} هو {2} أرقام. يرجى تصحيح الرقم.
+Incorrect Mobile Number,رقم الجوال غير صحيح
+Max Mobile Length,الحد الأقصى لطول رقم الجوال
+Maximum digits for the local mobile number, without the country code. Leave empty to skip this limit.,الحد الأقصى لأرقام رقم الجوال المحلي بدون رمز الدولة. اتركه فارغاً لتجاوز هذا الحد.
+Mobile Number,رقم الجوال
+Secondary Mobile Number,رقم الجوال الثانوي

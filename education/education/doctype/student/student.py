@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.desk.form.linked_with import get_linked_doctypes
 from frappe.model.document import Document
-from frappe.utils import getdate, today
+from frappe.utils import cint, getdate, today
 
 from education.education.utils import (check_content_completion,
                                        check_quiz_completion)
@@ -60,12 +60,40 @@ class Student(Document):
 			filter(None, [self.first_name, self.middle_name, self.last_name])
 		)
 		self.validate_dates()
-		#self.validate_mobile_numbers()
+		self.validate_country_mobile_length()
 		self.validate_user()
 		
 		if self.student_applicant:
 			self.check_unique()
 			self.update_applicant_status()
+
+	def validate_country_mobile_length(self):
+		"""Reject a local number that is longer than the selected country's limit.
+
+		Runs when the number is changed, and on every save from the student
+		info web form so an already-stored number must be corrected there.
+		"""
+		in_web_form = bool(getattr(frappe.flags, "in_web_form", False))
+		if (
+			in_web_form
+			or self.has_value_changed("student_mobile_number")
+			or self.has_value_changed("mobile_country_code")
+		):
+			self.student_mobile_number = enforce_country_mobile_length(
+				self.student_mobile_number,
+				self.mobile_country_code,
+				"رقم الجوال",
+			)
+		if (
+			in_web_form
+			or self.has_value_changed("student_secondary_mobile_number")
+			or self.has_value_changed("secondary_mobile_country_code")
+		):
+			self.student_secondary_mobile_number = enforce_country_mobile_length(
+				self.student_secondary_mobile_number,
+				self.secondary_mobile_country_code,
+				"رقم الجوال الثانوي",
+			)
 
 	def validate_mobile_numbers(self):
 		if self.student_mobile_number:
@@ -348,6 +376,26 @@ def reformat_mobile_number(mobile_number):
 
 def _digits_only(value):
 	return "".join(ch for ch in (value or "") if ch.isdigit())
+
+
+def enforce_country_mobile_length(mobile_number, country_code, field_label):
+	"""Stop a local number that exceeds the limit defined on its country code."""
+	if not mobile_number or not country_code:
+		return mobile_number
+
+	mobile_number = reformat_mobile_number(str(mobile_number).strip())
+	if not mobile_number:
+		return mobile_number
+
+	max_length = cint(frappe.db.get_value("Country Code", country_code, "max_mobile_length"))
+	if max_length and len(mobile_number) > max_length:
+		frappe.throw(
+			"لقد أدخلت {0} بشكل غير صحيح. الحد المسموح به لرمز الدولة {1} هو {2} أرقام. يرجى تصحيح الرقم.".format(
+				field_label, country_code, max_length
+			)
+		)
+
+	return mobile_number
 
 
 def validate_mobile_with_country_code(mobile_number, country_code, field_label, required_country_code=False):
