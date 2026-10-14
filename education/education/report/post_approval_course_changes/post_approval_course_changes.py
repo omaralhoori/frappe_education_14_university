@@ -94,6 +94,12 @@ def get_columns():
 			"width": 160,
 		},
 		{
+			"fieldname": "teams_synced",
+			"label": _("Teams Synced"),
+			"fieldtype": "Check",
+			"width": 140,
+		},
+		{
 			"fieldname": "log_name",
 			"label": _("Log"),
 			"fieldtype": "Link",
@@ -146,7 +152,8 @@ def get_data(filters):
 			log.academic_term,
 			log.program,
 			log.course_enrollment_applicant,
-			log.changed_by
+			log.changed_by,
+			log.teams_synced
 		FROM `tabCourse Enrollment Change Log` log
 		WHERE {conditions}
 		ORDER BY log.change_on DESC, log.creation DESC
